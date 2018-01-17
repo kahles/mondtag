@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="toolbar_dark">#151515</color>
+
+    <!-- fragment_calendar -->
+    <color name="background_today">#555555</color>
+    <color name="background_default">@color/cardview_dark_background</color>
+    <color name="day_of_week_color">#FFFFFF</color>
+    <color name="day_of_week_weekend_color">#FF2200</color>
+</resources>

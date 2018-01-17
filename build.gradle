@@ -1,0 +1,47 @@
+plugins {
+    id "com.gladed.androidgitversion" version "0.2.21"
+}
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "de.kah2.mondtag"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode androidGitVersion.code()
+        versionName androidGitVersion.name()
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+    }
+
+    lintOptions {
+        // continue the build even when errors are found:
+        // workaround for "error" "app_name is not translated"
+        abortOnError false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:cardview-v7:26.1.0'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.android.support:support-v13:26.1.0'
+    compile 'com.jakewharton.threetenabp:threetenabp:1.0.5'
+    //    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    //        exclude group: 'com.android.support', module: 'support-annotations'
+    //    })
+    implementation project(':libZodiac')
+    implementation project(':novaforjava')
+}

@@ -1,0 +1,78 @@
+<resources>
+    <!-- App -->
+    <string name="app_name" translatable="false">Mondtag</string>
+    <string name="action_info">Info</string>
+    <string name="action_settings">Settings</string>
+    <string name="dialog_button_close">close</string>
+
+    <!-- Data fetching -->
+    <string name="data_fetching_toolbar_subtitle">Generating calendar …</string>
+    <string name="status_importing">Importing data</string>
+    <string name="status_generating">Generating minimal range</string>
+    <string name="status_extending">Extending range</string>
+    <string name="status_counting">Setting day counts</string>
+
+    <!-- Settings -->
+    <string name="pref_group_name_rise_set">Rise and set times</string>
+    <string name="location">Location</string>
+    <string name="timezone">Timezone</string>
+    <string name="pref_key_timezone" translatable="false">pref_key_timezone</string>
+    <string name="pref_key_location" translatable="false">pref_key_location</string>
+    <string name="pref_group_key_rise_set" translatable="false">pref_key_rise_set</string>
+    <string name="pref_key_interpretation" translatable="false">pref_key_interpretation</string>
+    <string name="location_last_known">Last known location</string>
+    <string name="location_open">View on map</string>
+    <string name="location_not_available">Location not available</string>
+    <string name="location_not_valid">Enter location in format [latitude],[longitude]</string>
+    <string name="location_info_default_loaded">Default "Munich, Germany" was set</string>
+    <string name="location_default">48.137,11.57521</string>
+    <string name="dialog_permission_message">In order to get the last known location from your device, you need to grant the permission to access location data.</string>
+    <string name="settings_info_dialog_message">It seems Mondtag is started the first time - default settings are loaded. Press \"back\" when you have customized them.</string>
+
+    <!-- Default values -->
+    <string name="dummy_action">Some action</string>
+    <string name="dummy_day_name">Someday</string>
+    <string name="dummy_date">1234–56–78</string>
+    <string name="dummy_time">12:34 pm</string>
+
+    <!-- Calendar events -->
+    <string name="event_default_name">Action</string>
+
+    <!-- Calendar view -->
+    <string name="button_extend_data">Calculate more days</string>
+
+    <!-- Day detail view descriptions -->
+    <string name="description_sun_rise">sun rise</string>
+    <string name="description_sun_set">sun set</string>
+    <string name="description_lunar_rise">lunar rise</string>
+    <string name="description_lunar_set">lunar set</string>
+    <string name="description_lunar_phase">Lunar phase</string>
+    <string name="description_zodiac_sign">Zodiac sign</string>
+    <string name="description_zodiac_direction">Zodiac direction</string>
+    <string name="description_zodiac_element">Element</string>
+    <string name="button_create_reminder">Create reminder</string>
+
+    <!-- Day data -->
+    <string name="ascending">ascending</string>
+    <string name="descending">descending</string>
+    <string name="increasing">waxing</string>
+    <string name="decreasing">waning</string>
+    <string name="full_moon">full moon</string>
+    <string name="new_moon">new moon</string>
+    <string name="air">air</string>
+    <string name="aquarius">aquarius</string>
+    <string name="aries">aries</string>
+    <string name="cancer">cancer</string>
+    <string name="capricorn">capricorn</string>
+    <string name="earth">earth</string>
+    <string name="fire">fire</string>
+    <string name="gemini">gemini</string>
+    <string name="leo">leo</string>
+    <string name="libra">libra</string>
+    <string name="pisces">pisces</string>
+    <string name="sagittarius">sagittarius</string>
+    <string name="scorpio">scorpio</string>
+    <string name="taurus">taurus</string>
+    <string name="virgo">virgo</string>
+    <string name="water">water</string>
+</resources>
