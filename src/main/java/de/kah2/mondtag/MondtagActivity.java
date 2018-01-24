@@ -105,8 +105,6 @@ public class MondtagActivity extends AppCompatActivity {
     public void extendFuture() {
         this.getDataManager().extendExpectedRange();
 
-        // FIXME progress bar has initially 100%?!
-
         this.activateDataGeneration();
     }
 

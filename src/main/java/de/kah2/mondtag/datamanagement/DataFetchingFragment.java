@@ -87,17 +87,21 @@ public class DataFetchingFragment extends Fragment
     public void onStateChanged(State state) {
         if (mondtagActivity != null) {
 
-            if (state == State.FINISHED) {
+            if (state == null) {
+                
+                this.actionTextView.setText("");
+
+            } else if (state == State.FINISHED) {
 
                 // We're ready and display the calendar
                 this.mondtagActivity.onDataReady();
 
             } else if (state != State.IMPORT_FINISHED) {
 
-                /*
-                 * We update state information - except for IMPORT_FINISHED, because this state
-                 * would be displayed too short to be read.
-                 */
+            /*
+             * We update state information - except for IMPORT_FINISHED, because this state
+             * would be displayed too short to be read.
+             */
                 this.actionTextView.setText(
                         mondtagActivity.getString(
                                 ResourceMapper.getResourceIds(state)[ResourceMapper.INDEX_STRING]));

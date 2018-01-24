@@ -59,7 +59,14 @@ public class DataFetchingMessenger implements ProgressListener {
     @Override
     public void onStateChanged(State state) {
 
-        Log.d(TAG, "onStateChanged: " + state.toString());
+        String stateStr;
+
+        if (state == null)
+            stateStr = "resetted";
+        else
+            stateStr = state.toString();
+
+        Log.d(TAG, "onStateChanged: " + stateStr);
 
         final Message message = this.messageHandler.obtainMessage(MESSAGE_STATE_CHANGE, state);
 
