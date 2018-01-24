@@ -37,6 +37,8 @@ public class DataManager {
 
     private boolean userShouldReviewConfig = false;
 
+    private boolean importedExistingData = false;
+
     private Calendar calendar;
 
     /**
@@ -84,7 +86,13 @@ public class DataManager {
      */
      void startCalendarGeneration() {
 
-        this.fetcher.startLoadingAndGeneratingRest();
+         if (!this.importedExistingData) {
+
+             this.fetcher.importData(this.calendar);
+             this.importedExistingData = true;
+         }
+
+         this.fetcher.startGeneratingMissingDays(this.calendar);
     }
 
     /**
@@ -139,13 +147,6 @@ public class DataManager {
         dbHelper.resetDatabase(dbHelper.getWritableDatabase());
     }
 
-    /**
-     * @return the calendar or null if none is present
-     */
-    public Calendar getCalendar() {
-        return calendar;
-    }
-
     private void initConfig() {
 
         final Context context = this.context;
@@ -182,6 +183,14 @@ public class DataManager {
     public void setConfigReviewed() {
         this.userShouldReviewConfig = false;
     }
+
+    /**
+     * @return the calendar or null if none is present
+     */
+    public Calendar getCalendar() {
+        return calendar;
+    }
+
 
     public DataFetchingMessenger getDataFetchingMessenger() {
         return messenger;

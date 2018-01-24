@@ -216,7 +216,7 @@ public class LocationPreference extends DialogPreference {
         final SavedState state = new SavedState(super.onSaveInstanceState());
 
         // We only need to save the preference value if it's not persistent
-        // TODO_LATER is this all really necessary?
+
         if (!this.isPersistent()) {
             Log.d(TAG, "onSaveInstanceState: preference is not persistent - saving location");
             state.position = this.location;

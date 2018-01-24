@@ -39,25 +39,24 @@ class DataFetcher implements ProgressListener{
     }
 
     /**
-     * The main task ...
-     * <ol>
-     *     <li>Tries to import data</li>
-     *     <li>Removes old data</li>
-     *     <li>Starts calculation of the rest of needed data</li>
-     * </ol>
+     * Loads existing data and removes days outside expected range
      */
-    public void startLoadingAndGeneratingRest() {
-
-        this.startTime = Clock.systemUTC().instant();
-
+    public void importData(Calendar calendar) {
         final List<DayStorableDataSet> loadedData = this.loadData();
-        final Calendar calendar = ((Mondtag) this.context).getDataManager().getCalendar();
 
         calendar.importDays(loadedData);
         Log.d(LOG_TAG, "Imported " + loadedData.size() + " days");
 
         final List<Day> daysDeleted = calendar.removeOverhead(false);
         deleteFromDb(daysDeleted);
+    }
+
+    /**
+     * Starts calculation of days missing withing expected range
+     */
+    void startGeneratingMissingDays(Calendar calendar) {
+
+        this.startTime = Clock.systemUTC().instant();
 
         calendar.startGeneration();
     }
