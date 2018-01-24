@@ -5,7 +5,6 @@ Free, open-source lunar calendar for Android written in Java.
 This software is intended to become a small, handy assistant to plan e.g. gardening work.
 
 ### Status
-The actual version is v0.5 - I skipped some version numbers, because much work has been done since the last release.
 All basic functionality is implemented, the next big step will be adding interpretations. 
 
 ### Requirements
