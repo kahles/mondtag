@@ -57,7 +57,8 @@ public class MondtagActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mondtag);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        // TODO add button for interpretation
+        super.setSupportActionBar(toolbar);
 
         // if app wasn't already started ...
         if (savedInstanceState == null) {
@@ -153,6 +154,7 @@ public class MondtagActivity extends AppCompatActivity {
                         new DataFetchingFragment(), DataFetchingFragment.TAG );
                 break;
             case STATE_DISPLAYING:
+                // TODO update header-subtitle with interpretation
                 getSupportActionBar().setSubtitle("");
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 transaction.replace( R.id.content_frame,

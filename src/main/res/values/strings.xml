@@ -19,7 +19,6 @@
     <string name="pref_key_timezone" translatable="false">pref_key_timezone</string>
     <string name="pref_key_location" translatable="false">pref_key_location</string>
     <string name="pref_group_key_rise_set" translatable="false">pref_key_rise_set</string>
-    <string name="pref_key_interpretation" translatable="false">pref_key_interpretation</string>
     <string name="location_last_known">Last known location</string>
     <string name="location_open">View on map</string>
     <string name="location_not_available">Location not available</string>
@@ -34,6 +33,8 @@
     <string name="dummy_day_name">Someday</string>
     <string name="dummy_date">1234–56–78</string>
     <string name="dummy_time">12:34 pm</string>
+    <string name="dummy_interpretationText">Interpretation</string>
+    <string name="dummy_interpretationQuality">maybe good</string>
 
     <!-- Calendar events -->
     <string name="event_default_name">Action</string>
@@ -75,4 +76,10 @@
     <string name="taurus">taurus</string>
     <string name="virgo">virgo</string>
     <string name="water">water</string>
+
+    <!-- interpretation -->
+    <string name="interpretation_best">best</string>
+    <string name="interpretation_good">good</string>
+    <string name="interpretation_bad">bad</string>
+    <string name="interpretation_worst">worst</string>
 </resources>

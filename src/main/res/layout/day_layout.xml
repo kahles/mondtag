@@ -191,6 +191,16 @@
             android:layout_below="@id/lunarPhaseIcon"
             android:layout_toLeftOf="@id/sunRiseText"
             android:layout_toStartOf="@id/sunRiseText" />
+        <ImageView
+            android:id="@+id/interpretationIcon"
+            android:src="@drawable/quality_best"
+            android:contentDescription="@string/dummy_interpretationQuality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="center"
+            android:layout_alignBottom="@id/zodiacElementText"
+            android:layout_alignEnd="@id/lunarRiseSetSecondText"
+            android:layout_alignRight="@id/lunarRiseSetSecondText"/>
 
     </RelativeLayout>
 

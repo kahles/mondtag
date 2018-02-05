@@ -56,4 +56,10 @@
     <string name="description_sun_set">Sonnenuntergang</string>
     <string name="button_create_reminder">Erinnerung erstellen</string>
     <string name="button_extend_data">Weitere Tage berechnen</string>
+    <string name="interpretation_best">Am besten</string>
+    <string name="interpretation_good">Gut</string>
+    <string name="interpretation_worst">Schlecht</string>
+    <string name="interpretation_bad">Am schlechtesten</string>
+    <string name="dummy_interpretationText">Interpretation</string>
+    <string name="dummy_interpretationQuality">evtl. gut</string>
 </resources>
