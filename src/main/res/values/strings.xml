@@ -42,10 +42,10 @@
     <string name="button_extend_data">Calculate more days</string>
 
     <!-- Day detail view descriptions -->
-    <string name="description_sun_rise">sun rise</string>
-    <string name="description_sun_set">sun set</string>
-    <string name="description_lunar_rise">lunar rise</string>
-    <string name="description_lunar_set">lunar set</string>
+    <string name="description_sun_rise">Sun rise</string>
+    <string name="description_sun_set">Sun set</string>
+    <string name="description_lunar_rise">Lunar rise</string>
+    <string name="description_lunar_set">Lunar set</string>
     <string name="description_lunar_phase">Lunar phase</string>
     <string name="description_zodiac_sign">Zodiac sign</string>
     <string name="description_zodiac_direction">Zodiac direction</string>
