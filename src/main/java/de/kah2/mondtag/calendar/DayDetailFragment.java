@@ -45,7 +45,7 @@ public class DayDetailFragment extends android.app.DialogFragment {
         }
 
         DayDataDisplayer viewHolder = new DayDataDisplayer(view);
-        viewHolder.setDayData(this.day);
+        viewHolder.setDayData(this.day, true);
         this.setLunarRiseSetDescriptions(view);
 
         final Button reminderButton = view.findViewById(R.id.buttonCreateReminder);

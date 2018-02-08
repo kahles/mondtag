@@ -125,7 +125,7 @@ public class CalendarRecyclerViewAdapter extends RecyclerView.Adapter<CalendarRe
                 this.view.setOnLongClickListener(this);
 
                 final DayDataDisplayer displayer = new DayDataDisplayer(view);
-                displayer.setDayData(day);
+                displayer.setDayData(day, false);
 
                 setDailyLayoutProperties(day, displayer);
             }

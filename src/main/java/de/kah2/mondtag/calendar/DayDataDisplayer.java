@@ -1,6 +1,7 @@
 package de.kah2.mondtag.calendar;
 
 import android.content.Context;
+import android.text.Layout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,6 +38,9 @@ class DayDataDisplayer {
     private final TextView zodiacDirectionText;
     private final ImageView zodiacElementIcon;
     private final TextView zodiacElementText;
+    private final ImageView interpretationIcon;
+    private final TextView interpretationNameView;
+    private final TextView interpretationQualityTextView;
 
     public DayDataDisplayer(View dayView) {
         this.dayView = dayView;
@@ -62,10 +66,19 @@ class DayDataDisplayer {
         this.zodiacDirectionText = dayView.findViewById(R.id.zodiacDirectionText);
         this.zodiacElementIcon = dayView.findViewById(R.id.zodiacElementIcon);
         this.zodiacElementText = dayView.findViewById(R.id.zodiacElementText);
+        this.interpretationIcon = dayView.findViewById(R.id.interpretationIcon);
+        this.interpretationNameView = dayView.findViewById(R.id.interpretationName);
+        this.interpretationQualityTextView = dayView.findViewById(R.id.interpretationQualityText);
     }
 
-    /** This method fills in the values of a {@link Day}. */
-    void setDayData(final Day day) {
+    /**
+     * This method fills in the values:
+     * @param day The day object containing the data to display
+     * @param isVerboseView if true, the views R.id.interpretationName and
+     *                      R.id.interpretationQualityText are also set - if false, only the icon
+     *                      and its description will be set.
+     */
+    void setDayData(final Day day, boolean isVerboseView) {
         dayOfWeekView.setText( ResourceMapper.formatDayOfWeek(day.getDate()) );
 
         dateView.setText( ResourceMapper.formatDate(day.getDate()) );
@@ -77,39 +90,41 @@ class DayDataDisplayer {
                 ResourceMapper.formatTime( getContext(),
                         day.getPlanetaryData().getSolarRiseSet().getSet() ) );
 
-        this.setLunarRiseSet(day);
-
-        Integer[] ids;
-        String text;
+        this.initLunarRiseSetFields(day);
 
         if (day.getPlanetaryData().getLunarPhase() != null) {
-            ids = ResourceMapper.getResourceIds(day.getPlanetaryData().getLunarPhase());
-            text = getContext().getString(ids[ResourceMapper.INDEX_STRING]);
-            lunarPhaseIcon.setImageResource(ids[ResourceMapper.INDEX_IMAGE]);
-            lunarPhaseIcon.setContentDescription(text);
-            lunarPhaseText.setText(text);
+            this.initFields(day.getPlanetaryData().getLunarPhase(), lunarPhaseIcon, lunarPhaseText);
         }
 
-        ids = ResourceMapper.getResourceIds( day.getZodiacData().getDirection() );
-        text = getContext().getString(ids[ResourceMapper.INDEX_STRING]);
-        zodiacDirectionIcon.setImageResource(ids[ResourceMapper.INDEX_IMAGE]);
-        zodiacDirectionIcon.setContentDescription(text);
-        zodiacDirectionText.setText(text);
+        this.initFields(day.getZodiacData().getDirection(), zodiacDirectionIcon, zodiacDirectionText);
+        this.initFields(day.getZodiacData().getSign(), zodiacSignIcon, zodiacSignText);
+        this.initFields(day.getZodiacData().getElement(), zodiacElementIcon, zodiacElementText);
 
-        ids = ResourceMapper.getResourceIds( day.getZodiacData().getSign() );
-        text = getContext().getString(ids[ResourceMapper.INDEX_STRING]);
-        zodiacSignIcon.setImageResource(ids[ResourceMapper.INDEX_IMAGE]);
-        zodiacSignIcon.setContentDescription(text);
-        zodiacSignText.setText(text);
-
-        ids = ResourceMapper.getResourceIds( day.getZodiacData().getElement() );
-        text = getContext().getString(ids[ResourceMapper.INDEX_STRING]);
-        zodiacElementIcon.setImageResource(ids[ResourceMapper.INDEX_IMAGE]);
-        zodiacElementIcon.setContentDescription(text);
-        zodiacElementText.setText(text);
+        initInterpretationFields(day, isVerboseView);
     }
 
-    private void setLunarRiseSet(Day day) {
+    private void initInterpretationFields(Day day, boolean isVerboseView) {
+
+        int image = 0;
+        String text = "";
+
+        if ( day.getInterpreter() != null ) { // An Interpretation is set
+            final Integer[] ids = ResourceMapper.getResourceIds( day.getInterpreter().getQuality() );
+            image = ids[ResourceMapper.INDEX_IMAGE];
+            text = getContext().getString(ids[ResourceMapper.INDEX_STRING]);
+        }
+
+        this.interpretationIcon.setImageResource(image);
+        this.interpretationIcon.setContentDescription(text);
+
+        if (isVerboseView) {
+            this.interpretationQualityTextView.setText(text);
+            // TODO set intzerpretation name
+            // this.interpretationNameView.setText(day.getInterpreter().getKey());
+        }
+    }
+
+    private void initLunarRiseSetFields(Day day) {
         final LocalDateTime rise = day.getPlanetaryData().getLunarRiseSet().getRise();
         final LocalDateTime set = day.getPlanetaryData().getLunarRiseSet().getSet();
 
@@ -152,6 +167,14 @@ class DayDataDisplayer {
                     getContext().getString(R.string.description_lunar_rise));
             this.lunarRiseSetSecondTextView.setText(ResourceMapper.formatTime(context, rise));
         }
+    }
+
+    private void initFields(Enum<?> e, ImageView imageView, TextView textView) {
+        final Integer[] ids = ResourceMapper.getResourceIds(e);
+        final String text = getContext().getString(ids[ResourceMapper.INDEX_STRING]);
+        imageView.setImageResource(ids[ResourceMapper.INDEX_IMAGE]);
+        imageView.setContentDescription(text);
+        if (textView != null) textView.setText(text);
     }
 
     /** Simple delegate to get a {@link Context}-object from the contained {@link View}. */

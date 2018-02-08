@@ -14,6 +14,7 @@ import java.util.Hashtable;
 import java.util.Locale;
 
 import de.kah2.libZodiac.ProgressListener;
+import de.kah2.libZodiac.interpretation.Interpreter;
 import de.kah2.libZodiac.planetary.LunarPhase;
 import de.kah2.libZodiac.zodiac.ZodiacDirection;
 import de.kah2.libZodiac.zodiac.ZodiacElement;
@@ -100,6 +101,16 @@ public class ResourceMapper {
                 new Integer[]{R.drawable.fire, R.string.fire});
         mappings.put(ZodiacElement.WATER.toString(),
                 new Integer[]{R.drawable.water, R.string.water});
+
+        // Interpretation qualities
+        mappings.put(Interpreter.Quality.WORST.toString(),
+                new Integer[]{R.drawable.quality_worst, R.string.interpretation_worst});
+        mappings.put(Interpreter.Quality.BAD.toString(),
+                new Integer[]{R.drawable.quality_bad, R.string.interpretation_bad});
+        mappings.put(Interpreter.Quality.GOOD.toString(),
+                new Integer[]{R.drawable.quality_good, R.string.interpretation_good});
+        mappings.put(Interpreter.Quality.BEST.toString(),
+                new Integer[]{R.drawable.quality_best, R.string.interpretation_best});
     }
 
     public static Integer[] getResourceIds(Enum<?> e) {
