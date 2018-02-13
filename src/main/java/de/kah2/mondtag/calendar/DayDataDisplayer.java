@@ -105,22 +105,26 @@ class DayDataDisplayer {
 
     private void initInterpretationFields(Day day, boolean isVerboseView) {
 
-        int image = 0;
-        String text = "";
+        int qualityIcon = 0;
+        String qualityText = "";
+        String interpretationName = "";
 
         if ( day.getInterpreter() != null ) { // An Interpretation is set
             final Integer[] ids = ResourceMapper.getResourceIds( day.getInterpreter().getQuality() );
-            image = ids[ResourceMapper.INDEX_IMAGE];
-            text = getContext().getString(ids[ResourceMapper.INDEX_STRING]);
+            qualityIcon = ids[ResourceMapper.INDEX_IMAGE];
+            qualityText = getContext().getString(ids[ResourceMapper.INDEX_STRING]);
+
+            interpretationName = getContext().getString(
+                    ResourceMapper.getResourceIds(
+                            day.getInterpreter().getKey() )[ResourceMapper.INDEX_STRING] );
         }
 
-        this.interpretationIcon.setImageResource(image);
-        this.interpretationIcon.setContentDescription(text);
+        this.interpretationIcon.setImageResource(qualityIcon);
+        this.interpretationIcon.setContentDescription(qualityText);
 
         if (isVerboseView) {
-            this.interpretationQualityTextView.setText(text);
-            // TODO set intzerpretation name
-            // this.interpretationNameView.setText(day.getInterpreter().getKey());
+            this.interpretationQualityTextView.setText(qualityText);
+            this.interpretationNameView.setText(interpretationName);
         }
     }
 

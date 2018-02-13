@@ -3,6 +3,7 @@
     <string name="app_name" translatable="false">Mondtag</string>
     <string name="action_info">Info</string>
     <string name="action_settings">Settings</string>
+    <string name="action_interpretations">Interpretations</string>
     <string name="dialog_button_close">close</string>
 
     <!-- Data fetching -->
@@ -82,4 +83,16 @@
     <string name="interpretation_good">good</string>
     <string name="interpretation_bad">bad</string>
     <string name="interpretation_worst">worst</string>
+
+    <string name="interpret_gardening">interprete_gardening</string>
+    <string name="interpret_gardening_CombatSlugs">Combat slugs</string>
+    <string name="interpret_gardening_OverterrestrialPests">Combat overterrestrial pests</string>
+    <string name="interpret_gardening_SubterrestrialPests">Combat subterrestrial pests</string>
+    <string name="interpret_gardening_CutFruitTree">Cut fruit trees</string>
+    <string name="interpret_gardening_Graft">Graft</string>
+    <string name="interpret_gardening_Cutting">Make cuttings / transplant</string>
+    <string name="interpret_gardening_WeedDig">Weed / dig</string>
+    <string name="interpret_gardening_TrimSick">Trim sick plants</string>
+    <string name="interpret_gardening_MowLawn">Mow the lawn</string>
+    <string name="interpret_gardening_Water">Water plants</string>
 </resources>

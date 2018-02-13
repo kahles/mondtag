@@ -9,8 +9,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import de.kah2.libZodiac.interpretation.Interpreter;
+import de.kah2.libZodiac.interpretation.Translatable;
 import de.kah2.mondtag.calendar.CalendarFragment;
 import de.kah2.mondtag.calendar.InfoDialogFragment;
+import de.kah2.mondtag.calendar.ResourceMapper;
 import de.kah2.mondtag.datamanagement.DataFetchingFragment;
 import de.kah2.mondtag.datamanagement.DataManager;
 import de.kah2.mondtag.settings.SettingsFragment;
@@ -135,6 +138,8 @@ public class MondtagActivity extends AppCompatActivity {
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
+        // TODO ... may produce NPE ... :-/
+
         switch (state) {
             case STATE_CONFIGURING:
                 getSupportActionBar().setSubtitle(R.string.action_settings);
@@ -154,8 +159,7 @@ public class MondtagActivity extends AppCompatActivity {
                         new DataFetchingFragment(), DataFetchingFragment.TAG );
                 break;
             case STATE_DISPLAYING:
-                // TODO update header-subtitle with interpretation
-                getSupportActionBar().setSubtitle("");
+                initInterpreterName();
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 transaction.replace( R.id.content_frame,
                         new CalendarFragment(), CalendarFragment.TAG );
@@ -165,6 +169,19 @@ public class MondtagActivity extends AppCompatActivity {
         transaction.commit();
 
         this.invalidateOptionsMenu();
+    }
+
+    private void initInterpreterName() {
+        final Class<? extends Interpreter> interpreterClass =
+                getDataManager().getCalendar().getInterpreterClass();
+
+        if ( interpreterClass == null) {
+            getSupportActionBar().setSubtitle("");
+        } else {
+            getSupportActionBar().setSubtitle( ResourceMapper.getResourceIds(
+                    Translatable.getKey( interpreterClass.getName() ) )
+                    [ResourceMapper.INDEX_STRING] );
+        }
     }
 
     public void onDataReady() {
