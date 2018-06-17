@@ -24,7 +24,7 @@ public class Mondtag extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Log.i(LOG_TAG, "######### onCreate called ############");
+        Log.d(LOG_TAG, "######### onCreate called ############");
 
         AndroidThreeTen.init(this);
 
@@ -33,7 +33,7 @@ public class Mondtag extends Application {
 
     public DataManager getDataManager() {
 
-        Log.i(LOG_TAG, "######### getDataManager called ############");
+        Log.d(LOG_TAG, "######### getDataManager called ############");
 
         return dataManager;
     }

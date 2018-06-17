@@ -2,6 +2,7 @@ package de.kah2.mondtag.calendar;
 
 import android.content.Context;
 import android.text.Layout;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 
 import de.kah2.libZodiac.Day;
+import de.kah2.libZodiac.interpretation.Interpreter;
 import de.kah2.mondtag.R;
 
 /**
@@ -19,6 +21,8 @@ import de.kah2.mondtag.R;
  * Created by kahles on 21.03.17.
  */
 class DayDataDisplayer {
+
+    private final static String TAG = DayDataDisplayer.class.getSimpleName();
 
     private final View dayView;
 
@@ -110,13 +114,28 @@ class DayDataDisplayer {
         String interpretationName = "";
 
         if ( day.getInterpreter() != null ) { // An Interpretation is set
-            final Integer[] ids = ResourceMapper.getResourceIds( day.getInterpreter().getQuality() );
-            qualityIcon = ids[ResourceMapper.INDEX_IMAGE];
-            qualityText = getContext().getString(ids[ResourceMapper.INDEX_STRING]);
 
-            interpretationName = getContext().getString(
-                    ResourceMapper.getResourceIds(
-                            day.getInterpreter().getKey() )[ResourceMapper.INDEX_STRING] );
+            final Interpreter.Quality quality = day.getInterpreter().getQuality();
+
+            // If quality is neutral, we display nothing
+            if (quality != Interpreter.Quality.NEUTRAL) {
+
+                final Integer[] qualityStringIds = ResourceMapper.getResourceIds( quality );
+
+                qualityIcon = qualityStringIds[ResourceMapper.INDEX_IMAGE];
+                qualityText = getContext().getString(qualityStringIds[ResourceMapper.INDEX_STRING]);
+            }
+
+            final String interpreterKey = day.getInterpreter().getKey();
+
+            final Integer[] interpreterStringIds = ResourceMapper.getResourceIds(interpreterKey);
+            if (interpreterStringIds != null) {
+                interpretationName = getContext().getString(
+                        interpreterStringIds[ResourceMapper.INDEX_STRING] );
+            } else {
+                Log.e(TAG, "initInterpretationFields: String id not found for " + interpreterKey);
+                interpretationName = interpreterKey;
+            }
         }
 
         this.interpretationIcon.setImageResource(qualityIcon);

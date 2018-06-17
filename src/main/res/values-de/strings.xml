@@ -74,4 +74,5 @@
     <string name="interpret_gardening_CombatSlugs">Schnecken bekämpfen</string>
     <string name="interpret_gardening_MowLawn">Rasen mähen</string>
     <string name="action_interpretations">Interpretationen</string>
+    <string name="interpret_none">Keine Interpretation</string>
 </resources>

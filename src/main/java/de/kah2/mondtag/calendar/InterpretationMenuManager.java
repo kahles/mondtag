@@ -26,6 +26,8 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
 
     private static Hashtable<Integer, Class<? extends Interpreter>> idMap = new Hashtable<>();
 
+    // TODO add option for "none"
+
     static {
         idMap.put(R.string.interpret_gardening_CombatSlugs, Gardening.CombatSlugsInterpreter.class);
         idMap.put(R.string.interpret_gardening_CutFruitTree, Gardening.CutFruitTreeInterpreter.class);
@@ -39,13 +41,15 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
         idMap.put(R.string.interpret_gardening_WeedDig, Gardening.WeedDigInterpreter.class);
     }
 
+    private InterpretationChangeListener interpretationChangeListener;
+
     public void addInterpreters(Menu menu) {
 
         menu.clear();
 
         for (int id : idMap.keySet()) {
 
-            // TODO order by display name
+            // TODO_LATER order by display name
             final int ORDER = 0;
 
             menu.add( Menu.NONE, id, ORDER, id );
@@ -54,15 +58,39 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
+
         item.setChecked(true);
+
         Log.d(TAG, "onMenuItemClick: id:" + item.getItemId() + " --> " + item.toString());
 
-        Class <? extends Interpreter> selectedInterpreter = idMap.get( item.getItemId() );
+        final Class <? extends Interpreter> selectedInterpreterClass = idMap.get( item.getItemId() );
 
-        // TODO set selected interpreter
+        if ( selectedInterpreterClass == null ) {
+            Log.e( TAG, "onMenuItemClick: unknown interpreter" );
+            return false;
+        }
 
-        Log.d(TAG, "onMenuItemClick: " + item.getTitle() + " - " + item.getItemId());
+        if (interpretationChangeListener != null) {
+            this.interpretationChangeListener.onInterpreterChanged(
+                    item.getItemId(),
+                    selectedInterpreterClass );
+        }
 
-        return false;
+        return true;
+    }
+
+    public void setInterpretationChangeListener(InterpretationChangeListener interpretationChangeListener) {
+        Log.d(TAG, "setInterpretationChangeListener called");
+        this.interpretationChangeListener = interpretationChangeListener;
+    }
+
+    public void resetInterpretationChangeListener() {
+        Log.d(TAG, "resetInterpretationChangeListener called");
+        this.interpretationChangeListener = null;
+    }
+
+    public interface InterpretationChangeListener {
+
+        void onInterpreterChanged(int nameResId, Class <? extends Interpreter> clazz);
     }
 }

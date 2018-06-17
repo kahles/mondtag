@@ -84,6 +84,8 @@
     <string name="interpretation_bad">bad</string>
     <string name="interpretation_worst">worst</string>
 
+    <string name="interpret_none">No interpretation</string>
+
     <string name="interpret_gardening">interprete_gardening</string>
     <string name="interpret_gardening_CombatSlugs">Combat slugs</string>
     <string name="interpret_gardening_OverterrestrialPests">Combat overterrestrial pests</string>

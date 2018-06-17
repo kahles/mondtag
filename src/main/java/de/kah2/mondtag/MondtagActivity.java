@@ -24,7 +24,8 @@ import de.kah2.mondtag.settings.SettingsFragment;
  * I switched to only replacing fragments instead of using multiple activities, because state
  * handling is much easier this way - e.g. when the app gets interrupted during start.
  */
-public class MondtagActivity extends AppCompatActivity {
+public class MondtagActivity extends AppCompatActivity
+        implements InterpretationMenuManager.InterpretationChangeListener{
 
     private final static String TAG = MondtagActivity.class.getSimpleName();
 
@@ -43,6 +44,8 @@ public class MondtagActivity extends AppCompatActivity {
 
     private final InterpretationMenuManager interpretationMenuManager =
             new InterpretationMenuManager();
+
+    private int interpretationNameResId = R.string.interpret_none;
 
     /**
      * Indicates if the UI is in foreground and Fragment transactions are possible.
@@ -88,6 +91,7 @@ public class MondtagActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "onPause: isVisible := false");
+        this.interpretationMenuManager.resetInterpretationChangeListener();
         this.isVisible = false;
     }
 
@@ -162,7 +166,7 @@ public class MondtagActivity extends AppCompatActivity {
                         new DataFetchingFragment(), DataFetchingFragment.TAG );
                 break;
             case STATE_DISPLAYING:
-                initInterpreterName();
+                getSupportActionBar().setSubtitle(this.interpretationNameResId);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 transaction.replace( R.id.content_frame,
                         new CalendarFragment(), CalendarFragment.TAG );
@@ -172,19 +176,6 @@ public class MondtagActivity extends AppCompatActivity {
         transaction.commit();
 
         this.invalidateOptionsMenu();
-    }
-
-    private void initInterpreterName() {
-        final Class<? extends Interpreter> interpreterClass =
-                getDataManager().getCalendar().getInterpreterClass();
-
-        if ( interpreterClass == null) {
-            getSupportActionBar().setSubtitle("");
-        } else {
-            getSupportActionBar().setSubtitle( ResourceMapper.getResourceIds(
-                    Translatable.getKey( interpreterClass.getName() ) )
-                    [ResourceMapper.INDEX_STRING] );
-        }
     }
 
     public void onDataReady() {
@@ -273,6 +264,7 @@ public class MondtagActivity extends AppCompatActivity {
 
             final Menu interpretationsMenu = menu.getItem(0).getSubMenu();
             this.interpretationMenuManager.addInterpreters( interpretationsMenu );
+            this.interpretationMenuManager.setInterpretationChangeListener(this);
 
             return true;
 
@@ -280,5 +272,14 @@ public class MondtagActivity extends AppCompatActivity {
             Log.d(TAG, "onPrepareOptionsMenu: hiding menu");
             return false;
         }
+    }
+
+    @Override
+    public void onInterpreterChanged(int nameResId, Class<? extends Interpreter> clazz) {
+        this.getDataManager().getCalendar().setInterpreterClass( clazz );
+
+        this.interpretationNameResId = nameResId;
+        // TODO update content
+        this.updateContent();
     }
 }
