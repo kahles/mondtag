@@ -116,27 +116,27 @@ public class ResourceMapper {
 
         // Interpretations
         mappings.put(Translatable.getKey(Gardening.class.getName()),
-                new Integer[]{-1, R.string.interprete_gardening});
+                new Integer[]{-1, R.string.interpret_gardening});
         mappings.put(Translatable.getKey(Gardening.CombatSlugsInterpreter.class.getName()),
-                new Integer[]{-1, R.string.interprete_gardening_CombatSlugs});
+                new Integer[]{-1, R.string.interpret_gardening_CombatSlugs});
         mappings.put(Translatable.getKey(Gardening.CutFruitTreeInterpreter.class.getName()),
-                new Integer[]{-1, R.string.interprete_gardening_CutFruitTree});
+                new Integer[]{-1, R.string.interpret_gardening_CutFruitTree});
         mappings.put(Translatable.getKey(Gardening.CuttingInterpreter.class.getName()),
-                new Integer[]{-1, R.string.interprete_gardening_Cutting});
+                new Integer[]{-1, R.string.interpret_gardening_Cutting});
         mappings.put(Translatable.getKey(Gardening.GraftInterpreter.class.getName()),
-                new Integer[]{-1, R.string.interprete_gardening_Graft});
+                new Integer[]{-1, R.string.interpret_gardening_Graft});
         mappings.put(Translatable.getKey(Gardening.MowLawnInterpreter.class.getName()),
-                new Integer[]{-1, R.string.interprete_gardening_MowLawn});
+                new Integer[]{-1, R.string.interpret_gardening_MowLawn});
         mappings.put(Translatable.getKey(Gardening.OverterrestrialPestsInterpreter.class.getName()),
-                new Integer[]{-1, R.string.interprete_gardening_OverterrestrialPests});
+                new Integer[]{-1, R.string.interpret_gardening_OverterrestrialPests});
         mappings.put(Translatable.getKey(Gardening.SubterrestrialPestsInterpreter.class.getName()),
-                new Integer[]{-1, R.string.interprete_gardening_SubterrestrialPests});
+                new Integer[]{-1, R.string.interpret_gardening_SubterrestrialPests});
         mappings.put(Translatable.getKey(Gardening.TrimSickInterpreter.class.getName()),
-                new Integer[]{-1, R.string.interprete_gardening_TrimSick});
+                new Integer[]{-1, R.string.interpret_gardening_TrimSick});
         mappings.put(Translatable.getKey(Gardening.WaterInterpreter.class.getName()),
-                new Integer[]{-1, R.string.interprete_gardening_Water});
+                new Integer[]{-1, R.string.interpret_gardening_Water});
         mappings.put(Translatable.getKey(Gardening.WeedDigInterpreter.class.getName()),
-                new Integer[]{-1, R.string.interprete_gardening_WeedDig});
+                new Integer[]{-1, R.string.interpret_gardening_WeedDig});
     }
 
     public static Integer[] getResourceIds(String s) {

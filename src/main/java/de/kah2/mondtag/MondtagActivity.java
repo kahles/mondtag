@@ -13,6 +13,7 @@ import de.kah2.libZodiac.interpretation.Interpreter;
 import de.kah2.libZodiac.interpretation.Translatable;
 import de.kah2.mondtag.calendar.CalendarFragment;
 import de.kah2.mondtag.calendar.InfoDialogFragment;
+import de.kah2.mondtag.calendar.InterpretationMenuManager;
 import de.kah2.mondtag.calendar.ResourceMapper;
 import de.kah2.mondtag.datamanagement.DataFetchingFragment;
 import de.kah2.mondtag.datamanagement.DataManager;
@@ -39,7 +40,10 @@ public class MondtagActivity extends AppCompatActivity {
     private final static String BUNDLE_KEY_FIRST_START =
             MondtagActivity.class.getName() + ".isFirstStart";
     private boolean isFirstStart = false;
-    
+
+    private final InterpretationMenuManager interpretationMenuManager =
+            new InterpretationMenuManager();
+
     /**
      * Indicates if the UI is in foreground and Fragment transactions are possible.
      * true between {@link #onResume()} and {@link #onPause()}.
@@ -60,7 +64,7 @@ public class MondtagActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mondtag);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
-        // TODO add button for interpretation
+
         super.setSupportActionBar(toolbar);
 
         // if app wasn't already started ...
@@ -138,7 +142,6 @@ public class MondtagActivity extends AppCompatActivity {
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-        // TODO ... may produce NPE ... :-/
 
         switch (state) {
             case STATE_CONFIGURING:
@@ -204,11 +207,21 @@ public class MondtagActivity extends AppCompatActivity {
                 Log.d(TAG, "Showing settings ...");
                 this.activateConfiguration();
                 return true;
+            case R.id.action_interpretation:
+                // Nothing to do
+                return true;
             default:
-                Log.e(TAG, "Unknown Action: " + item.getTitle());
-                return super.onOptionsItemSelected(item);
+                if ( this.interpretationMenuManager.onMenuItemClick(item) ) {
+                    // click got handled by InterpretationMenuManager
+                    return true;
+                } else {
+                    Log.e(TAG, "Unknown Action: " + item.getTitle());
+                    return super.onOptionsItemSelected(item);
+                }
         }
     }
+
+
 
     /**
      * When the user presses "back" the app is closed, except if configuration is active. In this
@@ -253,17 +266,16 @@ public class MondtagActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(TAG, "onCreateOptionsMenu: creating menu");
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (this.state == STATE_DISPLAYING) {
-            Log.d(TAG, "onPrepareOptionsMenu: showing menu");
-            return super.onPrepareOptionsMenu(menu);
+            Log.d(TAG, "onPrepareOptionsMenu: showing main menu");
+            getMenuInflater().inflate(R.menu.menu, menu);
+
+            final Menu interpretationsMenu = menu.getItem(0).getSubMenu();
+            this.interpretationMenuManager.addInterpreters( interpretationsMenu );
+
+            return true;
+
         } else {
             Log.d(TAG, "onPrepareOptionsMenu: hiding menu");
             return false;
