@@ -139,6 +139,13 @@ public class ResourceMapper {
         SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getTimeFormat(context);
         DateTimeFormatter format = DateTimeFormatter.ofPattern(sdf.toPattern());
         return format.format(date);
+    }
 
+    // FIXME return correct keys
+    public static String createInterpreterKey(Class clazz) {
+        final String className = clazz.getName();
+
+        final int splitAt = className.lastIndexOf('.') + 1;
+        return className.substring(splitAt).replace('$', '_');
     }
 }
