@@ -12,16 +12,13 @@ import de.kah2.libZodiac.interpretation.Interpreter;
 import de.kah2.mondtag.R;
 
 /**
- * TODO docs
+ * Handles the menu that is used to switch {@link de.kah2.libZodiac.interpretation.Interpreter}s.
  */
-
 public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListener {
 
     private final static String TAG = InterpretationMenuManager.class.getSimpleName();
 
     private static Hashtable<Integer, Class<? extends Interpreter>> idMap = new Hashtable<>();
-
-    // TODO add option for "none"
 
     static {
         idMap.put(R.string.interpret_Gardening_CombatSlugs, Gardening.CombatSlugsInterpreter.class);
@@ -42,10 +39,12 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
 
         menu.clear();
 
+        // TODO add option for "none"
+
         for (int id : idMap.keySet()) {
 
             // TODO_LATER order by display name
-            final int ORDER = 0;
+            final int ORDER = 1;
 
             menu.add( Menu.NONE, id, ORDER, id );
         }

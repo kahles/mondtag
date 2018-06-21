@@ -26,7 +26,6 @@ import de.kah2.mondtag.R;
  * times.
  *
  * Created by kahles on 11.11.16.
- * TODO_LATER docs!
  */
 
 public class ResourceMapper {
@@ -116,23 +115,28 @@ public class ResourceMapper {
                 new Integer[]{R.drawable.quality_best, R.string.interpretation_best});
     }
 
-    public static Integer[] getResourceIds(String s) {
-        return mappings.get(s);
-    }
+    /**
+     * Returns the resource-ids belonging to an enum value.
+     * @param e the key
+     * @return an array where INDEX_STRING contains the string-id and INDEX_IMAGE the id of the icon
+     */
     public static Integer[] getResourceIds(Enum<?> e) {
         return mappings.get(e.toString());
     }
 
+    /** Returns the translated day of the week of a date. */
     public static String formatDayOfWeek(LocalDate date) {
         return date.getDayOfWeek().getDisplayName(TextStyle.FULL, LOCALE);
     }
 
+    /** Returns the formatted date string for a {@link LocalDate} */
     public static String formatDate(LocalDate date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
                 .withLocale(LOCALE);
         return date.format( formatter );
     }
 
+    /** Returns the formatted time string of a {@link LocalDateTime}-object. */
     public static String formatTime(Context context, LocalDateTime date) {
         /* Ignores 24h-format  - see https://github.com/JakeWharton/ThreeTenABP/issues/16 */
         /*LocalTime time = LocalTime.from(date).truncatedTo(ChronoUnit.MINUTES);
@@ -142,6 +146,10 @@ public class ResourceMapper {
         return format.format(date);
     }
 
+    /**
+     * Creates a resource-id for obtaining translated strings.
+     * See {@link DayDataDisplayer}#initInterpretationFields for a usage example.
+     */
     public static String createInterpreterKey(Interpreter interpreter) {
         final String className = interpreter.getClass().getName();
 
