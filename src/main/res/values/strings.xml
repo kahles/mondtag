@@ -86,15 +86,18 @@
 
     <string name="interpret_none">No interpretation</string>
 
-    <string name="interpret_gardening">interprete_gardening</string>
-    <string name="interpret_gardening_CombatSlugs">Combat slugs</string>
-    <string name="interpret_gardening_OverterrestrialPests">Combat overterrestrial pests</string>
-    <string name="interpret_gardening_SubterrestrialPests">Combat subterrestrial pests</string>
-    <string name="interpret_gardening_CutFruitTree">Cut fruit trees</string>
-    <string name="interpret_gardening_Graft">Graft</string>
-    <string name="interpret_gardening_Cutting">Make cuttings / transplant</string>
-    <string name="interpret_gardening_WeedDig">Weed / dig</string>
-    <string name="interpret_gardening_TrimSick">Trim sick plants</string>
-    <string name="interpret_gardening_MowLawn">Mow the lawn</string>
-    <string name="interpret_gardening_Water">Water plants</string>
+    <!--
+    Convention for naming interpreter keys is interpret_[ContainingClass]_[Name]
+    See also ResourceMapper#createInterpreterKey
+    -->
+    <string name="interpret_Gardening_CombatSlugs">Combat slugs</string>
+    <string name="interpret_Gardening_OverterrestrialPests">Combat overterrestrial pests</string>
+    <string name="interpret_Gardening_SubterrestrialPests">Combat subterrestrial pests</string>
+    <string name="interpret_Gardening_CutFruitTree">Cut fruit trees</string>
+    <string name="interpret_Gardening_Graft">Graft</string>
+    <string name="interpret_Gardening_Cutting">Make cuttings / transplant</string>
+    <string name="interpret_Gardening_WeedDig">Weed / dig</string>
+    <string name="interpret_Gardening_TrimSick">Trim sick plants</string>
+    <string name="interpret_Gardening_MowLawn">Mow the lawn</string>
+    <string name="interpret_Gardening_Water">Water plants</string>
 </resources>

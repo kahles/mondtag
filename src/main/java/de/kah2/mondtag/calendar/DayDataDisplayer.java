@@ -1,7 +1,6 @@
 package de.kah2.mondtag.calendar;
 
 import android.content.Context;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -111,7 +110,7 @@ class DayDataDisplayer {
 
         int qualityIcon = 0;
         String qualityText = "";
-        String interpretationName = "";
+        String interpreterName = "";
 
         if ( day.getInterpreter() != null ) { // An Interpretation is set
 
@@ -126,16 +125,24 @@ class DayDataDisplayer {
                 qualityText = getContext().getString(qualityStringIds[ResourceMapper.INDEX_STRING]);
             }
 
-            final String interpreterKey = day.getInterpreter().getKey();
+            final String interpreterKey =
+                    ResourceMapper.createInterpreterKey( day.getInterpreter() );
 
-            final Integer[] interpreterStringIds = ResourceMapper.getResourceIds(interpreterKey);
-            if (interpreterStringIds != null) {
-                interpretationName = getContext().getString(
-                        interpreterStringIds[ResourceMapper.INDEX_STRING] );
-            } else {
-                Log.e(TAG, "initInterpretationFields: String id not found for " + interpreterKey);
-                interpretationName = interpreterKey;
+            try {
+
+                final int interpreterStringId = R.string.class
+                        .getDeclaredField(interpreterKey).getInt(null);
+                interpreterName = getContext().getString(interpreterStringId);
+
+            } catch (NoSuchFieldException e) {
+                Log.e(TAG, "initInterpretationFields: String id not found for "
+                        + interpreterKey);
+                interpreterName = interpreterKey;
+            } catch (IllegalAccessException e) {
+                // If the field isn't accessible - this shouldn't happen :)
+                e.printStackTrace();
             }
+
         }
 
         this.interpretationIcon.setImageResource(qualityIcon);
@@ -143,7 +150,7 @@ class DayDataDisplayer {
 
         if (isVerboseView) {
             this.interpretationQualityTextView.setText(qualityText);
-            this.interpretationNameView.setText(interpretationName);
+            this.interpretationNameView.setText(interpreterName);
         }
     }
 

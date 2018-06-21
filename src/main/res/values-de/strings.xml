@@ -63,16 +63,16 @@
     <string name="dummy_interpretationText">Interpretation</string>
     <string name="dummy_interpretationQuality">evtl. gut</string>
     <string name="interpret_gardening">Gartenarbeit</string>
-    <string name="interpret_gardening_OverterrestrialPests">Überirdische Schädlinge bekämpfen</string>
-    <string name="interpret_gardening_SubterrestrialPests">Unterirdische Schädlinge bekämpfen</string>
-    <string name="interpret_gardening_CutFruitTree">Obstbäume schneiden</string>
-    <string name="interpret_gardening_Graft">Veredeln</string>
-    <string name="interpret_gardening_Cutting">Stecklinge schneiden / Pflanzen umsetzen</string>
-    <string name="interpret_gardening_WeedDig">Jäten / umgraben</string>
-    <string name="interpret_gardening_TrimSick">Kranke Pflanzen beschneiden</string>
-    <string name="interpret_gardening_Water">Gießen</string>
-    <string name="interpret_gardening_CombatSlugs">Schnecken bekämpfen</string>
-    <string name="interpret_gardening_MowLawn">Rasen mähen</string>
+    <string name="interpret_Gardening_OverterrestrialPests">Überirdische Schädlinge bekämpfen</string>
+    <string name="interpret_Gardening_SubterrestrialPests">Unterirdische Schädlinge bekämpfen</string>
+    <string name="interpret_Gardening_CutFruitTree">Obstbäume schneiden</string>
+    <string name="interpret_Gardening_Graft">Veredeln</string>
+    <string name="interpret_Gardening_Cutting">Stecklinge schneiden / Pflanzen umsetzen</string>
+    <string name="interpret_Gardening_WeedDig">Jäten / umgraben</string>
+    <string name="interpret_Gardening_TrimSick">Kranke Pflanzen beschneiden</string>
+    <string name="interpret_Gardening_Water">Gießen</string>
+    <string name="interpret_Gardening_CombatSlugs">Schnecken bekämpfen</string>
+    <string name="interpret_Gardening_MowLawn">Rasen mähen</string>
     <string name="action_interpretations">Interpretationen</string>
     <string name="interpret_none">Keine Interpretation</string>
 </resources>

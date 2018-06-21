@@ -14,9 +14,7 @@ import java.util.Hashtable;
 import java.util.Locale;
 
 import de.kah2.libZodiac.ProgressListener;
-import de.kah2.libZodiac.interpretation.Gardening;
 import de.kah2.libZodiac.interpretation.Interpreter;
-import de.kah2.libZodiac.interpretation.Translatable;
 import de.kah2.libZodiac.planetary.LunarPhase;
 import de.kah2.libZodiac.zodiac.ZodiacDirection;
 import de.kah2.libZodiac.zodiac.ZodiacElement;
@@ -28,6 +26,7 @@ import de.kah2.mondtag.R;
  * times.
  *
  * Created by kahles on 11.11.16.
+ * TODO_LATER docs!
  */
 
 public class ResourceMapper {
@@ -36,6 +35,8 @@ public class ResourceMapper {
     public final static int INDEX_STRING = 1;
 
     private final static Locale LOCALE = Locale.getDefault();
+
+    private final static String INTERPRETER_KEY_PREFIX = "interpret_";
 
     private final static Hashtable<String, Integer[]> mappings = new Hashtable<>();
 
@@ -141,11 +142,13 @@ public class ResourceMapper {
         return format.format(date);
     }
 
-    // FIXME return correct keys
-    public static String createInterpreterKey(Class clazz) {
-        final String className = clazz.getName();
+    public static String createInterpreterKey(Interpreter interpreter) {
+        final String className = interpreter.getClass().getName();
 
         final int splitAt = className.lastIndexOf('.') + 1;
-        return className.substring(splitAt).replace('$', '_');
+        return INTERPRETER_KEY_PREFIX
+                + className.substring(splitAt)
+                    .replace('$', '_')
+                    .replace("Interpreter", "");
     }
 }

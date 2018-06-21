@@ -10,11 +10,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import de.kah2.libZodiac.interpretation.Interpreter;
-import de.kah2.libZodiac.interpretation.Translatable;
 import de.kah2.mondtag.calendar.CalendarFragment;
 import de.kah2.mondtag.calendar.InfoDialogFragment;
 import de.kah2.mondtag.calendar.InterpretationMenuManager;
-import de.kah2.mondtag.calendar.ResourceMapper;
 import de.kah2.mondtag.datamanagement.DataFetchingFragment;
 import de.kah2.mondtag.datamanagement.DataManager;
 import de.kah2.mondtag.settings.SettingsFragment;
@@ -145,7 +143,6 @@ public class MondtagActivity extends AppCompatActivity
         }
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
 
         switch (state) {
             case STATE_CONFIGURING:
@@ -279,7 +276,7 @@ public class MondtagActivity extends AppCompatActivity
         this.getDataManager().getCalendar().setInterpreterClass( clazz );
 
         this.interpretationNameResId = nameResId;
-        // TODO update content
+
         this.updateContent();
     }
 }
