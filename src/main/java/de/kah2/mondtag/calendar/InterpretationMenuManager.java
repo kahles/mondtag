@@ -39,7 +39,7 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
 
         menu.clear();
 
-        // TODO add option for "none"
+        menu.add(Menu.NONE, R.string.interpret_none, 0, R.string.interpret_none);
 
         for (int id : idMap.keySet()) {
 
@@ -56,6 +56,13 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
         item.setChecked(true);
 
         Log.d(TAG, "onMenuItemClick: id:" + item.getItemId() + " --> " + item.toString());
+
+        if (item.getItemId() == R.string.interpret_none) {
+            this.interpretationChangeListener.onInterpreterChanged(
+                    item.getItemId(),
+                    null);
+            return true;
+        }
 
         final Class <? extends Interpreter> selectedInterpreterClass = idMap.get( item.getItemId() );
 
