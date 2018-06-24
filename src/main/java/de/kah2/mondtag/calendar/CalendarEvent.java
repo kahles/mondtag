@@ -37,12 +37,10 @@ class CalendarEvent {
 
         return new Intent( Intent.ACTION_INSERT )
                 .setData( CalendarContract.Events.CONTENT_URI)
-                // TODO_LATER make these times configurable?
                 .putExtra( CalendarContract.EXTRA_EVENT_BEGIN_TIME,
                         this.dateInMs)
                 .putExtra( CalendarContract.EXTRA_EVENT_END_TIME,
                         this.dateInMs + EVENT_DURATION_IN_MS)
-                // TODO_LATER Works with Google but not with Jorte?!
                 .putExtra( CalendarContract.EXTRA_EVENT_ALL_DAY, true )
                 .putExtra( CalendarContract.Events.TITLE,
                         context.getString(R.string.event_default_name) )
