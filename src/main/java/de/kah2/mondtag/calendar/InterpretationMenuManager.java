@@ -5,10 +5,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.Hashtable;
-
-import de.kah2.libZodiac.interpretation.Gardening;
-import de.kah2.libZodiac.interpretation.Interpreter;
 import de.kah2.mondtag.R;
 
 /**
@@ -18,35 +14,21 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
 
     private final static String TAG = InterpretationMenuManager.class.getSimpleName();
 
-    private static Hashtable<Integer, Class<? extends Interpreter>> idMap = new Hashtable<>();
-
-    static {
-        idMap.put(R.string.interpret_Gardening_CombatSlugs, Gardening.CombatSlugsInterpreter.class);
-        idMap.put(R.string.interpret_Gardening_CutFruitTree, Gardening.CutFruitTreeInterpreter.class);
-        idMap.put(R.string.interpret_Gardening_Cutting, Gardening.CuttingInterpreter.class);
-        idMap.put(R.string.interpret_Gardening_Graft, Gardening.GraftInterpreter.class);
-        idMap.put(R.string.interpret_Gardening_MowLawn, Gardening.MowLawnInterpreter.class);
-        idMap.put(R.string.interpret_Gardening_OverterrestrialPests, Gardening.OverterrestrialPestsInterpreter.class);
-        idMap.put(R.string.interpret_Gardening_SubterrestrialPests, Gardening.SubterrestrialPestsInterpreter.class);
-        idMap.put(R.string.interpret_Gardening_TrimSick, Gardening.TrimSickInterpreter.class);
-        idMap.put(R.string.interpret_Gardening_Water, Gardening.WaterInterpreter.class);
-        idMap.put(R.string.interpret_Gardening_WeedDig, Gardening.WeedDigInterpreter.class);
-    }
-
     private InterpretationChangeListener interpretationChangeListener;
 
     public void addInterpreters(Menu menu) {
 
         menu.clear();
 
-        menu.add(Menu.NONE, R.string.interpret_none, 0, R.string.interpret_none);
+        int order =0;
 
-        for (int id : idMap.keySet()) {
+        menu.add(Menu.NONE, R.string.interpret_none, order, R.string.interpret_none);
 
-            // TODO_LATER order by display name
-            final int ORDER = 1;
+        for (int id : InterpreterMapper.getKeys()) {
 
-            menu.add( Menu.NONE, id, ORDER, id );
+            order++;
+
+            menu.add( Menu.NONE, id, order, id );
         }
     }
 
@@ -58,23 +40,19 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
         Log.d(TAG, "onMenuItemClick: id:" + item.getItemId() + " --> " + item.toString());
 
         if (item.getItemId() == R.string.interpret_none) {
-            this.interpretationChangeListener.onInterpreterChanged(
-                    item.getItemId(),
-                    null);
+            this.interpretationChangeListener.onInterpreterChanged(null);
             return true;
         }
 
-        final Class <? extends Interpreter> selectedInterpreterClass = idMap.get( item.getItemId() );
+        InterpreterMapper.InterpreterMapping interpreterMapping = InterpreterMapper.getMapping( item.getItemId() );
 
-        if ( selectedInterpreterClass == null ) {
+        if ( interpreterMapping == null ) {
             Log.e( TAG, "onMenuItemClick: unknown interpreter" );
             return false;
         }
 
         if (interpretationChangeListener != null) {
-            this.interpretationChangeListener.onInterpreterChanged(
-                    item.getItemId(),
-                    selectedInterpreterClass );
+            this.interpretationChangeListener.onInterpreterChanged(interpreterMapping);
         }
 
         return true;
@@ -92,6 +70,6 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
 
     public interface InterpretationChangeListener {
 
-        void onInterpreterChanged(int nameResId, Class <? extends Interpreter> clazz);
+        void onInterpreterChanged(InterpreterMapper.InterpreterMapping interpreterMapping);
     }
 }

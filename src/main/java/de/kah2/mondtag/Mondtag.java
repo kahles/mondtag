@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
+import de.kah2.mondtag.calendar.InterpreterMapper;
 import de.kah2.mondtag.datamanagement.DataManager;
 
 /**
@@ -27,6 +28,8 @@ public class Mondtag extends Application {
         Log.d(LOG_TAG, "######### onCreate called ############");
 
         AndroidThreeTen.init(this);
+
+        InterpreterMapper.init(this);
 
         this.dataManager= new DataManager(this);
     }

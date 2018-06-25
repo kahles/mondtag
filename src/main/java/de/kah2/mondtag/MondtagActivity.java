@@ -13,6 +13,7 @@ import de.kah2.libZodiac.interpretation.Interpreter;
 import de.kah2.mondtag.calendar.CalendarFragment;
 import de.kah2.mondtag.calendar.InfoDialogFragment;
 import de.kah2.mondtag.calendar.InterpretationMenuManager;
+import de.kah2.mondtag.calendar.InterpreterMapper;
 import de.kah2.mondtag.datamanagement.DataFetchingFragment;
 import de.kah2.mondtag.datamanagement.DataManager;
 import de.kah2.mondtag.settings.SettingsFragment;
@@ -272,10 +273,20 @@ public class MondtagActivity extends AppCompatActivity
     }
 
     @Override
-    public void onInterpreterChanged(int nameResId, Class<? extends Interpreter> clazz) {
-        this.getDataManager().getCalendar().setInterpreterClass( clazz );
+    public void onInterpreterChanged(InterpreterMapper.InterpreterMapping mapping) {
 
-        this.interpretationNameResId = nameResId;
+        if (mapping == null) {
+
+            this.getDataManager().getCalendar().setInterpreterClass(null);
+            this.interpretationNameResId = R.string.interpret_none;
+
+        } else {
+
+            this.getDataManager().getCalendar().setInterpreterClass( mapping.getInterpreterClass() );
+            this.interpretationNameResId = mapping.getId();
+        }
+
+
 
         this.updateContent();
     }
