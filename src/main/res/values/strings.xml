@@ -100,4 +100,6 @@
     <string name="interpret_Gardening_TrimSick">Trim sick plants</string>
     <string name="interpret_Gardening_MowLawn">Mow the lawn</string>
     <string name="interpret_Gardening_Water">Water plants</string>
+    <string name="interpret_Gardening_SowPlant">Sow and plant</string>
+    <string name="interpret_gardening">Gardening</string>
 </resources>
