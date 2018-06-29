@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import de.kah2.libZodiac.interpretation.Interpreter;
 import de.kah2.mondtag.calendar.CalendarFragment;
 import de.kah2.mondtag.calendar.InfoDialogFragment;
 import de.kah2.mondtag.calendar.InterpretationMenuManager;
@@ -44,20 +43,9 @@ public class MondtagActivity extends AppCompatActivity
     private final InterpretationMenuManager interpretationMenuManager =
             new InterpretationMenuManager();
 
+    private final static String BUNDLE_KEY_INTERPRETER_ID =
+            MondtagActivity.class.getName() + ".interpretationNameResId";
     private int interpretationNameResId = R.string.interpret_none;
-
-    /**
-     * Indicates if the UI is in foreground and Fragment transactions are possible.
-     * true between {@link #onResume()} and {@link #onPause()}.
-     */
-    private boolean isVisible = false;
-
-    /**
-     * Indicates if the UI couldn't be updated, because the view wasn't in foreground. If true, the
-     * update is done by {@link #onResume()}.
-     * @see #isVisible
-     */
-    private boolean isUiUpdatePostponed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,19 +79,14 @@ public class MondtagActivity extends AppCompatActivity
         super.onPause();
         Log.d(TAG, "onPause: isVisible := false");
         this.interpretationMenuManager.resetInterpretationChangeListener();
-        this.isVisible = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume: isVisible := true");
-        this.isVisible = true;
-        if (this.isUiUpdatePostponed) {
-            Log.d(TAG, "onResume: UI update was postponed - doing it now");
-            this.updateContent();
-            this.isUiUpdatePostponed = false;
-        }
+
+        this.updateContent();
     }
 
     // called by onCreate and onOptionsItemSelected
@@ -134,14 +117,6 @@ public class MondtagActivity extends AppCompatActivity
     }
 
     private void updateContent() {
-
-        if (!this.isVisible) {
-            Log.d(TAG, "updateContent: UI not visible - skipping update");
-            this.isUiUpdatePostponed = true;
-            return;
-        } else {
-            Log.d(TAG, "updateContent: updating UI");
-        }
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
@@ -209,9 +184,7 @@ public class MondtagActivity extends AppCompatActivity
                 }
         }
     }
-
-
-
+    
     /**
      * When the user presses "back" the app is closed, except if configuration is active. In this
      * case the app returns to calendar view if data is available OR to data fetching, if data needs
@@ -239,6 +212,9 @@ public class MondtagActivity extends AppCompatActivity
         Log.d(TAG, "onSaveInstanceState: state = " + this.state);
         outState.putBoolean(BUNDLE_KEY_FIRST_START, this.isFirstStart);
         Log.d(TAG, "onSaveInstanceState: isFirstStart = " + this.isFirstStart);
+        outState.putInt(BUNDLE_KEY_INTERPRETER_ID, this.interpretationNameResId);
+        Log.d(TAG, "onSaveInstanceState: interpretationNameResId = "
+                + this.interpretationNameResId);
     }
 
     @Override
@@ -248,6 +224,9 @@ public class MondtagActivity extends AppCompatActivity
         Log.d(TAG, "onRestoreInstanceState: state := " + this.state);
         this.isFirstStart = savedInstanceState.getBoolean(BUNDLE_KEY_FIRST_START);
         Log.d(TAG, "onRestoreInstanceState: isFirstStart := " + this.isFirstStart);
+        this.interpretationNameResId = savedInstanceState.getInt(BUNDLE_KEY_INTERPRETER_ID);
+        Log.d(TAG, "onRestoreInstanceState: interpretationNameResId := "
+                + this.interpretationNameResId);
     }
 
     private DataManager getDataManager() {
@@ -256,6 +235,9 @@ public class MondtagActivity extends AppCompatActivity
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+
+        // FIXME when menu is opened, interpretation icon gets duplicated
+
         if (this.state == STATE_DISPLAYING) {
             Log.d(TAG, "onPrepareOptionsMenu: showing main menu");
             getMenuInflater().inflate(R.menu.menu, menu);
@@ -285,8 +267,6 @@ public class MondtagActivity extends AppCompatActivity
             this.getDataManager().getCalendar().setInterpreterClass( mapping.getInterpreterClass() );
             this.interpretationNameResId = mapping.getId();
         }
-
-
 
         this.updateContent();
     }
