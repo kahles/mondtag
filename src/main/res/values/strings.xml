@@ -77,6 +77,11 @@
     <string name="taurus">taurus</string>
     <string name="virgo">virgo</string>
     <string name="water">water</string>
+    <string name="flowerPlants">flower plants</string>
+    <string name="leafPlants">leaf plants</string>
+    <string name="rootPlants">root plants</string>
+    <string name="fruitPlants">fruit plants</string>
+
 
     <!-- interpretation -->
     <string name="interpretation_best">best</string>

@@ -201,6 +201,15 @@
             android:layout_alignBottom="@id/zodiacElementText"
             android:layout_alignEnd="@id/lunarRiseSetSecondText"
             android:layout_alignRight="@id/lunarRiseSetSecondText"/>
+        <TextView
+            android:id="@+id/interpretationQualityCategoryText"
+            android:text="@string/dummy_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_alignBottom="@id/interpretationIcon"
+            android:layout_toLeftOf="@id/interpretationIcon"
+            android:layout_toStartOf="@id/interpretationIcon" />
 
     </RelativeLayout>
 

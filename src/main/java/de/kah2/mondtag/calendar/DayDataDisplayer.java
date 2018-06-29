@@ -44,8 +44,9 @@ class DayDataDisplayer {
     private final ImageView interpretationIcon;
     private final TextView interpretationNameView;
     private final TextView interpretationQualityTextView;
+    private final TextView interpretationQualityCategoryTextView;
 
-    public DayDataDisplayer(View dayView) {
+    DayDataDisplayer(View dayView) {
         this.dayView = dayView;
 
         this.dayOfWeekView = dayView.findViewById(R.id.dayOfWeekText);
@@ -72,6 +73,8 @@ class DayDataDisplayer {
         this.interpretationIcon = dayView.findViewById(R.id.interpretationIcon);
         this.interpretationNameView = dayView.findViewById(R.id.interpretationName);
         this.interpretationQualityTextView = dayView.findViewById(R.id.interpretationQualityText);
+        this.interpretationQualityCategoryTextView=
+                dayView.findViewById(R.id.interpretationQualityCategoryText);
     }
 
     /**
@@ -109,14 +112,20 @@ class DayDataDisplayer {
     private void initInterpretationFields(Day day, boolean isVerboseView) {
 
         int qualityIcon = 0;
+
+        // Use empty Strings as default, if no values are set
         String qualityText = "";
+        String qualityCategory = "";
         String interpreterName = "";
+
 
         if ( day.getInterpreter() != null ) { // An Interpretation is set
 
+            interpreterName = getTranslatedInterpreterString(day);
+
             final Interpreter.Quality quality = day.getInterpreter().getQuality();
 
-            // If quality is neutral, we display nothing
+            // If quality isn't neutral, we display it
             if (quality != Interpreter.Quality.NEUTRAL) {
 
                 final Integer[] qualityStringIds = ResourceMapper.getResourceIds( quality );
@@ -125,33 +134,55 @@ class DayDataDisplayer {
                 qualityText = getContext().getString(qualityStringIds[ResourceMapper.INDEX_STRING]);
             }
 
-            final String interpreterKey =
-                    ResourceMapper.createInterpreterKey( day.getInterpreter() );
+            // If qualityCategory isn't empty, we fetch the String
+            if (day.getInterpreter().getCategory() != null) {
 
-            try {
-
-                final int interpreterStringId = R.string.class
-                        .getDeclaredField(interpreterKey).getInt(null);
-                interpreterName = getContext().getString(interpreterStringId);
-
-            } catch (NoSuchFieldException e) {
-                Log.e(TAG, "initInterpretationFields: String id not found for "
-                        + interpreterKey);
-                interpreterName = interpreterKey;
-            } catch (IllegalAccessException e) {
-                // If the field isn't accessible - this shouldn't happen :)
-                e.printStackTrace();
+                qualityCategory = getContext().getString(
+                        ResourceMapper.getResourceIds(
+                                day.getInterpreter().getCategory()
+                        )[ResourceMapper.INDEX_STRING] );
             }
-
         }
 
+        // Finally assign Strings to fields
         this.interpretationIcon.setImageResource(qualityIcon);
         this.interpretationIcon.setContentDescription(qualityText);
 
+        this.interpretationQualityCategoryTextView.setText(qualityCategory);
+
         if (isVerboseView) {
+            // These fields we only have in fragment_day_detail
             this.interpretationQualityTextView.setText(qualityText);
             this.interpretationNameView.setText(interpreterName);
         }
+    }
+
+    private String getTranslatedInterpreterString(Day day) {
+
+        String interpreterName;
+
+        final String interpreterKey =
+                ResourceMapper.createInterpreterKey( day.getInterpreter() );
+
+        // Try to get a translated String for created key and throw an Exception if String is
+        // missing
+        try {
+
+            final int interpreterStringId = R.string.class
+                    .getDeclaredField(interpreterKey).getInt(null);
+            interpreterName = getContext().getString(interpreterStringId);
+
+        } catch (NoSuchFieldException e) {
+            Log.e(TAG, "initInterpretationFields: String id not found for "
+                    + interpreterKey);
+            interpreterName = interpreterKey;
+        } catch (IllegalAccessException e) {
+            // If the field isn't accessible - this shouldn't happen :)
+            e.printStackTrace();
+            return "";
+        }
+
+        return interpreterName;
     }
 
     private void initLunarRiseSetFields(Day day) {

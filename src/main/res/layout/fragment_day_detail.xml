@@ -189,7 +189,8 @@
             android:src="@drawable/quality_best"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="center"/>
+            android:scaleType="center"
+            android:layout_rowSpan="2"/>
         <TextView
             android:id="@+id/interpretationName"
             android:text="@string/dummy_interpretationText"
@@ -198,6 +199,11 @@
         <TextView
             android:id="@+id/interpretationQualityText"
             android:text="@string/dummy_interpretationQuality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/interpretationQualityCategoryText"
+            android:text="@string/dummy_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </GridLayout>

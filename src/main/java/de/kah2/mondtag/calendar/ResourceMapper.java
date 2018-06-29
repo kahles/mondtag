@@ -104,6 +104,16 @@ public class ResourceMapper {
         mappings.put(ZodiacElement.WATER.toString(),
                 new Integer[]{R.drawable.water, R.string.water});
 
+        // Zodiac element's categories
+        mappings.put(ZodiacElement.PlantPart.FLOWER.toString(),
+                new Integer[]{-1, R.string.flowerPlants});
+        mappings.put(ZodiacElement.PlantPart.LEAF.toString(),
+                new Integer[]{-1, R.string.leafPlants});
+        mappings.put(ZodiacElement.PlantPart.FRUIT.toString(),
+                new Integer[]{-1, R.string.fruitPlants});
+        mappings.put(ZodiacElement.PlantPart.ROOT.toString(),
+                new Integer[]{-1, R.string.rootPlants});
+
         // Interpretation qualities
         mappings.put(Interpreter.Quality.WORST.toString(),
                 new Integer[]{R.drawable.quality_worst, R.string.interpretation_worst});

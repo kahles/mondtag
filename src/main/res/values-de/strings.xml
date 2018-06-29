@@ -76,4 +76,8 @@
     <string name="action_interpretations">Interpretationen</string>
     <string name="interpret_none">Keine Interpretation</string>
     <string name="interpret_Gardening_SowPlant">Säen und pflanzen</string>
+    <string name="flowerPlants">Blütepflanzen</string>
+    <string name="leafPlants">Blattpflanzen</string>
+    <string name="rootPlants">Wurzelpflanzen</string>
+    <string name="fruitPlants">Fruchtpflanzen</string>
 </resources>
