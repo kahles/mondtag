@@ -1,6 +1,7 @@
 package de.kah2.mondtag.calendar;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.threeten.bp.DayOfWeek;
 import org.threeten.bp.LocalDate;
@@ -137,12 +139,19 @@ public class CalendarRecyclerViewAdapter extends RecyclerView.Adapter<CalendarRe
 
             final Context context = displayer.getContext();
 
-            if (day.getDate().isEqual(CalendarRecyclerViewAdapter.this.today)) {
+            final boolean isToday = day.getDate().isEqual(CalendarRecyclerViewAdapter.this.today);
+
+            // Elevate item, if it is TODAY
+
+            if (isToday) {
                 if (Build.VERSION.SDK_INT >= 21) {
                     this.view.setElevation(20);
                 }
                 this.view.setBackgroundColor(
                         ContextCompat.getColor( context, R.color.background_today) );
+
+                displayer.getDayOfWeekView().setTypeface(null, Typeface.BOLD);
+
             } else {
                 if (Build.VERSION.SDK_INT >= 21) {
                     this.view.setElevation(6);
@@ -151,13 +160,25 @@ public class CalendarRecyclerViewAdapter extends RecyclerView.Adapter<CalendarRe
                         ContextCompat.getColor( context, R.color.background_default) );
             }
 
+            // Set day-of-week-color
+
+            int color;
             if (dayOfWeek.equals(DayOfWeek.SATURDAY) || dayOfWeek.equals(DayOfWeek.SUNDAY)) {
-                displayer.getDayOfWeekView().setTextColor(
-                        ContextCompat.getColor( context, R.color.day_of_week_weekend_color) );
+
+                if (isToday)
+                    color = R.color.day_of_week_weekend_color_highlight;
+                else
+                    color = R.color.day_of_week_weekend_color;
+
             } else {
-                displayer.getDayOfWeekView().setTextColor(
-                        ContextCompat.getColor( context, R.color.day_of_week_color) );
+
+                if (isToday)
+                    color = R.color.day_of_week_color_highlight;
+                else
+                    color = R.color.day_of_week_color;
             }
+            displayer.getDayOfWeekView().setTextColor(
+                    ContextCompat.getColor( context, color) );
         }
 
         @Override
