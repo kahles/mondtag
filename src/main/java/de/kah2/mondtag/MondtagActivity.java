@@ -51,14 +51,14 @@ public class MondtagActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_mondtag);
-
-        final Toolbar toolbar = findViewById(R.id.toolbar);
-
-        super.setSupportActionBar(toolbar);
-
         // if app wasn't already started ...
         if (savedInstanceState == null) {
+
+            setContentView(R.layout.activity_mondtag);
+
+            final Toolbar toolbar = findViewById(R.id.toolbar);
+
+            super.setSupportActionBar(toolbar);
 
             this.isFirstStart = this.getDataManager().userShouldReviewConfig();
             
@@ -148,6 +148,7 @@ public class MondtagActivity extends AppCompatActivity
 
         transaction.commit();
 
+        // This is needed or our menu isn't removed if settings are shown
         this.invalidateOptionsMenu();
     }
 
@@ -161,6 +162,9 @@ public class MondtagActivity extends AppCompatActivity
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        Log.d(TAG, "onOptionsItemSelected: " + item.getTitle() + "selected.");
+
         switch (item.getItemId()) {
             case R.id.action_info:
                 Log.d(TAG, "Showing info ...");
@@ -236,10 +240,12 @@ public class MondtagActivity extends AppCompatActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
-        // FIXME when menu is opened, interpretation icon gets duplicated
-
         if (this.state == STATE_DISPLAYING) {
             Log.d(TAG, "onPrepareOptionsMenu: showing main menu");
+
+            // clear - otherwise we get duplicate menu entries
+            menu.clear();
+
             getMenuInflater().inflate(R.menu.menu, menu);
 
             final Menu interpretationsMenu = menu.getItem(0).getSubMenu();
