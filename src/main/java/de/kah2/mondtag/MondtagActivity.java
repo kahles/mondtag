@@ -51,14 +51,15 @@ public class MondtagActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.d(TAG, "onCreate");
+
+        setContentView(R.layout.activity_mondtag);
+
+        final Toolbar toolbar = findViewById(R.id.toolbar);
+        super.setSupportActionBar(toolbar);
+
         // if app wasn't already started ...
         if (savedInstanceState == null) {
-
-            setContentView(R.layout.activity_mondtag);
-
-            final Toolbar toolbar = findViewById(R.id.toolbar);
-
-            super.setSupportActionBar(toolbar);
 
             this.isFirstStart = this.getDataManager().userShouldReviewConfig();
             
@@ -77,14 +78,15 @@ public class MondtagActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause: isVisible := false");
+        Log.d(TAG, "onPause");
+
         this.interpretationMenuManager.resetInterpretationChangeListener();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume: isVisible := true");
+        Log.d(TAG, "onResume");
 
         this.updateContent();
     }
