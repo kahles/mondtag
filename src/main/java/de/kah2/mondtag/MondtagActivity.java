@@ -3,6 +3,7 @@ package de.kah2.mondtag;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -120,12 +121,18 @@ public class MondtagActivity extends AppCompatActivity
 
     private void updateContent() {
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+        final ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar == null) {
+            return;
+        }
 
         switch (state) {
             case STATE_CONFIGURING:
-                getSupportActionBar().setSubtitle(R.string.action_settings);
-                getSupportActionBar().setDisplayShowHomeEnabled(true);
+                actionBar.setSubtitle(R.string.action_settings);
+                actionBar.setDisplayShowHomeEnabled(true);
                 SettingsFragment fragment = new SettingsFragment();
                 transaction.replace( R.id.content_frame,
                         fragment, SettingsFragment.TAG );
@@ -135,14 +142,14 @@ public class MondtagActivity extends AppCompatActivity
                 }
                 break;
             case STATE_GENERATING:
-                getSupportActionBar().setSubtitle(R.string.data_fetching_toolbar_subtitle);
-                getSupportActionBar().setDisplayShowHomeEnabled(false);
+                actionBar.setSubtitle(R.string.data_fetching_toolbar_subtitle);
+                actionBar.setDisplayShowHomeEnabled(false);
                 transaction.replace( R.id.content_frame,
                         new DataFetchingFragment(), DataFetchingFragment.TAG );
                 break;
             case STATE_DISPLAYING:
-                getSupportActionBar().setSubtitle(this.interpretationNameResId);
-                getSupportActionBar().setDisplayShowHomeEnabled(false);
+                actionBar.setSubtitle(this.interpretationNameResId);
+                actionBar.setDisplayShowHomeEnabled(false);
                 transaction.replace( R.id.content_frame,
                         new CalendarFragment(), CalendarFragment.TAG );
                 break;
