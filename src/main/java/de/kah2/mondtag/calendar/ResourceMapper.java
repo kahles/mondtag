@@ -14,6 +14,7 @@ import java.util.Hashtable;
 import java.util.Locale;
 
 import de.kah2.libZodiac.ProgressListener;
+import de.kah2.libZodiac.interpretation.Gardening;
 import de.kah2.libZodiac.interpretation.Interpreter;
 import de.kah2.libZodiac.planetary.LunarPhase;
 import de.kah2.libZodiac.zodiac.ZodiacDirection;
@@ -41,97 +42,92 @@ public class ResourceMapper {
 
     static {
         // data fetching activities
-        mappings.put(ProgressListener.State.IMPORTING.toString(),
-                new Integer[]{-1, R.string.status_importing});
-        mappings.put(ProgressListener.State.GENERATING.toString(),
-                new Integer[]{-1, R.string.status_generating});
-        mappings.put(ProgressListener.State.EXTENDING_PAST.toString(),
-                new Integer[]{-1, R.string.status_extending});
-        mappings.put(ProgressListener.State.EXTENDING_FUTURE.toString(),
-                new Integer[]{-1, R.string.status_extending});
-        mappings.put(ProgressListener.State.COUNTING.toString(),
-                new Integer[]{-1, R.string.status_counting});
+        putString(ProgressListener.State.IMPORTING, R.string.status_importing);
+        putString(ProgressListener.State.GENERATING, R.string.status_generating);
+        putString(ProgressListener.State.EXTENDING_PAST, R.string.status_extending);
+        putString(ProgressListener.State.EXTENDING_FUTURE, R.string.status_extending);
+        putString(ProgressListener.State.COUNTING, R.string.status_counting);
 
         // Lunar phases
-        mappings.put(LunarPhase.FULL_MOON.toString(),
-                new Integer[]{R.drawable.moon_full, R.string.full_moon});
-        mappings.put(LunarPhase.INCREASING.toString(),
-                new Integer[]{R.drawable.moon_waxing, R.string.increasing});
-        mappings.put(LunarPhase.DECREASING.toString(),
-                new Integer[]{R.drawable.moon_waning, R.string.decreasing});
-        mappings.put(LunarPhase.NEW_MOON.toString(),
-                new Integer[]{R.drawable.moon_new, R.string.new_moon});
+        putAll(LunarPhase.FULL_MOON, R.drawable.moon_full, R.string.full_moon);
+        putAll(LunarPhase.INCREASING, R.drawable.moon_waxing, R.string.increasing);
+        putAll(LunarPhase.DECREASING, R.drawable.moon_waning, R.string.decreasing);
+        putAll(LunarPhase.NEW_MOON, R.drawable.moon_new, R.string.new_moon);
 
         // Zodiac directions
-        mappings.put(ZodiacDirection.ASCENDING.toString(),
-                new Integer[]{R.drawable.moon_ascending, R.string.ascending});
-        mappings.put(ZodiacDirection.DESCENDING.toString(),
-                new Integer[]{R.drawable.moon_descending, R.string.descending});
+        putAll(ZodiacDirection.ASCENDING, R.drawable.moon_ascending, R.string.ascending);
+        putAll(ZodiacDirection.DESCENDING, R.drawable.moon_descending, R.string.descending);
 
         // Zodiac signs
-        mappings.put(ZodiacSign.AQUARIUS.toString(),
-                new Integer[]{R.drawable.aquarius, R.string.aquarius});
-        mappings.put(ZodiacSign.ARIES.toString(),
-                new Integer[]{R.drawable.aries, R.string.aries});
-        mappings.put(ZodiacSign.CANCER.toString(),
-                new Integer[]{R.drawable.cancer, R.string.cancer});
-        mappings.put(ZodiacSign.CAPRICORN.toString(),
-                new Integer[]{R.drawable.capricorn, R.string.capricorn});
-        mappings.put(ZodiacSign.GEMINI.toString(),
-                new Integer[]{R.drawable.gemini, R.string.gemini});
-        mappings.put(ZodiacSign.LEO.toString(),
-                new Integer[]{R.drawable.leo, R.string.leo});
-        mappings.put(ZodiacSign.LIBRA.toString(),
-                new Integer[]{R.drawable.libra, R.string.libra});
-        mappings.put(ZodiacSign.PISCES.toString(),
-                new Integer[]{R.drawable.pisces, R.string.pisces});
-        mappings.put(ZodiacSign.SAGITTARIUS.toString(),
-                new Integer[]{R.drawable.sagittarius, R.string.sagittarius});
-        mappings.put(ZodiacSign.SCORPIO.toString(),
-                new Integer[]{R.drawable.scorpio, R.string.scorpio});
-        mappings.put(ZodiacSign.TAURUS.toString(),
-                new Integer[]{R.drawable.taurus, R.string.taurus});
-        mappings.put(ZodiacSign.VIRGO.toString(),
-                new Integer[]{R.drawable.virgo, R.string.virgo});
+        putAll(ZodiacSign.AQUARIUS, R.drawable.aquarius, R.string.aquarius);
+        putAll(ZodiacSign.ARIES, R.drawable.aries, R.string.aries);
+        putAll(ZodiacSign.CANCER, R.drawable.cancer, R.string.cancer);
+        putAll(ZodiacSign.CAPRICORN, R.drawable.capricorn, R.string.capricorn);
+        putAll(ZodiacSign.GEMINI, R.drawable.gemini, R.string.gemini);
+        putAll(ZodiacSign.LEO, R.drawable.leo, R.string.leo);
+        putAll(ZodiacSign.LIBRA, R.drawable.libra, R.string.libra);
+        putAll(ZodiacSign.PISCES, R.drawable.pisces, R.string.pisces);
+        putAll(ZodiacSign.SAGITTARIUS, R.drawable.sagittarius, R.string.sagittarius);
+        putAll(ZodiacSign.SCORPIO, R.drawable.scorpio, R.string.scorpio);
+        putAll(ZodiacSign.TAURUS, R.drawable.taurus, R.string.taurus);
+        putAll(ZodiacSign.VIRGO, R.drawable.virgo, R.string.virgo);
 
         // Zodiac elements
-        mappings.put(ZodiacElement.AIR.toString(),
-                new Integer[]{R.drawable.air, R.string.air});
-        mappings.put(ZodiacElement.EARTH.toString(),
-                new Integer[]{R.drawable.earth, R.string.earth});
-        mappings.put(ZodiacElement.FIRE.toString(),
-                new Integer[]{R.drawable.fire, R.string.fire});
-        mappings.put(ZodiacElement.WATER.toString(),
-                new Integer[]{R.drawable.water, R.string.water});
-
-        // Zodiac element's categories
-        mappings.put(ZodiacElement.PlantPart.FLOWER.toString(),
-                new Integer[]{-1, R.string.flowerPlants});
-        mappings.put(ZodiacElement.PlantPart.LEAF.toString(),
-                new Integer[]{-1, R.string.leafPlants});
-        mappings.put(ZodiacElement.PlantPart.FRUIT.toString(),
-                new Integer[]{-1, R.string.fruitPlants});
-        mappings.put(ZodiacElement.PlantPart.ROOT.toString(),
-                new Integer[]{-1, R.string.rootPlants});
+        putAll(ZodiacElement.AIR, R.drawable.air, R.string.air);
+        putAll(ZodiacElement.EARTH, R.drawable.earth, R.string.earth);
+        putAll(ZodiacElement.FIRE, R.drawable.fire, R.string.fire);
+        putAll(ZodiacElement.WATER, R.drawable.water, R.string.water);
 
         // Interpretation qualities
-        mappings.put(Interpreter.Quality.WORST.toString(),
-                new Integer[]{R.drawable.quality_worst, R.string.interpretation_worst});
-        mappings.put(Interpreter.Quality.BAD.toString(),
-                new Integer[]{R.drawable.quality_bad, R.string.interpretation_bad});
-        mappings.put(Interpreter.Quality.GOOD.toString(),
-                new Integer[]{R.drawable.quality_good, R.string.interpretation_good});
-        mappings.put(Interpreter.Quality.BEST.toString(),
-                new Integer[]{R.drawable.quality_best, R.string.interpretation_best});
+        putAll(Interpreter.Quality.WORST, R.drawable.quality_worst, R.string.interpretation_worst);
+        putAll(Interpreter.Quality.BAD, R.drawable.quality_bad, R.string.interpretation_bad);
+        putAll(Interpreter.Quality.GOOD, R.drawable.quality_good, R.string.interpretation_good);
+        putAll(Interpreter.Quality.BEST, R.drawable.quality_best, R.string.interpretation_best);
+
+
+        // Interpreter annotations
+
+        // Gardening
+
+		putString( Gardening.Plants.FLOWERS, R.string.interpret_gardening_plants_flowers );
+		putString( Gardening.Plants.FRUIT_PLANTS, R.string.interpret_gardening_plants_fruit );
+		putString( Gardening.Plants.LAWN, R.string.interpret_gardening_plants_lawn );
+		putString( Gardening.Plants.LEAFY_VEGETABLES, R.string.interpret_gardening_plants_leafy );
+		putString( Gardening.Plants.ROOT_VEGETABLES, R.string.interpret_gardening_plants_root );
+		putString( Gardening.Plants.POTATOES, R.string.interpret_gardening_plants_potatoes );
+		putString( Gardening.Plants.SALAD, R.string.interpret_gardening_plants_salad );
+
+		putString( Gardening.HarvestInterpreter.Usage.TO_CONSERVE, R.string.interpret_gardening_harvest_conserve );
+		putString( Gardening.HarvestInterpreter.Usage.TO_DRY, R.string.interpret_gardening_harvest_dry );
+		putString( Gardening.HarvestInterpreter.Usage.CONSUME_IMMEDIATELY, R.string.interpret_gardening_harvest_consume );
+
+		putString( Gardening.WeedDigInterpreter.Annotations.DIG, R.string.interpret_gardening_dig );
+		putString( Gardening.WeedDigInterpreter.Annotations.WEED_TILL_NOON, R.string.interpret_gardening_weed );
+
+		putString( Gardening.TrimInterpreter.Category.FRUIT_TREES, R.string.interpret_gardening_trim_fruit );
+		putString( Gardening.TrimInterpreter.Category.SICK_PLANTS, R.string.interpret_gardening_trim_sick );
+
+		putString( Gardening.CombatPestsInterpreter.PestType.OVERTERRESTRIAL, R.string.interpret_gardening_combatpests_over );
+		putString( Gardening.CombatPestsInterpreter.PestType.SUBTERRESTRIAL, R.string.interpret_gardening_combatpests_sub );
+		putString( Gardening.CombatPestsInterpreter.PestType.SLUGS, R.string.interpret_gardening_combatpests_slugs );
     }
 
     /**
      * Returns the resource-ids belonging to an enum value.
-     * @param e the key
+     * @param key the key
      * @return an array where INDEX_STRING contains the string-id and INDEX_IMAGE the id of the icon
      */
-    public static Integer[] getResourceIds(Enum<?> e) {
-        return mappings.get(e.toString());
+    public static Integer[] getResourceIds(Enum<?> key) {
+        return getResourceIds( key.toString() );
+    }
+
+    /**
+     * Returns the resource-ids belonging to an enum value.
+     * @param key the key
+     * @return an array where INDEX_STRING contains the string-id and INDEX_IMAGE the id of the icon
+     */
+    public static Integer[] getResourceIds(String key) {
+        return mappings.get(key);
     }
 
     /** Returns the translated day of the week of a date. */
@@ -168,5 +164,14 @@ public class ResourceMapper {
                 + className.substring(splitAt)
                     .replace('$', '_')
                     .replace("Interpreter", "");
+    }
+
+    private static void putString(Enum<?> key, int stringId) {
+        putAll(key, -1, stringId);
+    }
+
+    private static void putAll(Enum<?> key, int drawableId, int stringId) {
+        mappings.put( key.toString(),
+                    new Integer[]{ drawableId, stringId } );
     }
 }

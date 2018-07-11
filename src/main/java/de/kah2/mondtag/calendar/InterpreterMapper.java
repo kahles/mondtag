@@ -10,6 +10,7 @@ import de.kah2.libZodiac.interpretation.Gardening;
 import de.kah2.libZodiac.interpretation.Interpreter;
 import de.kah2.mondtag.R;
 
+// TODO docs
 public class InterpreterMapper {
 
     private static LinkedList<InterpreterMapping> mappings;
@@ -22,17 +23,16 @@ public class InterpreterMapper {
 
         mappings = new LinkedList<>();
 
-        add(R.string.interpret_Gardening_CombatSlugs, Gardening.CombatSlugsInterpreter.class);
-        add(R.string.interpret_Gardening_CutFruitTree, Gardening.CutFruitTreeInterpreter.class);
-        add(R.string.interpret_Gardening_Cutting, Gardening.CuttingInterpreter.class);
+        add(R.string.interpret_Gardening_CombatPests, Gardening.CombatPestsInterpreter.class);
+        add(R.string.interpret_Gardening_CuttingTransplant, Gardening.CuttingTransplantInterpreter.class);
+        add(R.string.interpret_Gardening_Fertilize, Gardening.FertilizeInterpreter.class);
         add(R.string.interpret_Gardening_Graft, Gardening.GraftInterpreter.class);
+        add(R.string.interpret_Gardening_Harvest, Gardening.HarvestInterpreter.class);
         add(R.string.interpret_Gardening_MowLawn, Gardening.MowLawnInterpreter.class);
-        add(R.string.interpret_Gardening_OverterrestrialPests, Gardening.OverterrestrialPestsInterpreter.class);
-        add(R.string.interpret_Gardening_SubterrestrialPests, Gardening.SubterrestrialPestsInterpreter.class);
-        add(R.string.interpret_Gardening_TrimSick, Gardening.TrimSickInterpreter.class);
+        add(R.string.interpret_Gardening_SowPlant, Gardening.SowPlantInterpreter.class);
+        add(R.string.interpret_Gardening_Trim, Gardening.TrimInterpreter.class);
         add(R.string.interpret_Gardening_Water, Gardening.WaterInterpreter.class);
         add(R.string.interpret_Gardening_WeedDig, Gardening.WeedDigInterpreter.class);
-        add(R.string.interpret_Gardening_SowPlant, Gardening.SowPlantInterpreter.class);
 
         // We can forget the context
         InterpreterMapper.context = null;

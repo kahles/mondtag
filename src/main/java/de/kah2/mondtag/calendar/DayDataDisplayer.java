@@ -1,6 +1,7 @@
 package de.kah2.mondtag.calendar;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,6 +9,9 @@ import android.widget.TextView;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
+
+import java.util.HashSet;
+import java.util.LinkedList;
 
 import de.kah2.libZodiac.Day;
 import de.kah2.libZodiac.interpretation.Interpreter;
@@ -115,7 +119,7 @@ class DayDataDisplayer {
 
         // Use empty Strings as default, if no values are set
         String qualityText = "";
-        String qualityCategory = "";
+        String annotations = "";
         String interpreterName = "";
 
 
@@ -134,13 +138,21 @@ class DayDataDisplayer {
                 qualityText = getContext().getString(qualityStringIds[ResourceMapper.INDEX_STRING]);
             }
 
-            // If qualityCategory isn't empty, we fetch the String
-            if (day.getInterpreter().getCategory() != null) {
+            // If annotations aren't empty, we fetch the Strings
 
-                qualityCategory = getContext().getString(
-                        ResourceMapper.getResourceIds(
-                                day.getInterpreter().getCategory()
-                        )[ResourceMapper.INDEX_STRING] );
+            final HashSet<String> annotationKeys = day.getInterpreter().getAnnotations();
+
+
+            if ( annotationKeys.size() > 0 ) {
+
+                final LinkedList<String> annotationStrings = new LinkedList<>();
+
+                for (String key : annotationKeys) {
+                    annotationStrings.add( getContext().getString(
+                        ResourceMapper.getResourceIds(key)[ResourceMapper.INDEX_STRING] ));
+                }
+
+                annotations = TextUtils.join(" | ", annotationStrings);
             }
         }
 
@@ -148,7 +160,7 @@ class DayDataDisplayer {
         this.interpretationIcon.setImageResource(qualityIcon);
         this.interpretationIcon.setContentDescription(qualityText);
 
-        this.interpretationQualityCategoryTextView.setText(qualityCategory);
+        this.interpretationQualityCategoryTextView.setText(annotations);
 
         if (isVerboseView) {
             // These fields we only have in fragment_day_detail

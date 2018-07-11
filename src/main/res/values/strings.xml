@@ -77,11 +77,6 @@
     <string name="taurus">taurus</string>
     <string name="virgo">virgo</string>
     <string name="water">water</string>
-    <string name="flowerPlants">flower plants</string>
-    <string name="leafPlants">leaf plants</string>
-    <string name="rootPlants">root plants</string>
-    <string name="fruitPlants">fruit plants</string>
-
 
     <!-- interpretation -->
     <string name="interpretation_best">best</string>
@@ -95,16 +90,42 @@
     Convention for naming interpreter keys is interpret_[ContainingClass]_[Name]
     See also ResourceMapper#createInterpreterKey
     -->
-    <string name="interpret_Gardening_CombatSlugs">Combat slugs</string>
-    <string name="interpret_Gardening_OverterrestrialPests">Combat overterrestrial pests</string>
-    <string name="interpret_Gardening_SubterrestrialPests">Combat subterrestrial pests</string>
-    <string name="interpret_Gardening_CutFruitTree">Cut fruit trees</string>
+    <string name="interpret_Gardening_CombatPests">Combat pests</string>
+    <string name="interpret_Gardening_CuttingTransplant">Make cuttings / transplant</string>
+    <string name="interpret_Gardening_Fertilize">Fertilize</string>
     <string name="interpret_Gardening_Graft">Graft</string>
-    <string name="interpret_Gardening_Cutting">Make cuttings / transplant</string>
+    <string name="interpret_Gardening_Harvest">Harvest</string>
     <string name="interpret_Gardening_WeedDig">Weed / dig</string>
-    <string name="interpret_Gardening_TrimSick">Trim sick plants</string>
+    <string name="interpret_Gardening_Trim">Trim plants</string>
     <string name="interpret_Gardening_MowLawn">Mow the lawn</string>
     <string name="interpret_Gardening_Water">Water plants</string>
     <string name="interpret_Gardening_SowPlant">Sow and plant</string>
-    <string name="interpret_gardening">Gardening</string>
+
+
+    <!-- Interpreter annotations -->
+
+    <!-- Gardening -->
+
+	<string name="interpret_gardening_plants_flowers">flowers</string>
+	<string name="interpret_gardening_plants_fruit">fruit plants</string>
+	<string name="interpret_gardening_plants_lawn">lawn</string>
+	<string name="interpret_gardening_plants_leafy">leafy vegetables</string>
+	<string name="interpret_gardening_plants_root">root vegetables</string>
+	<string name="interpret_gardening_plants_potatoes">potatoes</string>
+	<string name="interpret_gardening_plants_salad">salad</string>
+
+	<string name="interpret_gardening_harvest_conserve">to conserve</string>
+	<string name="interpret_gardening_harvest_dry">to dry</string>
+	<string name="interpret_gardening_harvest_consume">consume immediately</string>
+
+	<string name="interpret_gardening_dig">dig</string>
+	<string name="interpret_gardening_weed">weed before noon</string>
+
+	<string name="interpret_gardening_trim_fruit">fruit trees</string>
+	<string name="interpret_gardening_trim_sick">sick plants</string>
+
+	<string name="interpret_gardening_combatpests_over">overterrestrial pests</string>
+	<string name="interpret_gardening_combatpests_sub">subterrestrial pests</string>
+	<string name="interpret_gardening_combatpests_slugs">slugs</string>
+
 </resources>
