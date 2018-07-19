@@ -95,7 +95,7 @@
     <string name="interpret_Gardening_Fertilize">Fertilize</string>
     <string name="interpret_Gardening_Graft">Graft</string>
     <string name="interpret_Gardening_Harvest">Harvest</string>
-    <string name="interpret_Gardening_WeedDig">Weed / dig</string>
+    <string name="interpret_Gardening_WeedControl">Weed control</string>
     <string name="interpret_Gardening_Trim">Trim plants</string>
     <string name="interpret_Gardening_MowLawn">Mow the lawn</string>
     <string name="interpret_Gardening_Water">Water plants</string>
@@ -119,7 +119,8 @@
 	<string name="interpret_gardening_harvest_consume">consume immediately</string>
 
 	<string name="interpret_gardening_dig">dig</string>
-	<string name="interpret_gardening_weed">weed before noon</string>
+	<string name="interpret_gardening_weed">weed</string>
+	<string name="interpret_gardening_weed_before_noon">weed before noon</string>
 
 	<string name="interpret_gardening_trim_fruit">fruit trees</string>
 	<string name="interpret_gardening_trim_sick">sick plants</string>

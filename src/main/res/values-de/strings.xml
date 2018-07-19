@@ -70,7 +70,7 @@
     <string name="interpret_Gardening_Fertilize">Düngen</string>
     <string name="interpret_Gardening_Graft">Veredeln</string>
     <string name="interpret_Gardening_Harvest">Ernten</string>
-    <string name="interpret_Gardening_WeedDig">Jäten / umgraben</string>
+    <string name="interpret_Gardening_WeedControl">Unkrautbekämpfung</string>
     <string name="interpret_Gardening_Trim">Pflanzen beschneiden</string>
     <string name="interpret_Gardening_MowLawn">Rasen mähen</string>
     <string name="interpret_Gardening_Water">Gießen</string>
@@ -85,11 +85,12 @@
     <string name="interpret_gardening_harvest_dry">Zum trocknen</string>
     <string name="interpret_gardening_harvest_consume">Sofort verbrauchen</string>
     <string name="interpret_gardening_dig">Umgraben</string>
-    <string name="interpret_gardening_weed">Jäten bis Mittag</string>
+    <string name="interpret_gardening_weed_before_noon">Jäten bis Mittag</string>
     <string name="interpret_gardening_trim_fruit">Obstbäume</string>
     <string name="interpret_gardening_trim_sick">Kranke Pflanzen</string>
     <string name="interpret_gardening_combatpests_over">Überirdische Schädlinge</string>
     <string name="interpret_gardening_combatpests_sub">Unterirdische Schädlinge</string>
     <string name="interpret_gardening_combatpests_slugs">Schnecken</string>
+    <string name="interpret_gardening_weed">Jäten</string>
 
 </resources>

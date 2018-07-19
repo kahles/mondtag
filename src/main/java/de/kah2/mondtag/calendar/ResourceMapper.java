@@ -101,8 +101,9 @@ public class ResourceMapper {
 		putString( Gardening.HarvestInterpreter.Usage.TO_DRY, R.string.interpret_gardening_harvest_dry );
 		putString( Gardening.HarvestInterpreter.Usage.CONSUME_IMMEDIATELY, R.string.interpret_gardening_harvest_consume );
 
-		putString( Gardening.WeedDigInterpreter.Annotations.DIG, R.string.interpret_gardening_dig );
-		putString( Gardening.WeedDigInterpreter.Annotations.WEED_TILL_NOON, R.string.interpret_gardening_weed );
+		putString( Gardening.WeedControlInterpreter.Annotations.DIG, R.string.interpret_gardening_dig );
+		putString( Gardening.WeedControlInterpreter.Annotations.WEED, R.string.interpret_gardening_weed);
+		putString( Gardening.WeedControlInterpreter.Annotations.WEED_BEFORE_NOON, R.string.interpret_gardening_weed_before_noon);
 
 		putString( Gardening.TrimInterpreter.Category.FRUIT_TREES, R.string.interpret_gardening_trim_fruit );
 		putString( Gardening.TrimInterpreter.Category.SICK_PLANTS, R.string.interpret_gardening_trim_sick );

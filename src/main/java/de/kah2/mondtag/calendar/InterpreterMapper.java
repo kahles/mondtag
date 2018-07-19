@@ -32,7 +32,7 @@ public class InterpreterMapper {
         add(R.string.interpret_Gardening_SowPlant, Gardening.SowPlantInterpreter.class);
         add(R.string.interpret_Gardening_Trim, Gardening.TrimInterpreter.class);
         add(R.string.interpret_Gardening_Water, Gardening.WaterInterpreter.class);
-        add(R.string.interpret_Gardening_WeedDig, Gardening.WeedDigInterpreter.class);
+        add(R.string.interpret_Gardening_WeedControl, Gardening.WeedControlInterpreter.class);
 
         // We can forget the context
         InterpreterMapper.context = null;
