@@ -55,6 +55,34 @@ public class DataManager {
         this.calendar = this.createEmptyCalender();
     }
 
+    private void initConfig() {
+
+        final Context context = this.context;
+
+        final SharedPreferences preferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        initDefaultConfig( preferences,
+                context.getString(R.string.pref_key_location),
+                context.getString(R.string.location_default) );
+
+        initDefaultConfig( preferences,
+                context.getString(R.string.pref_key_timezone),
+                ZoneId.systemDefault().toString() );
+    }
+
+    /** Helper to set default config values */
+    private void initDefaultConfig(SharedPreferences preferences, String key, String value) {
+        if (preferences.getString(key, null) == null) {
+            Log.i( TAG, "initDefaultConfig: " + key + " := " + value );
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(key, value);
+            editor.apply();
+            userShouldReviewConfig = true;
+        }
+    }
+
+
     private Calendar createEmptyCalender() {
 
         final LocalDate startDate = LocalDate.now();
@@ -73,28 +101,6 @@ public class DataManager {
         return calendar;
     }
 
-    public void extendExpectedRange() {
-        final DateRange newRange = new DateRange(
-                calendar.getRangeExpected().getStart(),
-                calendar.getAllDays().getLast().getDate().plusDays(DAYS_TO_CALCULATE_AHEAD) );
-
-        calendar.setRangeExpected(newRange);
-    }
-
-    /**
-     * Starts calendar generation.
-     */
-     void startCalendarGeneration() {
-
-         if (!this.importedExistingData) {
-
-             this.fetcher.importData(this.calendar);
-             this.importedExistingData = true;
-         }
-
-         this.fetcher.startGeneratingMissingDays(this.calendar);
-    }
-
     /**
      * Loads the configured observer position needed for rise- and set-calculation or sets the
      * default if none is available.
@@ -105,7 +111,7 @@ public class DataManager {
 
         final String positionString = prefs.getString(
 
-        this.context.getString(R.string.pref_key_location), null);
+                this.context.getString(R.string.pref_key_location), null);
 
         StringConvertiblePosition position;
 
@@ -135,6 +141,48 @@ public class DataManager {
         return ZoneId.of(timezone);
     }
 
+    public void extendExpectedRange() {
+        final DateRange newRange = new DateRange(
+                calendar.getRangeExpected().getStart(),
+                calendar.getAllDays().getLast().getDate().plusDays(DAYS_TO_CALCULATE_AHEAD) );
+
+        calendar.setRangeExpected(newRange);
+    }
+
+    /**
+     * Starts calendar generation in a separate Thread to not block the UI.
+     */
+     void startCalendarGeneration() {
+
+         final Runnable worker = this.createLibZodiacWorker();
+         final Thread workerThread = new Thread(worker);
+
+         workerThread.start();
+    }
+
+    /**
+     * Creates a {@link Runnable} containing logic for importing and generating data.
+     * @return
+     */
+    private Runnable createLibZodiacWorker() {
+
+        final Runnable worker = () -> {
+
+            // Moves the current Thread into the background
+            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+
+            if ( ! DataManager.this.importedExistingData ) {
+
+                DataManager.this.fetcher.importData(DataManager.this.calendar);
+                DataManager.this.importedExistingData = true;
+            }
+
+            DataManager.this.fetcher.startGeneratingMissingDays(DataManager.this.calendar);
+        };
+
+        return worker;
+    }
+
     /**
      * To use on configuration changes to trigger recalculation of data
      */
@@ -145,33 +193,6 @@ public class DataManager {
 
         DatabaseHelper dbHelper = new DatabaseHelper(this.context);
         dbHelper.resetDatabase(dbHelper.getWritableDatabase());
-    }
-
-    private void initConfig() {
-
-        final Context context = this.context;
-
-        final SharedPreferences preferences = PreferenceManager
-                .getDefaultSharedPreferences(context);
-
-        initDefaultConfig( preferences,
-                context.getString(R.string.pref_key_location),
-                context.getString(R.string.location_default) );
-
-        initDefaultConfig( preferences,
-                context.getString(R.string.pref_key_timezone),
-                ZoneId.systemDefault().toString() );
-    }
-
-    /** Helper to set default config values */
-    private void initDefaultConfig(SharedPreferences preferences, String key, String value) {
-        if (preferences.getString(key, null) == null) {
-            Log.i( TAG, "initDefaultConfig: " + key + " := " + value );
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(key, value);
-            editor.apply();
-            userShouldReviewConfig = true;
-        }
     }
 
     /** Tells if config was loaded from defaults */
