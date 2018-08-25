@@ -48,7 +48,7 @@ class DataFetcher implements ProgressListener{
         Log.d(LOG_TAG, "Imported " + loadedData.size() + " days");
 
         final List<Day> daysDeleted = calendar.removeOverhead(false);
-        deleteFromDb(daysDeleted);
+        this.deleteFromDb(daysDeleted);
     }
 
     /**
@@ -65,17 +65,19 @@ class DataFetcher implements ProgressListener{
      * Deletes a {@link List} of {@link Day}s from database.
      */
     private void deleteFromDb(List<Day> days) {
-        final SQLiteDatabase db = databaseHelper.getWritableDatabase();
-        int deleted = 0;
-        if (days == null) {
-            deleted = db.delete(DatabaseDayEntry.TABLE_NAME, null, null);
-        } else if (days.size() > 0) {
+
+        if ( days != null && days.size() > 0 ) {
+
+            final SQLiteDatabase db = databaseHelper.getWritableDatabase();
+            int deleted = 0;
+
             final String selection = DatabaseDayEntry.COLUMN_NAME_DATE + " IN (?)";
             final String[] dates = {joinDates(days)};
             deleted = db.delete(DatabaseDayEntry.TABLE_NAME, selection, dates);
+
+            Log.d(LOG_TAG, "Deleted " + deleted + " days");
+            db.close();
         }
-        Log.d(LOG_TAG, "Deleted " + deleted + " days");
-        db.close();
     }
 
     /**
