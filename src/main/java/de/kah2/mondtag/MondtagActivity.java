@@ -41,6 +41,21 @@ public class MondtagActivity extends AppCompatActivity
             MondtagActivity.class.getName() + ".isFirstStart";
     private boolean isFirstStart = false;
 
+    /**
+     * Indicates if the UI is in foreground and Fragment transactions are possible.
+     * true between {@link #onResume()} and {@link #onPause()}.
+     * Needed to prevent running {@link #updateContent()} if calculation finishes while app is in
+     * background.
+     */
+    private boolean isVisible = false;
+
+    /**
+     * Indicates if the UI couldn't be updated, because the view wasn't in foreground. If true, the
+     * update is done by {@link #onResume()}.
+     * @see #isVisible
+     */
+    private boolean isUiUpdatePostponed = false;
+
     private final InterpretationMenuManager interpretationMenuManager =
             new InterpretationMenuManager();
 
@@ -81,6 +96,10 @@ public class MondtagActivity extends AppCompatActivity
         super.onPause();
         Log.d(TAG, "onPause");
 
+        // Prevents running #updateContent when app was sent to background. This could be the case
+        // if app is suspended during calculation and calculation finishes is background.
+        this.isVisible = false;
+
         this.interpretationMenuManager.resetInterpretationChangeListener();
     }
 
@@ -89,7 +108,13 @@ public class MondtagActivity extends AppCompatActivity
         super.onResume();
         Log.d(TAG, "onResume");
 
-        this.updateContent();
+        this.isVisible = true;
+
+        if (this.isUiUpdatePostponed) {
+            Log.d(TAG, "onResume: UI update was postponed - doing it now");
+            this.updateContent();
+            this.isUiUpdatePostponed = false;
+        }
     }
 
     // called by onCreate and onOptionsItemSelected
@@ -125,40 +150,44 @@ public class MondtagActivity extends AppCompatActivity
 
         final ActionBar actionBar = getSupportActionBar();
 
-        if (actionBar == null) {
-            return;
+        if (!this.isVisible) {
+
+            Log.d(TAG, "updateContent: UI not visible - skipping update");
+            this.isUiUpdatePostponed = true;
+
+        } else {
+
+            switch (state) {
+                case STATE_CONFIGURING:
+                    actionBar.setSubtitle(R.string.action_settings);
+                    actionBar.setDisplayShowHomeEnabled(true);
+                    SettingsFragment fragment = new SettingsFragment();
+                    transaction.replace(R.id.content_frame,
+                            fragment, SettingsFragment.TAG);
+                    if (this.isFirstStart) {
+                        fragment.showHelpDialog();
+                        this.isFirstStart = false;
+                    }
+                    break;
+                case STATE_GENERATING:
+                    actionBar.setSubtitle(R.string.data_fetching_toolbar_subtitle);
+                    actionBar.setDisplayShowHomeEnabled(false);
+                    transaction.replace(R.id.content_frame,
+                            new DataFetchingFragment(), DataFetchingFragment.TAG);
+                    break;
+                case STATE_DISPLAYING:
+                    actionBar.setSubtitle(this.interpretationNameResId);
+                    actionBar.setDisplayShowHomeEnabled(false);
+                    transaction.replace(R.id.content_frame,
+                            new CalendarFragment(), CalendarFragment.TAG);
+                    break;
+            }
+
+            transaction.commit();
+
+            // This is needed or our menu isn't removed if settings are shown
+            this.invalidateOptionsMenu();
         }
-
-        switch (state) {
-            case STATE_CONFIGURING:
-                actionBar.setSubtitle(R.string.action_settings);
-                actionBar.setDisplayShowHomeEnabled(true);
-                SettingsFragment fragment = new SettingsFragment();
-                transaction.replace( R.id.content_frame,
-                        fragment, SettingsFragment.TAG );
-                if (this.isFirstStart) {
-                    fragment.showHelpDialog();
-                    this.isFirstStart = false;
-                }
-                break;
-            case STATE_GENERATING:
-                actionBar.setSubtitle(R.string.data_fetching_toolbar_subtitle);
-                actionBar.setDisplayShowHomeEnabled(false);
-                transaction.replace( R.id.content_frame,
-                        new DataFetchingFragment(), DataFetchingFragment.TAG );
-                break;
-            case STATE_DISPLAYING:
-                actionBar.setSubtitle(this.interpretationNameResId);
-                actionBar.setDisplayShowHomeEnabled(false);
-                transaction.replace( R.id.content_frame,
-                        new CalendarFragment(), CalendarFragment.TAG );
-                break;
-        }
-
-        transaction.commit();
-
-        // This is needed or our menu isn't removed if settings are shown
-        this.invalidateOptionsMenu();
     }
 
     public void onDataReady() {
