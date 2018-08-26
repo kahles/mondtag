@@ -48,6 +48,7 @@ class DataFetcher implements ProgressListener{
         Log.d(LOG_TAG, "Imported " + loadedData.size() + " days");
 
         final List<Day> daysDeleted = calendar.removeOverhead(false);
+        Log.d(LOG_TAG, "Deleting " + daysDeleted.size() + " unused days from database.");
         this.deleteFromDb(daysDeleted);
     }
 

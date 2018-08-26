@@ -177,6 +177,7 @@ public class LocationPreference extends DialogPreference {
                     getContext().getString(R.string.location_not_available));
         } else {
             this.locationInfoTextView.setText(getContext().getString(R.string.location_last_known));
+
             this.locationField.setText( location.getLatitude() +
                             StringConvertiblePosition.VALUE_SEPARATOR + location.getLongitude() );
             this.locationField.setEnabled(true);
@@ -263,11 +264,11 @@ public class LocationPreference extends DialogPreference {
         StringConvertiblePosition position;
         String infoText;
 
-        public SavedState(Parcelable superState) {
+        SavedState(Parcelable superState) {
             super(superState);
         }
 
-        public SavedState(Parcel source) {
+        SavedState(Parcel source) {
             super(source);
             final String[] values = new String[2];
             source.readStringArray(values);

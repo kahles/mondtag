@@ -3,7 +3,6 @@ package de.kah2.mondtag.settings;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import de.kah2.mondtag.R;

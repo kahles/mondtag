@@ -19,32 +19,25 @@ public class InterpreterMapper {
 
     private static LinkedList<InterpreterMapping> mappings;
 
-    private static Context context;
-
     public static void init(Context context) {
-
-        InterpreterMapper.context = context;
 
         mappings = new LinkedList<>();
 
-        add(R.string.interpret_Gardening_CombatPests, Gardening.CombatPestsInterpreter.class);
-        add(R.string.interpret_Gardening_CuttingTransplant, Gardening.CuttingTransplantInterpreter.class);
-        add(R.string.interpret_Gardening_Fertilize, Gardening.FertilizeInterpreter.class);
-        add(R.string.interpret_Gardening_Graft, Gardening.GraftInterpreter.class);
-        add(R.string.interpret_Gardening_Harvest, Gardening.HarvestInterpreter.class);
-        add(R.string.interpret_Gardening_MowLawn, Gardening.MowLawnInterpreter.class);
-        add(R.string.interpret_Gardening_SowPlant, Gardening.SowPlantInterpreter.class);
-        add(R.string.interpret_Gardening_Trim, Gardening.TrimInterpreter.class);
-        add(R.string.interpret_Gardening_Water, Gardening.WaterInterpreter.class);
-        add(R.string.interpret_Gardening_WeedControl, Gardening.WeedControlInterpreter.class);
-
-        // We can forget the context
-        InterpreterMapper.context = null;
+        add(context, R.string.interpret_Gardening_CombatPests, Gardening.CombatPestsInterpreter.class);
+        add(context, R.string.interpret_Gardening_CuttingTransplant, Gardening.CuttingTransplantInterpreter.class);
+        add(context, R.string.interpret_Gardening_Fertilize, Gardening.FertilizeInterpreter.class);
+        add(context, R.string.interpret_Gardening_Graft, Gardening.GraftInterpreter.class);
+        add(context, R.string.interpret_Gardening_Harvest, Gardening.HarvestInterpreter.class);
+        add(context, R.string.interpret_Gardening_MowLawn, Gardening.MowLawnInterpreter.class);
+        add(context, R.string.interpret_Gardening_SowPlant, Gardening.SowPlantInterpreter.class);
+        add(context, R.string.interpret_Gardening_Trim, Gardening.TrimInterpreter.class);
+        add(context, R.string.interpret_Gardening_Water, Gardening.WaterInterpreter.class);
+        add(context, R.string.interpret_Gardening_WeedControl, Gardening.WeedControlInterpreter.class);
 
         Collections.sort(mappings);
     }
 
-    private static void add(int id, Class<? extends Interpreter> interpreterClass) {
+    private static void add(Context context, int id, Class<? extends Interpreter> interpreterClass) {
         mappings.add( new InterpreterMapping(id, context.getString(id), interpreterClass) );
     }
 

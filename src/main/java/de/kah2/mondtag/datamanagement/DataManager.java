@@ -162,25 +162,22 @@ public class DataManager {
 
     /**
      * Creates a {@link Runnable} containing logic for importing and generating data.
-     * @return
      */
     private Runnable createLibZodiacWorker() {
 
-        final Runnable worker = () -> {
+        return () -> {
 
             // Moves the current Thread into the background
             android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
 
-            if ( ! DataManager.this.importedExistingData ) {
+            if ( ! this.importedExistingData ) {
 
-                DataManager.this.fetcher.importData(DataManager.this.calendar);
-                DataManager.this.importedExistingData = true;
+                this.fetcher.importData(this.calendar);
+                this.importedExistingData = true;
             }
 
-            DataManager.this.fetcher.startGeneratingMissingDays(DataManager.this.calendar);
+            this.fetcher.startGeneratingMissingDays(this.calendar);
         };
-
-        return worker;
     }
 
     /**
