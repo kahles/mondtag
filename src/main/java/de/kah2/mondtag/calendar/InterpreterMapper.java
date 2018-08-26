@@ -10,7 +10,11 @@ import de.kah2.libZodiac.interpretation.Gardening;
 import de.kah2.libZodiac.interpretation.Interpreter;
 import de.kah2.mondtag.R;
 
-// TODO docs
+/**
+ * This class manages the {@link InterpreterMapping}s to map String-IDs to {@link Interpreter}s.
+ * Static method {@link #init(Context)} must be called at app start to initialize these mappings
+ * using the android resource-IDs.
+ */
 public class InterpreterMapper {
 
     private static LinkedList<InterpreterMapping> mappings;
