@@ -13,8 +13,7 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.support.annotation.NonNull;
-import android.support.v13.app.FragmentCompat;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
@@ -114,7 +113,7 @@ public class SettingsFragment extends PreferenceFragment
                     getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            if (FragmentCompat.shouldShowRequestPermissionRationale(this,
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                     Manifest.permission.ACCESS_COARSE_LOCATION)) {
 
                 DialogFragment dialog = new LocationPermissionHelpDialog();
@@ -132,7 +131,7 @@ public class SettingsFragment extends PreferenceFragment
      * Requests the location permission from the system.
      */
     void requestPermission() {
-        FragmentCompat.requestPermissions(this,
+        ActivityCompat.requestPermissions(getActivity(),
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_LOCATION);
     }
 
@@ -174,6 +173,8 @@ public class SettingsFragment extends PreferenceFragment
     private Location getLastKnownLocation() {
         LocationManager locationManager = (LocationManager) getActivity().getApplicationContext()
                         .getSystemService(Context.LOCATION_SERVICE);
+
+        // FIXME locationManager could be null?
         List<String> providers = locationManager.getProviders(true);
 
         Location bestLocation = null;
