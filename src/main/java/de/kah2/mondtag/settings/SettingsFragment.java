@@ -156,11 +156,18 @@ public class SettingsFragment extends PreferenceFragment
      * location. The reference to the {@link LocationPreference} is set to null afterwards.
      */
     private void deliverLocation() {
-        if (locationRequester != null) {
-            locationRequester.onLocationDelivered( getLastKnownLocation() );
-            locationRequester = null;
+
+        if (locationRequester == null) {
+
+            Log.d(TAG, "deliverLocation: locationRequester is null - could not deliver location");
+
         } else {
-            Log.d(TAG, "deliverLocation: object is null - could not deliver location");
+
+            final Location location = getLastKnownLocation();
+
+            locationRequester.onLocationDelivered( location );
+
+            locationRequester = null;
         }
     }
 
@@ -174,7 +181,12 @@ public class SettingsFragment extends PreferenceFragment
         LocationManager locationManager = (LocationManager) getActivity().getApplicationContext()
                         .getSystemService(Context.LOCATION_SERVICE);
 
-        // FIXME locationManager could be null?
+        if (locationManager == null) {
+            Log.e(TAG, "getLastKnownLocation: could not obtain LocationManager" );
+            return null;
+        }
+
+        // TODO can't get location
         List<String> providers = locationManager.getProviders(true);
 
         Location bestLocation = null;
