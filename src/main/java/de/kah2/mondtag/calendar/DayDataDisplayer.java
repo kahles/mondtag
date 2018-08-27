@@ -122,15 +122,15 @@ class DayDataDisplayer {
         String annotations = "";
         String interpreterName = "";
 
-
         if ( day.getInterpreter() != null ) { // An Interpretation is set
-
-            interpreterName = getTranslatedInterpreterString(day);
 
             final Interpreter.Quality quality = day.getInterpreter().getQuality();
 
             // If quality isn't neutral, we display it
             if (quality != Interpreter.Quality.NEUTRAL) {
+
+                // Show interpretername only if a quality is set
+                interpreterName = getTranslatedInterpreterString(day);
 
                 final Integer[] qualityStringIds = ResourceMapper.getResourceIds( quality );
 
@@ -164,7 +164,9 @@ class DayDataDisplayer {
 
         if (isVerboseView) {
             // These fields we only have in fragment_day_detail
+
             this.interpretationQualityTextView.setText(qualityText);
+
             this.interpretationNameView.setText(interpreterName);
         }
     }
