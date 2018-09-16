@@ -5,7 +5,7 @@ Free, open-source lunar calendar for Android written in Java.
 This software is intended to become a small, handy assistant to plan e.g. gardening work.
 
 ### Status
-All basic functionality is implemented, the next big step will be adding interpretations. 
+All basic functionality including gardening interpretations is implemented and should work.
 
 ### Requirements
 
@@ -17,7 +17,7 @@ A [gradle](https://gradle.org) build script is included to manage dependencies a
 
 #### libZodiac
 This app is based on [libZodiac](https://github.com/kahles/libZodiac), which is the library I created to calculate and manage calendar data.
-Mondtag is actually based on v0.75.
+libZodiac uses libnova/novaforjava for astronomical calculations - see libZodiac project page for further details.
 
 #### ThreeTenABP
 [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP) is a JSR-310 backport for Android. It enables support of [java.time framework](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html) introduced in Java 8.
