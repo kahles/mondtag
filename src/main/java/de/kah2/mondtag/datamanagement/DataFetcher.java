@@ -70,11 +70,10 @@ class DataFetcher implements ProgressListener{
         if ( days != null && days.size() > 0 ) {
 
             final SQLiteDatabase db = databaseHelper.getWritableDatabase();
-            int deleted = 0;
 
             final String selection = DatabaseDayEntry.COLUMN_NAME_DATE + " IN (?)";
             final String[] dates = {joinDates(days)};
-            deleted = db.delete(DatabaseDayEntry.TABLE_NAME, selection, dates);
+            final int deleted = db.delete(DatabaseDayEntry.TABLE_NAME, selection, dates);
 
             Log.d(LOG_TAG, "Deleted " + deleted + " days");
             db.close();

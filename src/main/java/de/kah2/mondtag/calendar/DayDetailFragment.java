@@ -28,8 +28,6 @@ public class DayDetailFragment extends android.app.DialogFragment {
 
     private Day day;
 
-    public DayDetailFragment() {}
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

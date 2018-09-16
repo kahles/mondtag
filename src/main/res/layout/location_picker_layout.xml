@@ -10,7 +10,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:inputType="text"
+        android:hint=""/>
     <TextView
         android:id="@+id/location_info"
         android:layout_width="match_parent"

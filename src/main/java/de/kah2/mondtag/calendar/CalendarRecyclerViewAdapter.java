@@ -3,6 +3,7 @@ package de.kah2.mondtag.calendar;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -45,8 +46,9 @@ public class CalendarRecyclerViewAdapter extends RecyclerView.Adapter<CalendarRe
         this.notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
-    public Element onCreateViewHolder(ViewGroup parent, int viewType) {
+    public Element onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View inflatedView = LayoutInflater.from(parent.getContext())
                 .inflate( viewType , parent, false);
 
@@ -62,7 +64,7 @@ public class CalendarRecyclerViewAdapter extends RecyclerView.Adapter<CalendarRe
     }
 
     @Override
-    public void onBindViewHolder(Element holder, int position) {
+    public void onBindViewHolder(@NonNull Element holder, int position) {
         Day day;
 
         if ( position < days.size() ) {

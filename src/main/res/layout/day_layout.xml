@@ -209,7 +209,8 @@
             android:layout_marginRight="5dp"
             android:layout_alignBottom="@id/interpretationIcon"
             android:layout_toLeftOf="@id/interpretationIcon"
-            android:layout_toStartOf="@id/interpretationIcon" />
+            android:layout_toStartOf="@id/interpretationIcon"
+            android:layout_marginEnd="5dp"/>
 
     </RelativeLayout>
 

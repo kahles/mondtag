@@ -1,5 +1,7 @@
 package de.kah2.mondtag.settings;
 
+import android.support.annotation.NonNull;
+
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZoneOffset;
@@ -99,7 +101,7 @@ class TimeZonesArrayGenerator {
         }
 
         @Override
-        public int compareTo(TimeZone o) {
+        public int compareTo(@NonNull TimeZone o) {
             final int offsetComparison = this.offset.compareTo(o.offset);
 
             if (offsetComparison != 0)
