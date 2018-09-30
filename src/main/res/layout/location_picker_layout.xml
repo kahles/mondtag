@@ -2,42 +2,64 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <EditText
-        android:id="@+id/location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <TextView
+        android:id="@+id/location_desc_lat"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/location_latitude" />
+    <EditText
+        android:id="@+id/location_latitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@id/location_desc_lat"
+        android:layout_toRightOf="@id/location_desc_lat"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:inputType="text"
-        android:hint=""/>
+        android:inputType="numberDecimal"
+        android:hint=""
+        android:text="@string/dummy_decimal" />
+    <TextView
+        android:id="@+id/location_desc_long"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@id/location_desc_lat"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:text="@string/location_longitude"/>
+    <EditText
+        android:id="@+id/location_longitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/location_latitude"
+        android:layout_toEndOf="@id/location_desc_lat"
+        android:layout_toRightOf="@id/location_desc_lat"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:inputType="numberDecimal"
+        android:hint=""
+        android:text="@string/dummy_decimal" />
     <TextView
         android:id="@+id/location_info"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/location"
+        android:layout_below="@id/location_desc_long"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-    <Button
-        android:id="@+id/location_pick_button"
-        android:text="@string/location_last_known"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@id/location_info"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:text="@string/location_info_default_loaded"/>
     <Button
         android:id="@+id/location_open_button"
         android:text="@string/location_open"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/location_pick_button"
+        android:layout_below="@id/location_info"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"

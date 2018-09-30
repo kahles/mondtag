@@ -20,12 +20,10 @@
     <string name="pref_key_timezone" translatable="false">pref_key_timezone</string>
     <string name="pref_key_location" translatable="false">pref_key_location</string>
     <string name="pref_group_key_rise_set" translatable="false">pref_key_rise_set</string>
-    <string name="location_last_known">Last known location</string>
+    <string name="location_latitude">Latitude</string>
+    <string name="location_longitude">Longitude</string>
     <string name="location_open">View on map</string>
-    <string name="location_not_available">Location not available</string>
-    <string name="location_not_valid">Enter location in format [latitude],[longitude]</string>
     <string name="location_info_default_loaded">Default "Munich, Germany" was set</string>
-    <string name="location_default">48.137,11.57521</string>
     <string name="dialog_permission_message">In order to get the last known location from your device, you need to grant the permission to access location data.</string>
     <string name="settings_info_dialog_message">It seems Mondtag is started the first time - default settings are loaded. Press \"back\" when you have customized them.</string>
 
@@ -33,6 +31,7 @@
     <string name="dummy_action">Some action</string>
     <string name="dummy_day_name">Someday</string>
     <string name="dummy_date">1234–56–78</string>
+    <string name="dummy_decimal">12.34</string>
     <string name="dummy_time">12:34 pm</string>
     <string name="dummy_interpretationText">Interpretation</string>
     <string name="dummy_interpretationQuality">maybe good</string>

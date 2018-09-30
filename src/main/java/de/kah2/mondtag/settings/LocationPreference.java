@@ -1,17 +1,12 @@
 package de.kah2.mondtag.settings;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.DialogPreference;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -32,13 +27,9 @@ public class LocationPreference extends DialogPreference {
 
     private final static String TAG = LocationPreference.class.getSimpleName();
 
-    private EditText locationField;
+    private EditText latField;
+    private EditText longField;
     private TextView locationInfoTextView;
-
-    private TextWatcher locationWatcher;
-
-    private Button locationOpenButton;
-    private Button locationPickButton;
 
     private StringConvertiblePosition location;
 
@@ -56,51 +47,18 @@ public class LocationPreference extends DialogPreference {
     protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
 
-        this.locationField = view.findViewById(R.id.location);
+        this.latField = view.findViewById(R.id.location_latitude);
+        this.longField = view.findViewById(R.id.location_longitude);
 
         if (this.location != null) {
-            this.locationField.setText(this.location.toString());
+            this.latField.setText( this.location.getFormattedLatitude() );
+            this.longField.setText( this.location.getFormattedLongitude() );
         }
-
-        this.locationField.addTextChangedListener(getLocationTextWatcher());
 
         this.locationInfoTextView = view.findViewById(R.id.location_info);
 
-        this.locationPickButton = view.findViewById(R.id.location_pick_button);
-        locationPickButton.setOnClickListener(v -> requestLocation());
-
-        this.locationOpenButton = view.findViewById(R.id.location_open_button);
+        final Button locationOpenButton = view.findViewById(R.id.location_open_button);
         locationOpenButton.setOnClickListener(v -> LocationPreference.this.showMap());
-    }
-
-    /**
-     * Creates a {@link TextWatcher} if not already present that tries to read
-     * {@link StringConvertiblePosition}s on text changes.
-     */
-    private TextWatcher getLocationTextWatcher() {
-        if (this.locationWatcher == null)
-            this.locationWatcher = new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { /*nothing*/ }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    try {
-                        LocationPreference.this.location =
-                                StringConvertiblePosition.from( charSequence.toString() );
-                        LocationPreference.this.locationInfoTextView.setText("");
-                        setButtonsEnabled(true);
-                    } catch (Exception e) {
-                        LocationPreference.this.locationInfoTextView.setText(
-                                getContext().getString(R.string.location_not_valid));
-                        setButtonsEnabled(false);
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) { /*nothing*/ }
-            };
-        return this.locationWatcher;
     }
 
     /**
@@ -116,8 +74,6 @@ public class LocationPreference extends DialogPreference {
             Log.d(TAG, "onDialogClosed: saving location \"" + positionString + "\"");
             persistString(positionString);
         }
-
-        this.locationField.removeTextChangedListener(getLocationTextWatcher());
     }
 
     /**
@@ -156,35 +112,6 @@ public class LocationPreference extends DialogPreference {
     }
 
     /**
-     * "Orders" the location at {@link SettingsFragment}.
-     */
-    private void requestLocation() {
-        Log.d(TAG, "requestLocation ...");
-
-        SettingsFragment fragment = (SettingsFragment) ((Activity) getContext())
-                .getFragmentManager().findFragmentByTag(SettingsFragment.TAG);
-        fragment.requestLocation(this);
-    }
-
-    /**
-     * Callback to set the requested location.
-     */
-    public void onLocationDelivered(Location location) {
-        if (location == null) {
-
-            Log.d(TAG, "onLocationDelivered: null returned as location");
-            this.locationInfoTextView.setText(
-                    getContext().getString(R.string.location_not_available));
-        } else {
-            this.locationInfoTextView.setText(getContext().getString(R.string.location_last_known));
-
-            this.locationField.setText( location.getLatitude() +
-                            StringConvertiblePosition.VALUE_SEPARATOR + location.getLongitude() );
-            this.locationField.setEnabled(true);
-        }
-    }
-
-    /**
      * Creates an {@link Intent} to show a location on a map and starts an activity for it.
      */
     private void showMap() {
@@ -192,14 +119,6 @@ public class LocationPreference extends DialogPreference {
         final Uri geoUri = this.getLocation().toGeoUri();
         Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
         getContext().startActivity(mapCall);
-    }
-
-    /**
-     * Is used to disable the ok-button if an invalid location was entered.
-     */
-    private void setButtonsEnabled(boolean enabled) {
-        ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(enabled);
-        this.locationOpenButton.setEnabled(enabled);
     }
 
     /** Getter for the actually configured location. */
@@ -245,9 +164,8 @@ public class LocationPreference extends DialogPreference {
         super.onRestoreInstanceState(savedState.getSuperState());
 
         if (savedState.position != null) {
-            final String locationString = savedState.position.toString();
-            Log.d(TAG, "onRestoreInstanceState: position := " + locationString);
-            this.locationField.setText(locationString);
+            this.location = savedState.position;
+            Log.d(TAG, "onRestoreInstanceState: position := " + this.location);
         }
         Log.d(TAG, "onRestoreInstanceState: locationInfoText := " + savedState.infoText);
 
@@ -293,6 +211,7 @@ public class LocationPreference extends DialogPreference {
             if (this.position == null) {
                 values[INDEX_POSITION] = "";
             } else {
+                // FIXME save values
                 values[INDEX_POSITION] = this.position.toString();
             }
             values[INDEX_TEXT] = this.infoText;

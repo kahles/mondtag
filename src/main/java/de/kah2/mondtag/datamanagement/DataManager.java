@@ -8,6 +8,8 @@ import android.util.Log;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.ZoneId;
 
+import java.util.Locale;
+
 import de.kah2.libZodiac.Calendar;
 import de.kah2.libZodiac.DateRange;
 import de.kah2.mondtag.Mondtag;
@@ -28,6 +30,11 @@ public class DataManager {
     private final static String TAG = DataManager.class.getSimpleName();
 
     private final static int DAYS_TO_CALCULATE_AHEAD = 7;
+
+    private final static StringConvertiblePosition DEFAULT_LOCATION_MUNICH =
+            new StringConvertiblePosition(48.137,11.57521);
+
+    public final static Locale LOCALE = Locale.getDefault();
 
     private final Context context;
 
@@ -63,8 +70,7 @@ public class DataManager {
                 .getDefaultSharedPreferences(context);
 
         initDefaultConfig( preferences,
-                context.getString(R.string.pref_key_location),
-                context.getString(R.string.location_default) );
+                context.getString(R.string.pref_key_location), DEFAULT_LOCATION_MUNICH.toString());
 
         initDefaultConfig( preferences,
                 context.getString(R.string.pref_key_timezone),
@@ -119,8 +125,7 @@ public class DataManager {
             position = StringConvertiblePosition.from(positionString);
         } catch (Exception e) {
             Log.e(TAG, "getPosition: couldn't parse configured position", e);
-            position = StringConvertiblePosition.from(
-                    this.context.getString(R.string.location_default) );
+            position = DEFAULT_LOCATION_MUNICH;
         }
 
         return position;

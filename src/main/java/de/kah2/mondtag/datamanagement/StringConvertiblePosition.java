@@ -3,6 +3,8 @@ package de.kah2.mondtag.datamanagement;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import java.util.Locale;
+
 import de.kah2.libZodiac.planetary.Position;
 
 /**
@@ -10,11 +12,15 @@ import de.kah2.libZodiac.planetary.Position;
  * comma-separated values and building GeoUris.
  *
  * Created by kahles on 18.11.16.
+ *
+ * TODO Is StringConvertiblePosition still needed? Rename?
  */
 
 public class StringConvertiblePosition extends Position {
 
-    public final static String VALUE_SEPARATOR = ",";
+    private final static Locale LAT_LONG_LOCALE = Locale.ROOT;
+
+    private final static String VALUE_SEPARATOR = "|";
 
     private final static String GEO_URI_PREFIX = "geo:";
     private final static String GEO_URI_SEPARATOR = ",";
@@ -24,7 +30,9 @@ public class StringConvertiblePosition extends Position {
     private final static String GEO_URI_PARAM_SEPARATOR = "&";
     private final static String GEO_URI_SEARCH_PREFIX = "q=";
 
-    private StringConvertiblePosition(double lat, double lng) {
+    private final static String DOUBLE_FORMAT = "%.6f";
+
+    StringConvertiblePosition(double lat, double lng) {
         super(lat, lng);
     }
 
@@ -72,5 +80,15 @@ public class StringConvertiblePosition extends Position {
                 + GEO_URI_ZOOM_PREFIX + GEO_URI_ZOOM
                 + GEO_URI_PARAM_SEPARATOR
                 + GEO_URI_SEARCH_PREFIX + this.getLatitude() + GEO_URI_SEPARATOR + getLongitude() );
+    }
+
+    /** Returns a String representing the latitude in neutral format "x.xxxxxx" */
+    public String getFormattedLatitude() {
+        return String.format( LAT_LONG_LOCALE, DOUBLE_FORMAT, this.getLatitude() );
+    }
+
+    /** Returns a String representing the longitude in neutral format "x.xxxxxx" */
+    public String getFormattedLongitude() {
+        return String.format( LAT_LONG_LOCALE, DOUBLE_FORMAT, this.getLongitude() );
     }
 }

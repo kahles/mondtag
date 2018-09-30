@@ -21,6 +21,7 @@ import de.kah2.libZodiac.zodiac.ZodiacDirection;
 import de.kah2.libZodiac.zodiac.ZodiacElement;
 import de.kah2.libZodiac.zodiac.ZodiacSign;
 import de.kah2.mondtag.R;
+import de.kah2.mondtag.datamanagement.DataManager;
 
 /**
  * This class is used to map keys of libZodiac to string- or image-resources, and formats dates and
@@ -33,8 +34,6 @@ public class ResourceMapper {
 
     public final static int INDEX_IMAGE = 0;
     public final static int INDEX_STRING = 1;
-
-    private final static Locale LOCALE = Locale.getDefault();
 
     private final static String INTERPRETER_KEY_PREFIX = "interpret_";
 
@@ -133,13 +132,13 @@ public class ResourceMapper {
 
     /** Returns the translated day of the week of a date. */
     public static String formatDayOfWeek(LocalDate date) {
-        return date.getDayOfWeek().getDisplayName(TextStyle.FULL, LOCALE);
+        return date.getDayOfWeek().getDisplayName(TextStyle.FULL, DataManager.LOCALE);
     }
 
     /** Returns the formatted date string for a {@link LocalDate} */
     public static String formatDate(LocalDate date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-                .withLocale(LOCALE);
+                .withLocale(DataManager.LOCALE);
         return date.format( formatter );
     }
 

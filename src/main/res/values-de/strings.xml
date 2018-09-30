@@ -29,10 +29,6 @@
     <string name="action_info">Info</string>
     <string name="timezone">Zeitzone</string>
     <string name="location">Position</string>
-    <string name="location_last_known">Letzte bekannte Position</string>
-    <string name="location_not_available">Position nicht verfügbar</string>
-    <string name="location_default">48.137,11.57521</string>
-    <string name="location_not_valid">Ort angeben im Format [Breite],[Länge]</string>
     <string name="dialog_permission_message">Um die letzte bekannt Position des Gerätes zu ermitteln, muss Zugriff auf die Standort-Daten erlaubt sein.</string>
     <string name="dialog_button_close">schließen</string>
     <string name="dummy_action">Irgendeine Aktion</string>
@@ -92,5 +88,8 @@
     <string name="interpret_gardening_combatpests_sub">Unterirdische Schädlinge</string>
     <string name="interpret_gardening_combatpests_slugs">Schnecken</string>
     <string name="interpret_gardening_weed">Jäten</string>
+    <string name="dummy_decimal">12,34</string>
+    <string name="location_latitude">Breite</string>
+    <string name="location_longitude">Länge</string>
 
 </resources>
