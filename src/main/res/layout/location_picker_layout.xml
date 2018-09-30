@@ -55,11 +55,21 @@
         android:layout_alignParentEnd="true"
         android:text="@string/location_info_default_loaded"/>
     <Button
+        android:id="@+id/location_search_button"
+        android:text="@string/location_search"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/location_info"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+    <Button
         android:id="@+id/location_open_button"
         android:text="@string/location_open"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/location_info"
+        android:layout_below="@id/location_search_button"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"

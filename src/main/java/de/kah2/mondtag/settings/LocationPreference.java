@@ -57,8 +57,29 @@ public class LocationPreference extends DialogPreference {
 
         this.locationInfoTextView = view.findViewById(R.id.location_info);
 
+        final Button locationSearchButton = view.findViewById(R.id.location_search_button);
+        locationSearchButton.setOnClickListener(v -> LocationPreference.this.openSearchDialog());
+
         final Button locationOpenButton = view.findViewById(R.id.location_open_button);
         locationOpenButton.setOnClickListener(v -> LocationPreference.this.showMap());
+    }
+
+    /**
+     * Opens a dialog for geocoding-search
+     */
+    private void openSearchDialog() {
+        Log.d(TAG, "opening location search dialog");
+        /* TODO implement */
+    }
+
+    /**
+     * Creates an {@link Intent} to show a location on a map and starts an activity for it.
+     */
+    private void showMap() {
+        Log.d(TAG, "showing map");
+        final Uri geoUri = this.getLocation().toGeoUri();
+        Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
+        getContext().startActivity(mapCall);
     }
 
     /**
@@ -109,16 +130,6 @@ public class LocationPreference extends DialogPreference {
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
         return a.getString(index);
-    }
-
-    /**
-     * Creates an {@link Intent} to show a location on a map and starts an activity for it.
-     */
-    private void showMap() {
-        Log.d(TAG, "showing map");
-        final Uri geoUri = this.getLocation().toGeoUri();
-        Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
-        getContext().startActivity(mapCall);
     }
 
     /** Getter for the actually configured location. */

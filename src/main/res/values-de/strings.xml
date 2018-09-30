@@ -91,5 +91,6 @@
     <string name="dummy_decimal">12,34</string>
     <string name="location_latitude">Breite</string>
     <string name="location_longitude">Länge</string>
+    <string name="location_search">Ort suchen</string>
 
 </resources>
