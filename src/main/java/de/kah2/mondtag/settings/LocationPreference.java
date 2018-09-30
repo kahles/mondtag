@@ -103,7 +103,7 @@ public class LocationPreference extends DialogPreference {
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
         if (restorePersistedValue) {
-            final String positionString = this.getPersistedString(null);
+            final String positionString = super.getPersistedString(null);
             try {
 
                 this.location = StringConvertiblePosition.from(positionString);
@@ -165,7 +165,7 @@ public class LocationPreference extends DialogPreference {
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
 
-        if ( state == null || !(state instanceof SavedState) ) {
+        if ( !(state instanceof SavedState) ) {
             Log.d(TAG, "onRestoreInstanceState: Didn't save the state, so call superclass");
             super.onRestoreInstanceState(state);
             return;
@@ -176,19 +176,12 @@ public class LocationPreference extends DialogPreference {
 
         if (savedState.position != null) {
             this.location = savedState.position;
-            Log.d(TAG, "onRestoreInstanceState: position := " + this.location);
+            Log.d(TAG, "onRestoreInstanceState: location := " + savedState.position);
         }
         Log.d(TAG, "onRestoreInstanceState: locationInfoText := " + savedState.infoText);
-
-        if (this.locationInfoTextView != null) {
-            this.locationInfoTextView.setText(savedState.infoText);
-        }
     }
 
     private static class SavedState extends BaseSavedState {
-
-        private static final int INDEX_POSITION = 0;
-        private static final int INDEX_TEXT = 1;
 
         StringConvertiblePosition position;
         String infoText;
@@ -199,18 +192,19 @@ public class LocationPreference extends DialogPreference {
 
         SavedState(Parcel source) {
             super(source);
-            final String[] values = new String[2];
-            source.readStringArray(values);
 
-            try {
-                // We transform the String to a StringConvertiblePosition to have validation
-                this.position = StringConvertiblePosition.from( values[INDEX_POSITION] );
-                Log.d(TAG, "SavedState: read position: " + this.position);
-            } catch (Exception e) {
-                Log.d(TAG, "SavedState: position couldn't be restored: " + position);
+            final double lat = source.readDouble();
+            final double lng = source.readDouble();
+
+            this.position = new StringConvertiblePosition(lat, lng);
+
+            if (this.position.isValid()) {
+                Log.d(TAG, "SavedState: read location: " + this.position);
+            } else {
+                Log.d(TAG, "SavedState: location couldn't be restored - lat=" + lat + " lng=" + lng);
                 this.position = null;
             }
-            this.infoText = values[INDEX_TEXT];
+            this.infoText = source.readString();
         }
 
         @Override
@@ -218,16 +212,11 @@ public class LocationPreference extends DialogPreference {
 
             Log.d(TAG, "writeToParcel: " + this.position);
 
-            final String[] values = new String[2];
-            if (this.position == null) {
-                values[INDEX_POSITION] = "";
-            } else {
-                // FIXME save values
-                values[INDEX_POSITION] = this.position.toString();
+            if (this.position != null) {
+                dest.writeDouble(this.position.getLatitude());
+                dest.writeDouble(this.position.getLongitude());
             }
-            values[INDEX_TEXT] = this.infoText;
-
-            dest.writeStringArray(values);
+            dest.writeString( this.infoText );
 
             super.writeToParcel(dest, flags);
         }

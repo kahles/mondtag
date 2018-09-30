@@ -32,7 +32,7 @@ public class StringConvertiblePosition extends Position {
 
     private final static String DOUBLE_FORMAT = "%.6f";
 
-    StringConvertiblePosition(double lat, double lng) {
+    public StringConvertiblePosition(double lat, double lng) {
         super(lat, lng);
     }
 
