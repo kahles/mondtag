@@ -70,7 +70,8 @@ public class DataManager {
                 .getDefaultSharedPreferences(context);
 
         initDefaultConfig( preferences,
-                context.getString(R.string.pref_key_location), DEFAULT_LOCATION_MUNICH.toString());
+                context.getString(R.string.pref_key_location),
+                DEFAULT_LOCATION_MUNICH.toString());
 
         initDefaultConfig( preferences,
                 context.getString(R.string.pref_key_timezone),
@@ -80,14 +81,13 @@ public class DataManager {
     /** Helper to set default config values */
     private void initDefaultConfig(SharedPreferences preferences, String key, String value) {
         if (preferences.getString(key, null) == null) {
-            Log.i( TAG, "initDefaultConfig: " + key + " := " + value );
+            Log.d( TAG, "initDefaultConfig: " + key + " := " + value );
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString(key, value);
             editor.apply();
             userShouldReviewConfig = true;
         }
     }
-
 
     private Calendar createEmptyCalender() {
 
@@ -109,7 +109,7 @@ public class DataManager {
 
     /**
      * Loads the configured observer position needed for rise- and set-calculation or sets the
-     * default if none is available.
+     * default if <strong>an invalid position</strong> was saved.
      */
     private StringConvertiblePosition getPosition() {
         final SharedPreferences prefs = PreferenceManager

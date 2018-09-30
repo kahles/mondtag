@@ -57,7 +57,7 @@ public class SettingsFragment extends PreferenceFragment
         if (pref instanceof LocationPreference) {
 
             final LocationPreference locPref = (LocationPreference) pref;
-            String summary = locPref.getLocation().toString();
+            String summary = locPref.getPosition().toString();
             locPref.setSummary( summary );
             Log.d(TAG, "onSharedPreferenceChanged: setting " + key + " to " + summary);
 

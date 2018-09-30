@@ -31,7 +31,7 @@ public class LocationPreference extends DialogPreference {
     private EditText longField;
     private TextView positionInfoTextView;
 
-    private StringConvertiblePosition location;
+    private StringConvertiblePosition position;
     private String infoText = "";
 
     public LocationPreference(Context context, AttributeSet attrs) {
@@ -51,9 +51,9 @@ public class LocationPreference extends DialogPreference {
         this.latField = view.findViewById(R.id.location_latitude);
         this.longField = view.findViewById(R.id.location_longitude);
 
-        if (this.location != null) {
-            this.latField.setText( this.location.getFormattedLatitude() );
-            this.longField.setText( this.location.getFormattedLongitude() );
+        if (this.position != null) {
+            this.latField.setText( this.position.getFormattedLatitude() );
+            this.longField.setText( this.position.getFormattedLongitude() );
         }
 
         this.positionInfoTextView = view.findViewById(R.id.location_info);
@@ -70,31 +70,31 @@ public class LocationPreference extends DialogPreference {
      * Opens a dialog for geocoding-search
      */
     private void openSearchDialog() {
-        Log.d(TAG, "opening location search dialog");
+        Log.d(TAG, "opening position search dialog");
         /* TODO implement */
     }
 
     /**
-     * Creates an {@link Intent} to show a location on a map and starts an activity for it.
+     * Creates an {@link Intent} to show a position on a map and starts an activity for it.
      */
     private void showMap() {
         Log.d(TAG, "showing map");
-        final Uri geoUri = this.getLocation().toGeoUri();
+        final Uri geoUri = this.getPosition().toGeoUri();
         Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
         getContext().startActivity(mapCall);
     }
 
     /**
-     * Saves the configured location if dialog was closed by clicking ok-button.
+     * Saves the configured position if dialog was closed by clicking ok-button.
      */
     @Override
     protected void onDialogClosed(boolean okPressed) {
         super.onDialogClosed(okPressed);
 
         if (okPressed) {
-            final String positionString = this.location.toString();
+            final String positionString = this.position.toString();
 
-            Log.d(TAG, "onDialogClosed: saving location \"" + positionString + "\"");
+            Log.d(TAG, "onDialogClosed: saving position \"" + positionString + "\"");
             persistString(positionString);
         }
     }
@@ -108,7 +108,7 @@ public class LocationPreference extends DialogPreference {
             final String positionString = super.getPersistedString(null);
             try {
 
-                this.location = StringConvertiblePosition.from(positionString);
+                this.position = StringConvertiblePosition.from(positionString);
 
                 // If no exception occurred, we're done.
                 return;
@@ -119,11 +119,13 @@ public class LocationPreference extends DialogPreference {
             }
         }
 
-        // no persisted position exists or it' couldn't be read:
+        Log.d(TAG, "onSetInitialValue: no persisted position exists or it' couldn't be read - setting default");
+
+        // FIXME default may be null if an invalid value was saved
 
         final String positionString = (String) defaultValue;
 
-        this.location = StringConvertiblePosition.from(positionString);
+        this.position = StringConvertiblePosition.from(positionString);
 
         persistString(positionString);
     }
@@ -133,9 +135,9 @@ public class LocationPreference extends DialogPreference {
         return a.getString(index);
     }
 
-    /** Getter for the actually configured location. */
-    public StringConvertiblePosition getLocation() {
-        return location;
+    /** Getter for the actually configured position. */
+    public StringConvertiblePosition getPosition() {
+        return position;
     }
 
     /*
@@ -150,10 +152,10 @@ public class LocationPreference extends DialogPreference {
         // We only need to save the preference value if it's not persistent
 
         if (!this.isPersistent()) {
-            Log.d(TAG, "onSaveInstanceState: preference is not persistent - saving location");
-            state.position = this.location;
+            Log.d(TAG, "onSaveInstanceState: preference is not persistent - saving position");
+            state.position = this.position;
         } else {
-            Log.d(TAG, "onSaveInstanceState: preference is persistent - NOT saving location");
+            Log.d(TAG, "onSaveInstanceState: preference is persistent - NOT saving position");
         }
 
         state.infoText = this.infoText;
@@ -174,7 +176,7 @@ public class LocationPreference extends DialogPreference {
         super.onRestoreInstanceState(savedState.getSuperState());
 
         if (savedState.position != null) {
-            this.location = savedState.position;
+            this.position = savedState.position;
             Log.d(TAG, "onRestoreInstanceState: location := " + savedState.position);
         }
         Log.d(TAG, "onRestoreInstanceState: locationInfoText := " + savedState.infoText);
@@ -207,9 +209,9 @@ public class LocationPreference extends DialogPreference {
             this.position = new StringConvertiblePosition(lat, lng);
 
             if (this.position.isValid()) {
-                Log.d(TAG, "SavedState: read location: " + this.position);
+                Log.d(TAG, "SavedState: read position: " + this.position);
             } else {
-                Log.d(TAG, "SavedState: location couldn't be restored - lat=" + lat + " lng=" + lng);
+                Log.d(TAG, "SavedState: position couldn't be restored - lat=" + lat + " lng=" + lng);
                 this.position = null;
             }
             this.infoText = source.readString();
