@@ -29,9 +29,10 @@ public class LocationPreference extends DialogPreference {
 
     private EditText latField;
     private EditText longField;
-    private TextView locationInfoTextView;
+    private TextView positionInfoTextView;
 
     private StringConvertiblePosition location;
+    private String infoText = "";
 
     public LocationPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -55,7 +56,8 @@ public class LocationPreference extends DialogPreference {
             this.longField.setText( this.location.getFormattedLongitude() );
         }
 
-        this.locationInfoTextView = view.findViewById(R.id.location_info);
+        this.positionInfoTextView = view.findViewById(R.id.location_info);
+        this.positionInfoTextView.setText( this.infoText );
 
         final Button locationSearchButton = view.findViewById(R.id.location_search_button);
         locationSearchButton.setOnClickListener(v -> LocationPreference.this.openSearchDialog());
@@ -112,9 +114,8 @@ public class LocationPreference extends DialogPreference {
                 return;
 
             } catch (Exception e) {
-                Log.e(TAG, "onSetInitialValue: \"" + positionString + "\"", e);
-                this.locationInfoTextView.setText(
-                        getContext().getString(R.string.location_info_default_loaded) );
+                Log.w(TAG, "onSetInitialValue: \"" + positionString + "\"", e);
+                setInfoText( getContext().getString(R.string.location_info_default_loaded) );
             }
         }
 
@@ -155,9 +156,7 @@ public class LocationPreference extends DialogPreference {
             Log.d(TAG, "onSaveInstanceState: preference is persistent - NOT saving location");
         }
 
-        if (this.locationInfoTextView != null) {
-            state.infoText = this.locationInfoTextView.getText().toString();
-        }
+        state.infoText = this.infoText;
 
         return state;
     }
@@ -165,7 +164,7 @@ public class LocationPreference extends DialogPreference {
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
 
-        if ( !(state instanceof SavedState) ) {
+        if ( state == null || !(state instanceof SavedState) ) {
             Log.d(TAG, "onRestoreInstanceState: Didn't save the state, so call superclass");
             super.onRestoreInstanceState(state);
             return;
@@ -179,6 +178,15 @@ public class LocationPreference extends DialogPreference {
             Log.d(TAG, "onRestoreInstanceState: location := " + savedState.position);
         }
         Log.d(TAG, "onRestoreInstanceState: locationInfoText := " + savedState.infoText);
+
+        this.infoText = savedState.infoText;
+    }
+
+    void setInfoText(String text) {
+        if (this.positionInfoTextView != null) {
+            this.positionInfoTextView.setText(text);
+        }
+        this.infoText = text;
     }
 
     private static class SavedState extends BaseSavedState {
