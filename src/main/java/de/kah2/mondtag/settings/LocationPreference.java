@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import de.kah2.mondtag.R;
+import de.kah2.mondtag.datamanagement.DataManager;
 import de.kah2.mondtag.datamanagement.StringConvertiblePosition;
 
 /**
@@ -71,7 +72,7 @@ public class LocationPreference extends DialogPreference {
      */
     private void openSearchDialog() {
         Log.d(TAG, "opening position search dialog");
-        /* TODO implement */
+        /* TODO open search dialog here */
     }
 
     /**
@@ -100,34 +101,16 @@ public class LocationPreference extends DialogPreference {
     }
 
     /**
-     * Tries to load the persisted position data.
+     * Initializes this preference. Since we already set a default in
+     * {@link DataManager#getPosition()}, we don't need to do it here 😎
      */
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
-        if (restorePersistedValue) {
-            final String positionString = super.getPersistedString(null);
-            try {
-
-                this.position = StringConvertiblePosition.from(positionString);
-
-                // If no exception occurred, we're done.
-                return;
-
-            } catch (Exception e) {
-                Log.w(TAG, "onSetInitialValue: \"" + positionString + "\"", e);
-                setInfoText( getContext().getString(R.string.location_info_default_loaded) );
-            }
+        if (! restorePersistedValue) {
+            Log.e(TAG, "onSetInitialValue: THE THING THAT SHOULD NOT BE m(");
         }
 
-        Log.d(TAG, "onSetInitialValue: no persisted position exists or it' couldn't be read - setting default");
-
-        // FIXME default may be null if an invalid value was saved
-
-        final String positionString = (String) defaultValue;
-
-        this.position = StringConvertiblePosition.from(positionString);
-
-        persistString(positionString);
+        this.position = StringConvertiblePosition.from( super.getPersistedString( null ) );
     }
 
     @Override
@@ -136,7 +119,7 @@ public class LocationPreference extends DialogPreference {
     }
 
     /** Getter for the actually configured position. */
-    public StringConvertiblePosition getPosition() {
+    StringConvertiblePosition getPosition() {
         return position;
     }
 
@@ -166,7 +149,7 @@ public class LocationPreference extends DialogPreference {
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
 
-        if ( state == null || !(state instanceof SavedState) ) {
+        if ( !(state instanceof SavedState) ) {
             Log.d(TAG, "onRestoreInstanceState: Didn't save the state, so call superclass");
             super.onRestoreInstanceState(state);
             return;
@@ -186,6 +169,7 @@ public class LocationPreference extends DialogPreference {
 
     void setInfoText(String text) {
         if (this.positionInfoTextView != null) {
+            // TODO test if this is necessary
             this.positionInfoTextView.setText(text);
         }
         this.infoText = text;

@@ -34,7 +34,7 @@ public class DataManager {
     private final static StringConvertiblePosition DEFAULT_LOCATION_MUNICH =
             new StringConvertiblePosition(48.137,11.57521);
 
-    public final static Locale LOCALE = Locale.getDefault();
+    private final static String DEFAULT_TZ = ZoneId.systemDefault().toString();
 
     private final Context context;
 
@@ -54,39 +54,23 @@ public class DataManager {
     public DataManager(Context context) {
         this.context = context;
 
-        initConfig();
+        final SharedPreferences preferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        final String prefKeyTz = context.getString(R.string.pref_key_timezone);
+
+        if (preferences.getString(prefKeyTz, null) == null) {
+            Log.d( TAG, "Setting default timezone: " + DEFAULT_TZ);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(prefKeyTz, DEFAULT_TZ);
+            editor.apply();
+            userShouldReviewConfig = true;
+        }
 
         this.fetcher = new DataFetcher(context);
         this.messenger = new DataFetchingMessenger();
 
         this.calendar = this.createEmptyCalender();
-    }
-
-    private void initConfig() {
-
-        final Context context = this.context;
-
-        final SharedPreferences preferences = PreferenceManager
-                .getDefaultSharedPreferences(context);
-
-        initDefaultConfig( preferences,
-                context.getString(R.string.pref_key_location),
-                DEFAULT_LOCATION_MUNICH.toString());
-
-        initDefaultConfig( preferences,
-                context.getString(R.string.pref_key_timezone),
-                ZoneId.systemDefault().toString() );
-    }
-
-    /** Helper to set default config values */
-    private void initDefaultConfig(SharedPreferences preferences, String key, String value) {
-        if (preferences.getString(key, null) == null) {
-            Log.d( TAG, "initDefaultConfig: " + key + " := " + value );
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(key, value);
-            editor.apply();
-            userShouldReviewConfig = true;
-        }
     }
 
     private Calendar createEmptyCalender() {
@@ -133,8 +117,8 @@ public class DataManager {
 
     /**
      * <p>Loads the configured timezone needed for rise- and set-calculation.</p>
-     * <p>We don't need to set a default, because the user can't type any time zone - a default is
-     * already set at {@link #initConfig()}.</p>
+     * <p>We don't need to set a default, because the user can't type any time zone.</p>
+     * TODO set default here?
      */
     public ZoneId getZoneId() {
         final SharedPreferences prefs = PreferenceManager

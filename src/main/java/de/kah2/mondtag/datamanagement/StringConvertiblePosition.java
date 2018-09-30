@@ -12,15 +12,14 @@ import de.kah2.libZodiac.planetary.Position;
  * comma-separated values and building GeoUris.
  *
  * Created by kahles on 18.11.16.
- *
- * TODO Is StringConvertiblePosition still needed? Rename?
  */
 
 public class StringConvertiblePosition extends Position {
 
+    // Since it seems to be standard we use '.' as decimal separator
     private final static Locale LAT_LONG_LOCALE = Locale.ROOT;
 
-    private final static String VALUE_SEPARATOR = "|";
+    private final static String VALUE_SEPARATOR = ",";
 
     private final static String GEO_URI_PREFIX = "geo:";
     private final static String GEO_URI_SEPARATOR = ",";
