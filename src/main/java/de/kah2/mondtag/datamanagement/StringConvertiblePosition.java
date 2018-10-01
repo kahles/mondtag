@@ -19,7 +19,7 @@ public class StringConvertiblePosition extends Position {
     // Since it seems to be standard we use '.' as decimal separator
     private final static Locale LAT_LONG_LOCALE = Locale.ROOT;
 
-    private final static String VALUE_SEPARATOR = ",";
+    public final static String VALUE_SEPARATOR = ",";
 
     private final static String GEO_URI_PREFIX = "geo:";
     private final static String GEO_URI_SEPARATOR = ",";

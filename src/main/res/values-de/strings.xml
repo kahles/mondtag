@@ -92,5 +92,7 @@
     <string name="location_latitude">Breite</string>
     <string name="location_longitude">Länge</string>
     <string name="location_search">Ort suchen</string>
+    <string name="location_search_enter_name">Namen eingeben</string>
+    <string name="location_search_cancel">Abbrechen</string>
 
 </resources>

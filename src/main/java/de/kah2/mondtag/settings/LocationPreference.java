@@ -1,5 +1,7 @@
 package de.kah2.mondtag.settings;
 
+import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -24,7 +26,8 @@ import de.kah2.mondtag.datamanagement.StringConvertiblePosition;
  *
  * Created by kahles on 16.11.16.
  */
-public class LocationPreference extends DialogPreference {
+public class LocationPreference extends DialogPreference
+        implements LocationSearchDialogFragment.LocationReceiver {
 
     private final static String TAG = LocationPreference.class.getSimpleName();
 
@@ -72,7 +75,21 @@ public class LocationPreference extends DialogPreference {
      */
     private void openSearchDialog() {
         Log.d(TAG, "opening position search dialog");
-        /* TODO open search dialog here */
+
+        final LocationSearchDialogFragment searchDialog = new LocationSearchDialogFragment();
+
+        searchDialog.setLocationReceiver(this);
+
+        searchDialog.show(
+                ((Activity) getContext()).getFragmentManager(),
+                LocationSearchDialogFragment.class.getSimpleName());
+    }
+
+    /** Callback for {@link LocationSearchDialogFragment} */
+    @Override
+    public void onSearchResultSelected(StringConvertiblePosition position) {
+
+        this.position = position;
     }
 
     /**
