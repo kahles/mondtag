@@ -106,11 +106,35 @@ public class LocationPreference extends DialogPreference {
      */
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
-        if (! restorePersistedValue) {
-            Log.e(TAG, "onSetInitialValue: THE THING THAT SHOULD NOT BE m(");
-        }
+        if (restorePersistedValue) {
 
-        this.position = StringConvertiblePosition.from( super.getPersistedString( null ) );
+            /*
+             * (From Android Docs) "You cannot use the defaultValue as the default value in the
+             * getPersisted*() method, because its value is always null when restorePersistedValue
+             * is true."
+             */
+            final String positionString = super.getPersistedString( null );
+            try {
+
+                this.position = StringConvertiblePosition.from(positionString);
+
+            } catch (Exception e) {
+                Log.w(TAG, "onSetInitialValue: persisted position couldn't be loaded: \"" +
+                        positionString + "\" - setting default", e);
+                this.position = DataManager.DEFAULT_LOCATION_MUNICH;
+                setInfoText( getContext().getString(R.string.location_info_default_loaded) );
+            }
+
+        } else {
+
+            Log.d(TAG, "onSetInitialValue: no persisted position exists - setting default");
+
+            final String positionString = (String) defaultValue;
+
+            this.position = StringConvertiblePosition.from(positionString);
+
+            persistString(positionString);
+        }
     }
 
     @Override

@@ -31,7 +31,7 @@ public class DataManager {
 
     private final static int DAYS_TO_CALCULATE_AHEAD = 7;
 
-    private final static StringConvertiblePosition DEFAULT_LOCATION_MUNICH =
+    public final static StringConvertiblePosition DEFAULT_LOCATION_MUNICH =
             new StringConvertiblePosition(48.137,11.57521);
 
     private final static String DEFAULT_TZ = ZoneId.systemDefault().toString();
@@ -99,17 +99,22 @@ public class DataManager {
         final SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(this.context);
 
-        final String positionString = prefs.getString(
+        final String prefKey = this.context.getString(R.string.pref_key_location);
 
-                this.context.getString(R.string.pref_key_location), null);
+        final String positionString = prefs.getString(prefKey, null);
 
         StringConvertiblePosition position;
 
         try {
             position = StringConvertiblePosition.from(positionString);
         } catch (Exception e) {
-            Log.e(TAG, "getPosition: couldn't parse configured position", e);
+            Log.w(TAG, "getPosition: couldn't parse configured position \"" + positionString
+                    + "\", using default", e);
             position = DEFAULT_LOCATION_MUNICH;
+
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString( prefKey, position.toString() );
+            editor.apply();
         }
 
         return position;
