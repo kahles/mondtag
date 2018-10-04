@@ -132,13 +132,13 @@ public class ResourceMapper {
 
     /** Returns the translated day of the week of a date. */
     public static String formatDayOfWeek(LocalDate date) {
-        return date.getDayOfWeek().getDisplayName(TextStyle.FULL, ResourceMapper.getLocale());
+        return date.getDayOfWeek().getDisplayName(TextStyle.FULL, DataManager.getLocale());
     }
 
     /** Returns the formatted date string for a {@link LocalDate} */
     public static String formatDate(LocalDate date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-                .withLocale(ResourceMapper.getLocale());
+                .withLocale(DataManager.getLocale());
         return date.format( formatter );
     }
 
@@ -173,9 +173,5 @@ public class ResourceMapper {
     private static void putAll(Enum<?> key, int drawableId, int stringId) {
         mappings.put( key.toString(),
                     new Integer[]{ drawableId, stringId } );
-    }
-
-    private static Locale getLocale() {
-        return Locale.getDefault();
     }
 }

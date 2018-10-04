@@ -207,4 +207,9 @@ public class DataManager {
     public DataFetchingMessenger getDataFetchingMessenger() {
         return messenger;
     }
+
+    /** Returns system's default locale */
+    public static Locale getLocale() {
+        return Locale.getDefault();
+    }
 }
