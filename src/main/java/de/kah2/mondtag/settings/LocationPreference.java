@@ -1,7 +1,6 @@
 package de.kah2.mondtag.settings;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -27,7 +26,7 @@ import de.kah2.mondtag.datamanagement.StringConvertiblePosition;
  * Created by kahles on 16.11.16.
  */
 public class LocationPreference extends DialogPreference
-        implements LocationSearchDialogFragment.LocationReceiver {
+        implements LocationSearchDialogFragment.LocationConsumer {
 
     private final static String TAG = LocationPreference.class.getSimpleName();
 
@@ -78,7 +77,7 @@ public class LocationPreference extends DialogPreference
 
         final LocationSearchDialogFragment searchDialog = new LocationSearchDialogFragment();
 
-        searchDialog.setLocationReceiver(this);
+        searchDialog.setLocationConsumer(this);
 
         searchDialog.show(
                 ((Activity) getContext()).getFragmentManager(),
