@@ -27,7 +27,9 @@
     <string name="location_search">Search location</string>
     <string name="location_search_cancel">Cancel</string>
     <string name="location_search_enter_name">Enter name</string>
-    <string name="location_search_no_geocoder_available">No geocoding service available</string>
+    <string name="location_search_no_geocoder">No geocoding service available</string>
+    <string name="location_search_connection_error">Error connecting to geocoding service</string>
+    <string name="location_search_no_results">No results found</string>
     <string name="dialog_permission_message">In order to get the last known location from your device, you need to grant the permission to access location data.</string>
     <string name="settings_info_dialog_message">It seems Mondtag is started the first time - default settings are loaded. Press \"back\" when you have customized them.</string>
 

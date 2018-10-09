@@ -18,6 +18,7 @@ import android.widget.TextView;
 import de.kah2.mondtag.R;
 import de.kah2.mondtag.datamanagement.DataManager;
 import de.kah2.mondtag.datamanagement.StringConvertiblePosition;
+import static de.kah2.mondtag.settings.LocationSearchResultListAdapter.LocationConsumer;
 
 /**
  * This is a subclass of {@link DialogPreference} which is used to set-up observer position needed
@@ -26,7 +27,7 @@ import de.kah2.mondtag.datamanagement.StringConvertiblePosition;
  * Created by kahles on 16.11.16.
  */
 public class LocationPreference extends DialogPreference
-        implements LocationSearchDialogFragment.LocationConsumer {
+        implements LocationConsumer {
 
     private final static String TAG = LocationPreference.class.getSimpleName();
 
@@ -89,6 +90,8 @@ public class LocationPreference extends DialogPreference
     public void onSearchResultSelected(StringConvertiblePosition position) {
 
         this.position = position;
+        this.latField.setText( this.position.getFormattedLatitude() );
+        this.longField.setText( this.position.getFormattedLongitude() );
     }
 
     /**

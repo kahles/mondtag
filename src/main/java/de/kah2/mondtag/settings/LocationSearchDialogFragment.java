@@ -9,35 +9,43 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.util.Arrays;
-
 import de.kah2.mondtag.R;
 import de.kah2.mondtag.datamanagement.StringConvertiblePosition;
+
+import static de.kah2.mondtag.settings.LocationSearchResultListAdapter.NamedStringConvertiblePosition;
+import static de.kah2.mondtag.settings.LocationSearchResultListAdapter.LocationConsumer;
 
 /**
  * <p>Dialog for geocoding. Allows entering a location and search its coordinates.</p>
  * <p>Called by {@link LocationPreference}, uses {@link GeocodeIntentService for search}.</p>
  */
-public class LocationSearchDialogFragment extends DialogFragment {
+public class LocationSearchDialogFragment extends DialogFragment
+        implements LocationConsumer {
 
     private static final String TAG = LocationSearchDialogFragment.class.getSimpleName();
-
-    public static final String BUNDLE_KEY_SEARCH_TERM = TAG + ".SEARCH_TERM";
 
     private String searchTerm = "";
 
     private ProgressBar progressBar;
+
+    private RecyclerView resultListView;
+
+    // TODO save instance state of results or -adapter?
+    private LocationSearchResultListAdapter resultsAdapter;
 
     private LocationConsumer consumer;
 
@@ -46,14 +54,19 @@ public class LocationSearchDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            this.searchTerm = savedInstanceState.getString(BUNDLE_KEY_SEARCH_TERM);
+            this.searchTerm =
+                    savedInstanceState.getString(GeocodeIntentService.BUNDLE_KEY_SEARCH_TERM);
         }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        final View dialog = inflater.inflate(R.layout.fragment_location_search_dialog, container, false);
+
+        final View dialog = inflater.inflate(
+                R.layout.fragment_location_search_dialog, container, false);
+
+        this.maximizeDialog();
 
         final Button searchButton = dialog.findViewById(R.id.location_search_button);
         searchButton.setOnClickListener(view -> LocationSearchDialogFragment.this.startSearch());
@@ -61,7 +74,29 @@ public class LocationSearchDialogFragment extends DialogFragment {
         final Button cancelButton = dialog.findViewById(R.id.location_search_cancel_button);
         cancelButton.setOnClickListener(view -> LocationSearchDialogFragment.this.onCancel());
 
-        final EditText searchTermField = dialog.findViewById(R.id.location_search_term_field);
+        createSearchTermField(dialog);
+
+        this.resultListView = createResultListView(dialog);
+
+        this.progressBar = dialog.findViewById(R.id.location_search_progressbar);
+
+        return dialog;
+    }
+
+    // FIXME dialog changes size - should be set to a fix and reasonable value ...
+    private void maximizeDialog() {
+
+        final Window window = super.getDialog().getWindow();
+
+        final int size = ViewGroup.LayoutParams.MATCH_PARENT;
+
+        if (window != null) {
+            window.setLayout(size, size);
+        }
+    }
+
+    private void createSearchTermField(View parent) {
+        final EditText searchTermField = parent.findViewById(R.id.location_search_term_field);
         searchTermField.setText(this.searchTerm);
         searchTermField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -79,16 +114,27 @@ public class LocationSearchDialogFragment extends DialogFragment {
                         + LocationSearchDialogFragment.this.searchTerm);
             }
         });
+    }
 
-        this.progressBar = dialog.findViewById(R.id.location_search_progressbar);
+    private RecyclerView createResultListView(View parent) {
+        final RecyclerView view = parent.findViewById(R.id.locations_search_result_list);
 
-        return dialog;
+        final LinearLayoutManager linearLayoutManager =
+                new LinearLayoutManager(getActivity().getApplicationContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        view.setLayoutManager(linearLayoutManager);
+
+        this.resultsAdapter = new LocationSearchResultListAdapter();
+        this.resultsAdapter.setLocationConsumer(this);
+        view.setAdapter(this.resultsAdapter);
+
+        return view;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        outState.putString(BUNDLE_KEY_SEARCH_TERM, this.searchTerm);
+        outState.putString(GeocodeIntentService.BUNDLE_KEY_SEARCH_TERM, this.searchTerm);
 
         super.onSaveInstanceState(outState);
     }
@@ -99,18 +145,18 @@ public class LocationSearchDialogFragment extends DialogFragment {
 
         if (!Geocoder.isPresent()) {
             Toast.makeText(getActivity().getApplicationContext(),
-                    R.string.location_search_no_geocoder_available,
+                    R.string.location_search_no_geocoder,
                     Toast.LENGTH_LONG).show();
             return;
         }
 
-        ResultReceiver resultReceiver = new AddressResultReceiver(null);
+        final ResultReceiver resultReceiver = new AddressResultReceiver(null);
 
-        Intent intent = new Intent( getActivity().getApplicationContext(),
+        final Intent intent = new Intent( getActivity().getApplicationContext(),
                 GeocodeIntentService.class );
 
-        intent.putExtra(GeocodeIntentService.RECEIVER, resultReceiver);
-        intent.putExtra(GeocodeIntentService.SEARCH_TERM, this.searchTerm);
+        intent.putExtra(GeocodeIntentService.BUNDLE_KEY_RECEIVER, resultReceiver);
+        intent.putExtra(GeocodeIntentService.BUNDLE_KEY_SEARCH_TERM, this.searchTerm);
 
         getActivity().startService(intent);
     }
@@ -119,13 +165,13 @@ public class LocationSearchDialogFragment extends DialogFragment {
         this.dismiss();
     }
 
-    private void onSearchedItemSelected() {
-
-        // TODO implement item selection
-
-        this.consumer.onSearchResultSelected(new StringConvertiblePosition(1,1));
+    @Override
+    public void onSearchResultSelected(StringConvertiblePosition position) {
+        this.consumer.onSearchResultSelected(position);
+        this.dismiss();
     }
 
+    /** Class to receive results of {@link GeocodeIntentService} */
     private class AddressResultReceiver extends ResultReceiver {
 
         AddressResultReceiver(Handler handler) {
@@ -139,40 +185,41 @@ public class LocationSearchDialogFragment extends DialogFragment {
                 return;
             }
 
-            // Show a toast message if an address was found.
             if (resultCode == GeocodeIntentService.RESULT_SUCCESS) {
 
-                Parcelable[] parcelables =
-                        resultData.getParcelableArray( GeocodeIntentService.RESULT_DATA_KEY );
+                final Parcelable[] parcelables =
+                        resultData.getParcelableArray( GeocodeIntentService.BUNDLE_KEY_RESULT_DATA_KEY);
 
-                Address[] results = Arrays.copyOf(parcelables, parcelables.length, Address[].class);
+                final NamedStringConvertiblePosition[] results =
+                        new NamedStringConvertiblePosition[parcelables.length];
 
-                LocationSearchDialogFragment.this.progressBar.setVisibility(View.GONE);
+                for (int i = 0; i < parcelables.length; i++) {
 
-                for (int resultNumber = 0; resultNumber < results.length; resultNumber++) {
-
-                    final Address address = results[resultNumber];
-
-                    // TODO process results
-                    /*address.getAddressLine(0);
-                    address.getLatitude();
-                    address.getLongitude();*/
-
-                    Log.i(TAG, "onReceiveResult: Result #" + resultNumber + ":" );
-
-                    for (int lineNumber = 0; lineNumber <= address.getMaxAddressLineIndex(); lineNumber++) {
-                        Log.i( TAG, "onReceiveResult:\t\t" + address.getAddressLine(lineNumber) );
-                    }
+                    final Address address = (Address) parcelables[i];
+                    results[i] = new NamedStringConvertiblePosition(address);
                 }
+
+                LocationSearchDialogFragment.this.resultsAdapter.setResults(results);
+                getActivity().runOnUiThread( () ->
+                    LocationSearchDialogFragment.this.resultListView.setVisibility(View.VISIBLE) );
+            } else {
+
+                final int errorMessageId =
+                        resultData.getInt(GeocodeIntentService.BUNDLE_KEY_ERROR_MESSAGE);
+
+                getActivity().runOnUiThread( () ->
+                Toast.makeText(
+                        getActivity().getApplicationContext(),
+                        errorMessageId,
+                        Toast.LENGTH_SHORT).show() );
             }
+
+            getActivity().runOnUiThread(() ->
+                    LocationSearchDialogFragment.this.progressBar.setVisibility(View.GONE));
         }
     }
 
     void setLocationConsumer(LocationConsumer consumer) {
         this.consumer = consumer;
-    }
-
-    interface LocationConsumer {
-        void onSearchResultSelected(StringConvertiblePosition position);
     }
 }

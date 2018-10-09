@@ -94,6 +94,8 @@
     <string name="location_search">Ort suchen</string>
     <string name="location_search_enter_name">Namen eingeben</string>
     <string name="location_search_cancel">Abbrechen</string>
-    <string name="location_search_no_geocoder_available">Kein Geocodingdienst verfügbar</string>
+    <string name="location_search_no_geocoder">Kein Geocodingdienst verfügbar</string>
+    <string name="location_search_connection_error">Fehler beim Verbinden zum Geocodingdienst</string>
+    <string name="location_search_no_results">Keine Ergebnisse gefunden</string>
 
 </resources>
