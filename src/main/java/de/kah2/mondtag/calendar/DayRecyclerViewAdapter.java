@@ -25,15 +25,15 @@ import de.kah2.mondtag.R;
  *
  * Created by kahles on 09.11.16.
  */
-public class CalendarRecyclerViewAdapter extends RecyclerView.Adapter<CalendarRecyclerViewAdapter.Element> {
+public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerViewAdapter.Item> {
 
     private final ArrayList<Day> days;
 
     private LocalDate today;
 
-    private DayClickListener clickListener;
+    private ClickListener clickListener;
 
-    CalendarRecyclerViewAdapter() {
+    DayRecyclerViewAdapter() {
         this.days = new ArrayList<>();
     }
 
@@ -48,11 +48,11 @@ public class CalendarRecyclerViewAdapter extends RecyclerView.Adapter<CalendarRe
 
     @NonNull
     @Override
-    public Element onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public Item onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View inflatedView = LayoutInflater.from(parent.getContext())
                 .inflate( viewType , parent, false);
 
-        return new Element(inflatedView);
+        return new Item(inflatedView);
     }
 
     public int getItemViewType(int position) {
@@ -64,7 +64,7 @@ public class CalendarRecyclerViewAdapter extends RecyclerView.Adapter<CalendarRe
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Element holder, int position) {
+    public void onBindViewHolder(@NonNull Item holder, int position) {
         Day day;
 
         if ( position < days.size() ) {
@@ -80,10 +80,11 @@ public class CalendarRecyclerViewAdapter extends RecyclerView.Adapter<CalendarRe
 
     @Override
     public int getItemCount() {
+        // +1 because we add the extend-range-Button
         return days.size() + 1;
     }
 
-    void setDayClickListener(DayClickListener clickListener) {
+    void setClickListener(ClickListener clickListener) {
         this.clickListener = clickListener;
     }
 
@@ -91,16 +92,16 @@ public class CalendarRecyclerViewAdapter extends RecyclerView.Adapter<CalendarRe
      * This is the sub-element of our {@link RecyclerView} to manage the days and the button to
      * extend data.
      */
-    class Element extends RecyclerView.ViewHolder
+    class Item extends RecyclerView.ViewHolder
             implements View.OnClickListener, View.OnLongClickListener{
 
-        private final View view;
+        private final View itemView;
 
         private Day day;
 
-        Element(View view) {
-            super(view);
-            this.view = view;
+        Item(View itemView) {
+            super(itemView);
+            this.itemView = itemView;
         }
 
         /**
@@ -113,9 +114,9 @@ public class CalendarRecyclerViewAdapter extends RecyclerView.Adapter<CalendarRe
             if (day == null) {
 
                 // the actual list element is the extend button
-                view.findViewById(R.id.buttonExtendData).setOnClickListener((view)->{
+                itemView.findViewById(R.id.buttonExtendData).setOnClickListener((view)->{
 
-                    Log.d(Element.class.getSimpleName(),
+                    Log.d(Item.class.getSimpleName(),
                             "clickListener: extendButton clicked");
 
                     ((MondtagActivity) view.getContext()).extendFuture();
@@ -124,10 +125,10 @@ public class CalendarRecyclerViewAdapter extends RecyclerView.Adapter<CalendarRe
 
             } else {
 
-                this.view.setOnClickListener(this);
-                this.view.setOnLongClickListener(this);
+                this.itemView.setOnClickListener(this);
+                this.itemView.setOnLongClickListener(this);
 
-                final DayDataDisplayer displayer = new DayDataDisplayer(view);
+                final DayDataDisplayer displayer = new DayDataDisplayer(itemView);
                 displayer.setDayData(day, false);
 
                 setDailyLayoutProperties(day, displayer);
@@ -140,24 +141,24 @@ public class CalendarRecyclerViewAdapter extends RecyclerView.Adapter<CalendarRe
 
             final Context context = displayer.getContext();
 
-            final boolean isToday = day.getDate().isEqual(CalendarRecyclerViewAdapter.this.today);
+            final boolean isToday = day.getDate().isEqual(DayRecyclerViewAdapter.this.today);
 
             // Elevate item, if it is TODAY
 
             if (isToday) {
                 if (Build.VERSION.SDK_INT >= 21) {
-                    this.view.setElevation(20);
+                    this.itemView.setElevation(20);
                 }
-                this.view.setBackgroundColor(
+                this.itemView.setBackgroundColor(
                         ContextCompat.getColor( context, R.color.background_today) );
 
                 displayer.getDayOfWeekView().setTypeface(null, Typeface.BOLD);
 
             } else {
                 if (Build.VERSION.SDK_INT >= 21) {
-                    this.view.setElevation(6);
+                    this.itemView.setElevation(6);
                 }
-                this.view.setBackgroundColor(
+                this.itemView.setBackgroundColor(
                         ContextCompat.getColor( context, R.color.background_default) );
             }
 
@@ -184,17 +185,25 @@ public class CalendarRecyclerViewAdapter extends RecyclerView.Adapter<CalendarRe
 
         @Override
         public void onClick(View v) {
-            CalendarRecyclerViewAdapter.this.clickListener.onShortClick(this.day);
+            final ClickListener listener = DayRecyclerViewAdapter.this.clickListener;
+            if (listener != null) {
+                listener.onShortClick(this.day);
+            }
         }
 
         @Override
         public boolean onLongClick(View v) {
-            return CalendarRecyclerViewAdapter.this.clickListener.onLongClick(this.day);
+            final ClickListener listener = DayRecyclerViewAdapter.this.clickListener;
+            if (listener != null) {
+                return listener.onLongClick(this.day);
+            } else {
+                return false;
+            }
         }
     }
 
     /** Simple "adapter" interface to manage clicks on days */
-    public interface DayClickListener {
+    public interface ClickListener {
 
         /**
          * Is called when a list element is short-clicked.

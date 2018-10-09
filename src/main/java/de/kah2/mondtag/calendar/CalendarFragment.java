@@ -27,7 +27,7 @@ public class CalendarFragment extends Fragment {
     public final static String TAG = CalendarFragment.class.getSimpleName();
 
     private RecyclerView recyclerView;
-    private CalendarRecyclerViewAdapter calendarRecyclerViewAdapter;
+    private DayRecyclerViewAdapter dayRecyclerViewAdapter;
 
     @Nullable
     @Override
@@ -38,9 +38,9 @@ public class CalendarFragment extends Fragment {
         this.recyclerView = view.findViewById(R.id.recycler_view);
         this.recyclerView.setLayoutManager( this.createLayoutManager() );
 
-        this.calendarRecyclerViewAdapter = new CalendarRecyclerViewAdapter();
-        recyclerView.setAdapter(calendarRecyclerViewAdapter);
-        this.calendarRecyclerViewAdapter.setDayClickListener( this.createDayClickListener() );
+        this.dayRecyclerViewAdapter = new DayRecyclerViewAdapter();
+        recyclerView.setAdapter(dayRecyclerViewAdapter);
+        this.dayRecyclerViewAdapter.setClickListener( this.createDayClickListener() );
 
         updateCalendar();
 
@@ -48,14 +48,14 @@ public class CalendarFragment extends Fragment {
     }
 
     private RecyclerView.LayoutManager createLayoutManager() {
-        LinearLayoutManager linearLayoutManager =
+        final LinearLayoutManager linearLayoutManager =
                 new LinearLayoutManager(getActivity().getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         return linearLayoutManager;
     }
 
-    private CalendarRecyclerViewAdapter.DayClickListener createDayClickListener() {
-        return new CalendarRecyclerViewAdapter.DayClickListener() {
+    private DayRecyclerViewAdapter.ClickListener createDayClickListener() {
+        return new DayRecyclerViewAdapter.ClickListener() {
 
             @Override
             public void onShortClick(Day day) {
@@ -86,9 +86,9 @@ public class CalendarFragment extends Fragment {
         if (calendar != null) {
 
             final LinkedList<Day> days = calendar.getValidDays();
-            this.calendarRecyclerViewAdapter.setDays(days);
+            this.dayRecyclerViewAdapter.setDays(days);
 
-            LinearLayoutManager layoutManager =
+            final LinearLayoutManager layoutManager =
                     (LinearLayoutManager) this.recyclerView.getLayoutManager();
 
             int count = 0;

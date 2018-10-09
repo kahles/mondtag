@@ -40,10 +40,10 @@
     <!-- Calendar events -->
     <string name="event_default_name">Action</string>
 
-    <!-- Calendar view -->
+    <!-- Calendar itemView -->
     <string name="button_extend_data">Calculate more days</string>
 
-    <!-- Day detail view descriptions -->
+    <!-- Day detail itemView descriptions -->
     <string name="description_sun_rise">Sun rise</string>
     <string name="description_sun_set">Sun set</string>
     <string name="description_lunar_rise">Lunar rise</string>
