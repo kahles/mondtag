@@ -72,8 +72,6 @@ public class LocationSearchDialogFragment extends DialogFragment
         final View dialog = inflater.inflate(
                 R.layout.fragment_location_search_dialog, container, false);
 
-        this.maximizeDialog();
-
         final Button searchButton = dialog.findViewById(R.id.location_search_button);
         searchButton.setOnClickListener(view -> LocationSearchDialogFragment.this.startSearch());
 
@@ -87,18 +85,6 @@ public class LocationSearchDialogFragment extends DialogFragment
         this.progressBar = dialog.findViewById(R.id.location_search_progressbar);
 
         return dialog;
-    }
-
-    // FIXME dialog changes size - should be set to a fix and reasonable value ...
-    private void maximizeDialog() {
-
-        final Window window = super.getDialog().getWindow();
-
-        final int size = ViewGroup.LayoutParams.MATCH_PARENT;
-
-        if (window != null) {
-            window.setLayout(size, size);
-        }
     }
 
     private void createSearchTermField(View parent) {

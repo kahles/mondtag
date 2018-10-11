@@ -28,7 +28,7 @@
     <string name="action_settings">Einstellungen</string>
     <string name="action_info">Info</string>
     <string name="timezone">Zeitzone</string>
-    <string name="location">Position</string>
+    <string name="location">Ort</string>
     <string name="dialog_permission_message">Um die letzte bekannt Position des Gerätes zu ermitteln, muss Zugriff auf die Standort-Daten erlaubt sein.</string>
     <string name="dialog_button_close">schließen</string>
     <string name="dummy_action">Irgendeine Aktion</string>
@@ -39,7 +39,6 @@
     <string name="data_fetching_toolbar_subtitle">Erzeuge Kalender …</string>
     <string name="settings_info_dialog_message">Es scheint als würde Mondtag zum ersten Mal gestartet - Standardeinstellungen wurden geladen. Drücken Sie \"zurück\", wenn Sie diese angepasst haben.</string>
     <string name="location_open">Auf Karte ansehen</string>
-    <string name="location_info_default_loaded">Als Standardwert wurde \"München\" gesetzt.</string>
     <string name="pref_group_name_rise_set">Auf- und Untergangszeiten</string>
     <string name="description_zodiac_direction">Richtung im Tierkreis</string>
     <string name="description_zodiac_sign">Tierkreiszeichen</string>

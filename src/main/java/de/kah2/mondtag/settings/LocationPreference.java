@@ -32,12 +32,12 @@ public class LocationPreference extends DialogPreference
 
     private final static String TAG = LocationPreference.class.getSimpleName();
 
+    private TextView locationNameTextView;
     private EditText latField;
     private EditText longField;
-    private TextView positionInfoTextView;
 
     private NamedGeoPosition position;
-    private String infoText = "";
+    private String locationName = "";
 
     public LocationPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -53,16 +53,10 @@ public class LocationPreference extends DialogPreference
     protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
 
+        this.locationNameTextView = view.findViewById(R.id.location_name);
         this.latField = view.findViewById(R.id.location_latitude);
         this.longField = view.findViewById(R.id.location_longitude);
-
-        if (this.position != null) {
-            this.latField.setText( this.position.getFormattedLatitude() );
-            this.longField.setText( this.position.getFormattedLongitude() );
-        }
-
-        this.positionInfoTextView = view.findViewById(R.id.location_info);
-        this.positionInfoTextView.setText( this.infoText );
+        this.onSearchResultSelected( this.getPosition() );
 
         final Button locationSearchButton = view.findViewById(R.id.location_search_button);
         locationSearchButton.setOnClickListener(v -> LocationPreference.this.openSearchDialog());
@@ -91,6 +85,7 @@ public class LocationPreference extends DialogPreference
     public void onSearchResultSelected(NamedGeoPosition position) {
 
         this.position = position;
+        this.locationNameTextView.setText( this.position.getName() );
         this.latField.setText( this.position.getFormattedLatitude() );
         this.longField.setText( this.position.getFormattedLongitude() );
     }
@@ -142,7 +137,6 @@ public class LocationPreference extends DialogPreference
                 Log.w(TAG, "onSetInitialValue: persisted position couldn't be loaded: \"" +
                         positionString + "\" - setting default", e);
                 this.position = DataManager.DEFAULT_LOCATION_MUNICH;
-                setInfoText( getContext().getString(R.string.location_info_default_loaded) );
             }
 
         } else {
@@ -185,7 +179,7 @@ public class LocationPreference extends DialogPreference
             Log.d(TAG, "onSaveInstanceState: preference is persistent - NOT saving position");
         }
 
-        state.infoText = this.infoText;
+        state.infoText = this.locationName;
 
         return state;
     }
@@ -208,15 +202,7 @@ public class LocationPreference extends DialogPreference
         }
         Log.d(TAG, "onRestoreInstanceState: locationInfoText := " + savedState.infoText);
 
-        this.infoText = savedState.infoText;
-    }
-
-    private void setInfoText(String text) {
-        if (this.positionInfoTextView != null) {
-            // TODO test if this is necessary
-            this.positionInfoTextView.setText(text);
-        }
-        this.infoText = text;
+        this.locationName = savedState.infoText;
     }
 
     private static class SavedState extends BaseSavedState {

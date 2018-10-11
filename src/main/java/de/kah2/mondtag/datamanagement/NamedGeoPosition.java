@@ -99,6 +99,15 @@ public class NamedGeoPosition extends Position {
     }
     
     /**
+     * @return a string to display - not really compatible with {@link #from(String)}
+     */
+    public String toFormattedString() {
+        return this.getName() + VALUE_SEPARATOR + " "
+                + this.getFormattedLatitude() + VALUE_SEPARATOR + " "
+                + this.getFormattedLongitude();
+    }
+
+    /**
      * Creates a GeoUri that can be passed to {@link android.content.Intent}s of type
      * {@link android.content.Intent#ACTION_VIEW} to open the position with a maps app.
      */

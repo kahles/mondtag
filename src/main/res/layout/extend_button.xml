@@ -3,5 +3,5 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/buttonExtendData"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="@dimen/button_height"
     android:text="@string/button_extend_data"/>

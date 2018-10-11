@@ -22,7 +22,6 @@
     <string name="pref_group_key_rise_set" translatable="false">pref_key_rise_set</string>
     <string name="location_latitude">Latitude</string>
     <string name="location_longitude">Longitude</string>
-    <string name="location_info_default_loaded">Default "Munich, Germany" was set</string>
     <string name="location_open">View on map</string>
     <string name="location_search">Search location</string>
     <string name="location_search_cancel">Cancel</string>
