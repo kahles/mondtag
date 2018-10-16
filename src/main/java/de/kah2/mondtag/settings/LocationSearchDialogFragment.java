@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.os.ResultReceiver;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,9 +25,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import de.kah2.mondtag.R;
-import de.kah2.mondtag.datamanagement.StringConvertiblePosition;
+import de.kah2.mondtag.datamanagement.NamedGeoPosition;
 
-import static de.kah2.mondtag.settings.LocationSearchResultListAdapter.NamedStringConvertiblePosition;
 import static de.kah2.mondtag.settings.LocationSearchResultListAdapter.LocationConsumer;
 
 /**
@@ -44,7 +44,6 @@ public class LocationSearchDialogFragment extends DialogFragment
 
     private RecyclerView resultListView;
 
-    // TODO save instance state of results or -adapter?
     private LocationSearchResultListAdapter resultsAdapter;
 
     private LocationConsumer consumer;
@@ -56,6 +55,13 @@ public class LocationSearchDialogFragment extends DialogFragment
         if (savedInstanceState != null) {
             this.searchTerm =
                     savedInstanceState.getString(GeocodeIntentService.BUNDLE_KEY_SEARCH_TERM);
+
+                final String[] strings = savedInstanceState.getStringArray(
+                        GeocodeIntentService.BUNDLE_KEY_RESULTS );
+
+                if (strings != null) {
+                    this.resultsAdapter.setResults( convertStringsToPositions(strings) );
+                }
         }
     }
 
@@ -134,7 +140,10 @@ public class LocationSearchDialogFragment extends DialogFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        outState.putString(GeocodeIntentService.BUNDLE_KEY_SEARCH_TERM, this.searchTerm);
+        outState.putString( GeocodeIntentService.BUNDLE_KEY_SEARCH_TERM, this.searchTerm );
+
+        outState.putStringArray( GeocodeIntentService.BUNDLE_KEY_RESULTS,
+                convertPositionsToStrings( this.resultsAdapter.getResults() ) );
 
         super.onSaveInstanceState(outState);
     }
@@ -166,7 +175,7 @@ public class LocationSearchDialogFragment extends DialogFragment
     }
 
     @Override
-    public void onSearchResultSelected(StringConvertiblePosition position) {
+    public void onSearchResultSelected(NamedGeoPosition position) {
         this.consumer.onSearchResultSelected(position);
         this.dismiss();
     }
@@ -188,15 +197,14 @@ public class LocationSearchDialogFragment extends DialogFragment
             if (resultCode == GeocodeIntentService.RESULT_SUCCESS) {
 
                 final Parcelable[] parcelables =
-                        resultData.getParcelableArray( GeocodeIntentService.BUNDLE_KEY_RESULT_DATA_KEY);
+                        resultData.getParcelableArray( GeocodeIntentService.BUNDLE_KEY_RESULTS);
 
-                final NamedStringConvertiblePosition[] results =
-                        new NamedStringConvertiblePosition[parcelables.length];
+                final NamedGeoPosition[] results =
+                        new NamedGeoPosition[parcelables.length];
 
-                for (int i = 0; i < parcelables.length; i++) {
+                for (int i = 0; i < results.length; i++) {
 
-                    final Address address = (Address) parcelables[i];
-                    results[i] = new NamedStringConvertiblePosition(address);
+                    results[i] = new NamedGeoPosition( (Address) parcelables[i] );
                 }
 
                 LocationSearchDialogFragment.this.resultsAdapter.setResults(results);
@@ -221,5 +229,27 @@ public class LocationSearchDialogFragment extends DialogFragment
 
     void setLocationConsumer(LocationConsumer consumer) {
         this.consumer = consumer;
+    }
+
+    /** Bloat code for serialization */
+    private static NamedGeoPosition[] convertStringsToPositions(@NonNull String[] strings) {
+        final NamedGeoPosition[] positions = new NamedGeoPosition[strings.length];
+
+        for (int i = 0; i < strings.length; i++) {
+            positions[i] = NamedGeoPosition.from(strings[i]);
+        }
+
+        return positions;
+    }
+
+    /** Bloat code for serialization */
+    private static String[] convertPositionsToStrings(@NonNull NamedGeoPosition[] positions) {
+        final String[] strings = new String[positions.length];
+
+        for (int i = 0; i < positions.length; i++) {
+            strings[i] = positions[i].toString();
+        }
+
+        return strings;
     }
 }

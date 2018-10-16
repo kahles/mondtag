@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import de.kah2.mondtag.R;
-import de.kah2.mondtag.datamanagement.StringConvertiblePosition;
+import de.kah2.mondtag.datamanagement.NamedGeoPosition;
 
 /**
  * <p>This class allows displaying search results of type {@link Address} within a
@@ -21,7 +21,7 @@ import de.kah2.mondtag.datamanagement.StringConvertiblePosition;
 public class LocationSearchResultListAdapter
         extends RecyclerView.Adapter<LocationSearchResultListAdapter.SearchResult> {
 
-    private NamedStringConvertiblePosition[] results;
+    private NamedGeoPosition[] results;
 
     private LocationConsumer locationConsumer;
 
@@ -36,7 +36,7 @@ public class LocationSearchResultListAdapter
 
     @Override
     public void onBindViewHolder(@NonNull SearchResult holder, int position) {
-        final NamedStringConvertiblePosition result = results[position];
+        final NamedGeoPosition result = results[position];
         holder.bindElement(result);
     }
 
@@ -58,14 +58,14 @@ public class LocationSearchResultListAdapter
 
         private final View itemView;
 
-        private NamedStringConvertiblePosition address;
+        private NamedGeoPosition address;
 
         SearchResult(View itemView) {
             super(itemView);
             this.itemView = itemView;
         }
 
-        void bindElement(NamedStringConvertiblePosition address) {
+        void bindElement(NamedGeoPosition address) {
             this.address = address;
 
             final TextView nameView = itemView.findViewById(R.id.location_search_result_name);
@@ -96,30 +96,14 @@ public class LocationSearchResultListAdapter
         this.locationConsumer = locationConsumer;
     }
 
-    void setResults(NamedStringConvertiblePosition[] results) {
+    void setResults(NamedGeoPosition[] results) {
         this.results = results;
     }
 
-    /**
-     * The purpose of this class is to easily manage {@link StringConvertiblePosition}s with a
-     * describing name.
-     */
-    static class NamedStringConvertiblePosition extends StringConvertiblePosition {
-
-        private final String name;
-
-        NamedStringConvertiblePosition(Address address) {
-            super(address.getLatitude(), address.getLongitude());
-            this.name = address.getAddressLine(0);
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
+    public NamedGeoPosition[] getResults() { return results; }
 
     /** Simple interface to deliver a search result to another class */
     interface LocationConsumer {
-        void onSearchResultSelected(StringConvertiblePosition position);
+        void onSearchResultSelected(NamedGeoPosition position);
     }
 }

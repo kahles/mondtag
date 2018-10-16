@@ -28,7 +28,7 @@ public class GeocodeIntentService extends IntentService {
 
     static final String BUNDLE_KEY_RECEIVER = TAG + ".RECEIVER";
     static final String BUNDLE_KEY_SEARCH_TERM = TAG + ".SEARCH_TERM";
-    static final String BUNDLE_KEY_RESULT_DATA_KEY = TAG + ".RESULT";
+    static final String BUNDLE_KEY_RESULTS = TAG + ".RESULTS";
     static final String BUNDLE_KEY_ERROR_MESSAGE = TAG + ".ERROR";
 
     public static final int MAX_RESULTS = 20;
@@ -56,6 +56,7 @@ public class GeocodeIntentService extends IntentService {
         try {
 
             final Geocoder geocoder = new Geocoder(this, DataManager.getLocale() );
+
             results = geocoder.getFromLocationName(searchTerm, MAX_RESULTS);
 
         } catch (IOException e) {
@@ -82,18 +83,21 @@ public class GeocodeIntentService extends IntentService {
         }
     }
 
-    private void deliverResultToReceiver(int resultCode, Address[] results, int messageId) {
-        Bundle bundle = new Bundle();
+    private void deliverResultToReceiver(int resultCode, Address[] addresses, int messageId) {
+
+        final Bundle bundle = new Bundle();
 
         if (resultCode == RESULT_SUCCESS) {
-            Log.d(TAG, "deliverResultToReceiver: delivering " + results.length + " results.");
-            bundle.putParcelableArray(BUNDLE_KEY_RESULT_DATA_KEY, results);
+
+            Log.d(TAG, "deliverResultToReceiver: delivering " + addresses.length + " results.");
+            bundle.putParcelableArray(BUNDLE_KEY_RESULTS, addresses);
+
         } else {
+
             Log.d(TAG, "deliverResultToReceiver: delivering error message");
             bundle.putInt(BUNDLE_KEY_ERROR_MESSAGE, messageId);
         }
 
         this.receiver.send(resultCode, bundle);
     }
-
 }

@@ -31,8 +31,8 @@ public class DataManager {
 
     private final static int DAYS_TO_CALCULATE_AHEAD = 7;
 
-    public final static StringConvertiblePosition DEFAULT_LOCATION_MUNICH =
-            new StringConvertiblePosition(48.137,11.57521);
+    public final static NamedGeoPosition DEFAULT_LOCATION_MUNICH =
+            new NamedGeoPosition("Munich Germany",48.137,11.57521);
 
     private final static String DEFAULT_TZ = ZoneId.systemDefault().toString();
 
@@ -95,7 +95,7 @@ public class DataManager {
      * Loads the configured observer position needed for rise- and set-calculation or sets the
      * default if <strong>an invalid position</strong> was saved.
      */
-    private StringConvertiblePosition getPosition() {
+    private NamedGeoPosition getPosition() {
         final SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(this.context);
 
@@ -103,10 +103,10 @@ public class DataManager {
 
         final String positionString = prefs.getString(prefKey, null);
 
-        StringConvertiblePosition position;
+        NamedGeoPosition position;
 
         try {
-            position = StringConvertiblePosition.from(positionString);
+            position = NamedGeoPosition.from(positionString);
         } catch (Exception e) {
             Log.w(TAG, "getPosition: couldn't parse configured position \"" + positionString
                     + "\", using default", e);

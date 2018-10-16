@@ -17,7 +17,8 @@ import android.widget.TextView;
 
 import de.kah2.mondtag.R;
 import de.kah2.mondtag.datamanagement.DataManager;
-import de.kah2.mondtag.datamanagement.StringConvertiblePosition;
+import de.kah2.mondtag.datamanagement.NamedGeoPosition;
+
 import static de.kah2.mondtag.settings.LocationSearchResultListAdapter.LocationConsumer;
 
 /**
@@ -35,7 +36,7 @@ public class LocationPreference extends DialogPreference
     private EditText longField;
     private TextView positionInfoTextView;
 
-    private StringConvertiblePosition position;
+    private NamedGeoPosition position;
     private String infoText = "";
 
     public LocationPreference(Context context, AttributeSet attrs) {
@@ -87,7 +88,7 @@ public class LocationPreference extends DialogPreference
 
     /** Callback for {@link LocationSearchDialogFragment} */
     @Override
-    public void onSearchResultSelected(StringConvertiblePosition position) {
+    public void onSearchResultSelected(NamedGeoPosition position) {
 
         this.position = position;
         this.latField.setText( this.position.getFormattedLatitude() );
@@ -135,7 +136,7 @@ public class LocationPreference extends DialogPreference
             final String positionString = super.getPersistedString( null );
             try {
 
-                this.position = StringConvertiblePosition.from(positionString);
+                this.position = NamedGeoPosition.from(positionString);
 
             } catch (Exception e) {
                 Log.w(TAG, "onSetInitialValue: persisted position couldn't be loaded: \"" +
@@ -150,7 +151,7 @@ public class LocationPreference extends DialogPreference
 
             final String positionString = (String) defaultValue;
 
-            this.position = StringConvertiblePosition.from(positionString);
+            this.position = NamedGeoPosition.from(positionString);
 
             persistString(positionString);
         }
@@ -162,7 +163,7 @@ public class LocationPreference extends DialogPreference
     }
 
     /** Getter for the actually configured position. */
-    StringConvertiblePosition getPosition() {
+    NamedGeoPosition getPosition() {
         return position;
     }
 
@@ -210,7 +211,7 @@ public class LocationPreference extends DialogPreference
         this.infoText = savedState.infoText;
     }
 
-    void setInfoText(String text) {
+    private void setInfoText(String text) {
         if (this.positionInfoTextView != null) {
             // TODO test if this is necessary
             this.positionInfoTextView.setText(text);
@@ -220,7 +221,7 @@ public class LocationPreference extends DialogPreference
 
     private static class SavedState extends BaseSavedState {
 
-        StringConvertiblePosition position;
+        NamedGeoPosition position;
         String infoText;
 
         SavedState(Parcelable superState) {
@@ -230,15 +231,16 @@ public class LocationPreference extends DialogPreference
         SavedState(Parcel source) {
             super(source);
 
-            final double lat = source.readDouble();
-            final double lng = source.readDouble();
+            final String serializedPosition = source.readString();
 
-            this.position = new StringConvertiblePosition(lat, lng);
+            try {
 
-            if (this.position.isValid()) {
+                this.position = NamedGeoPosition.from(serializedPosition);
                 Log.d(TAG, "SavedState: read position: " + this.position);
-            } else {
-                Log.d(TAG, "SavedState: position couldn't be restored - lat=" + lat + " lng=" + lng);
+
+            } catch (IllegalArgumentException e) {
+
+                Log.d(TAG, "SavedState: position couldn't be restored: " + serializedPosition);
                 this.position = null;
             }
             this.infoText = source.readString();
@@ -250,10 +252,8 @@ public class LocationPreference extends DialogPreference
             Log.d(TAG, "writeToParcel: " + this.position);
 
             if (this.position != null) {
-                dest.writeDouble(this.position.getLatitude());
-                dest.writeDouble(this.position.getLongitude());
+                dest.writeString( this.position.toString() );
             }
-            dest.writeString( this.infoText );
 
             super.writeToParcel(dest, flags);
         }
