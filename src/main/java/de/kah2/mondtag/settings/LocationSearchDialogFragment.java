@@ -232,7 +232,11 @@ public class LocationSearchDialogFragment extends DialogFragment
     }
 
     /** Bloat code for serialization */
-    private static NamedGeoPosition[] convertStringsToPositions(@NonNull String[] strings) {
+    private static NamedGeoPosition[] convertStringsToPositions(String[] strings) {
+
+        if (strings == null)
+            return null;
+
         final NamedGeoPosition[] positions = new NamedGeoPosition[strings.length];
 
         for (int i = 0; i < strings.length; i++) {
@@ -243,7 +247,11 @@ public class LocationSearchDialogFragment extends DialogFragment
     }
 
     /** Bloat code for serialization */
-    private static String[] convertPositionsToStrings(@NonNull NamedGeoPosition[] positions) {
+    private static String[] convertPositionsToStrings(NamedGeoPosition[] positions) {
+
+        if (positions == null)
+            return null;
+
         final String[] strings = new String[positions.length];
 
         for (int i = 0; i < positions.length; i++) {
