@@ -122,4 +122,16 @@ public class NamedGeoPosition extends Position {
     public void setName(String name) {
         this.name = name.replace(VALUE_SEPARATOR, " ");;
     }
+
+    /** See {@link #set(ValueType, double)} */
+    public enum ValueType { LATITUDE, LONGITUDE }
+
+    /** Dynamic setter - since we don't have method references ... */
+    public void set(ValueType valueType, double value) {
+
+        switch (valueType) {
+            case LATITUDE: this.setLatitude(value); break;
+            case LONGITUDE: this.setLongitude(value); break;
+        }
+    }
 }

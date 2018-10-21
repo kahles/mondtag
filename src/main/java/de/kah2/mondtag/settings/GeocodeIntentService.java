@@ -18,6 +18,7 @@ import de.kah2.mondtag.datamanagement.DataManager;
  * This is an intent service to allow geocoing in background. See
  * <a href="https://developer.android.com/training/location/display-address">Android docs</a> for
  * details.
+ * TODO move to helpers?
  */
 public class GeocodeIntentService extends IntentService {
 

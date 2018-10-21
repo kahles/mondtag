@@ -1,6 +1,7 @@
 package de.kah2.mondtag.settings;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -8,6 +9,8 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.DialogPreference;
+import android.support.v4.content.ContextCompat;
+import android.text.Editable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +21,7 @@ import android.widget.TextView;
 import de.kah2.mondtag.R;
 import de.kah2.mondtag.datamanagement.DataManager;
 import de.kah2.mondtag.datamanagement.NamedGeoPosition;
+import de.kah2.mondtag.helpers.AbstractSimpleTextWatcher;
 
 import static de.kah2.mondtag.settings.LocationSearchResultListAdapter.LocationConsumer;
 
@@ -33,11 +37,14 @@ public class LocationPreference extends DialogPreference
     private final static String TAG = LocationPreference.class.getSimpleName();
 
     private TextView locationNameTextView;
-    private EditText latField;
-    private EditText longField;
+    private EditText latitudeField;
+    private EditText longitudeField;
+
+    private int editTextDefaultColor;
 
     private NamedGeoPosition position;
-    private String locationName = "";
+
+    private boolean listenersEnabled = true;
 
     public LocationPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -53,16 +60,78 @@ public class LocationPreference extends DialogPreference
     protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
 
-        this.locationNameTextView = view.findViewById(R.id.location_name);
-        this.latField = view.findViewById(R.id.location_latitude);
-        this.longField = view.findViewById(R.id.location_longitude);
-        this.onSearchResultSelected( this.getPosition() );
+        this.initPositionTextFields(view);
 
         final Button locationSearchButton = view.findViewById(R.id.location_search_button);
         locationSearchButton.setOnClickListener(v -> LocationPreference.this.openSearchDialog());
 
         final Button locationOpenButton = view.findViewById(R.id.location_open_button);
         locationOpenButton.setOnClickListener(v -> LocationPreference.this.showMap());
+
+        this.editTextDefaultColor = this.latitudeField.getCurrentTextColor();
+    }
+
+    private void initPositionTextFields(View view) {
+
+        // get fields
+        this.locationNameTextView = view.findViewById(R.id.location_name);
+        this.latitudeField = view.findViewById(R.id.location_latitude);
+        this.longitudeField = view.findViewById(R.id.location_longitude);
+
+        // set values
+        this.setSearchResult( this.getPosition() );
+
+        // add listeners
+        this.locationNameTextView.addTextChangedListener(new AbstractSimpleTextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (listenersEnabled) {
+                    Log.d(TAG, "afterTextChanged: name = " + s.toString());
+                    LocationPreference.this.position.setName(s.toString());
+                }
+            }
+        });
+        this.addLatLngListener(this.latitudeField, NamedGeoPosition.ValueType.LATITUDE);
+        this.addLatLngListener(this.longitudeField, NamedGeoPosition.ValueType.LONGITUDE);
+    }
+
+    private void addLatLngListener(EditText source, NamedGeoPosition.ValueType target) {
+        source.addTextChangedListener( new AbstractSimpleTextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (listenersEnabled) {
+                    final double value = Double.parseDouble( s.toString() );
+
+                    boolean isValid = true;
+
+                    try {
+                        LocationPreference.this.position.set(target,
+                                Double.valueOf( s.toString() ) );
+                        Log.d(TAG, "afterTextChanged: " + target + "=" + s.toString());
+
+                    } catch (IllegalArgumentException e) {
+
+                        Log.d(TAG, "afterTextChanged: invalid " + target + ": " + value);
+                        isValid = false;
+                    }
+
+                    // mark field to show invalid data was entered
+                    LocationPreference.this.setUserInputValid( isValid, source );
+                }
+            }
+        });
+    }
+
+    private void setUserInputValid(boolean isValid, EditText inputField) {
+
+        if (isValid) {
+            inputField.setTextColor(this.editTextDefaultColor);
+        } else {
+            inputField.setTextColor(ContextCompat.getColor(getContext(), R.color.invalid_text));
+        }
+
+        ((AlertDialog) this.getDialog()).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(isValid);
     }
 
     /**
@@ -82,12 +151,17 @@ public class LocationPreference extends DialogPreference
 
     /** Callback for {@link LocationSearchDialogFragment} */
     @Override
-    public void onSearchResultSelected(NamedGeoPosition position) {
+    public void setSearchResult(NamedGeoPosition position) {
+
+        // do not trigger listeners
+        this.listenersEnabled = false;
 
         this.position = position;
         this.locationNameTextView.setText( this.position.getName() );
-        this.latField.setText( this.position.getFormattedLatitude() );
-        this.longField.setText( this.position.getFormattedLongitude() );
+        this.latitudeField.setText( this.position.getFormattedLatitude() );
+        this.longitudeField.setText( this.position.getFormattedLongitude() );
+
+        this.listenersEnabled = true;
     }
 
     /**
@@ -179,8 +253,6 @@ public class LocationPreference extends DialogPreference
             Log.d(TAG, "onSaveInstanceState: preference is persistent - NOT saving position");
         }
 
-        state.infoText = this.locationName;
-
         return state;
     }
 
@@ -201,8 +273,6 @@ public class LocationPreference extends DialogPreference
             Log.d(TAG, "onRestoreInstanceState: location := " + savedState.position);
         }
         Log.d(TAG, "onRestoreInstanceState: locationInfoText := " + savedState.infoText);
-
-        this.locationName = savedState.infoText;
     }
 
     private static class SavedState extends BaseSavedState {

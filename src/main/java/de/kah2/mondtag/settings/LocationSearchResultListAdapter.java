@@ -87,7 +87,7 @@ public class LocationSearchResultListAdapter
             final LocationConsumer consumer = LocationSearchResultListAdapter.this.locationConsumer;
 
             if (consumer != null) {
-                consumer.onSearchResultSelected(this.address);
+                consumer.setSearchResult(this.address);
             }
         }
     }
@@ -104,6 +104,6 @@ public class LocationSearchResultListAdapter
 
     /** Simple interface to deliver a search result to another class */
     interface LocationConsumer {
-        void onSearchResultSelected(NamedGeoPosition position);
+        void setSearchResult(NamedGeoPosition position);
     }
 }

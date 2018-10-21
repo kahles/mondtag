@@ -8,17 +8,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.os.ResultReceiver;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -26,6 +23,7 @@ import android.widget.Toast;
 
 import de.kah2.mondtag.R;
 import de.kah2.mondtag.datamanagement.NamedGeoPosition;
+import de.kah2.mondtag.helpers.AbstractSimpleTextWatcher;
 
 import static de.kah2.mondtag.settings.LocationSearchResultListAdapter.LocationConsumer;
 
@@ -60,6 +58,7 @@ public class LocationSearchDialogFragment extends DialogFragment
                         GeocodeIntentService.BUNDLE_KEY_RESULTS );
 
                 if (strings != null) {
+                    // TODO use streams and remove
                     this.resultsAdapter.setResults( convertStringsToPositions(strings) );
                 }
         }
@@ -90,13 +89,7 @@ public class LocationSearchDialogFragment extends DialogFragment
     private void createSearchTermField(View parent) {
         final EditText searchTermField = parent.findViewById(R.id.location_search_term_field);
         searchTermField.setText(this.searchTerm);
-        searchTermField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
+        searchTermField.addTextChangedListener(new AbstractSimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -161,8 +154,8 @@ public class LocationSearchDialogFragment extends DialogFragment
     }
 
     @Override
-    public void onSearchResultSelected(NamedGeoPosition position) {
-        this.consumer.onSearchResultSelected(position);
+    public void setSearchResult(NamedGeoPosition position) {
+        this.consumer.setSearchResult(position);
         this.dismiss();
     }
 
@@ -217,7 +210,9 @@ public class LocationSearchDialogFragment extends DialogFragment
         this.consumer = consumer;
     }
 
-    /** Bloat code for serialization */
+    /**
+     * Bloat code for serialization
+     */
     private static NamedGeoPosition[] convertStringsToPositions(String[] strings) {
 
         if (strings == null)
@@ -232,7 +227,9 @@ public class LocationSearchDialogFragment extends DialogFragment
         return positions;
     }
 
-    /** Bloat code for serialization */
+    /**
+     * Bloat code for serialization
+     */
     private static String[] convertPositionsToStrings(NamedGeoPosition[] positions) {
 
         if (positions == null)

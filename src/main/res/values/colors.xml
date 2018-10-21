@@ -9,4 +9,7 @@
     <color name="day_of_week_color_highlight">#FFFFFF</color>
     <color name="day_of_week_weekend_color">#DD1100</color>
     <color name="day_of_week_weekend_color_highlight">#FF2200</color>
+
+    <!-- Location_picker_layout -->
+    <color name="invalid_text">#FF0000</color>
 </resources>
