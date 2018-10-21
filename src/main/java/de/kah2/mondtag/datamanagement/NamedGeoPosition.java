@@ -22,8 +22,6 @@ public class NamedGeoPosition extends Position {
     // Since it seems to be standard we use '.' as decimal separator
     private final static Locale LAT_LONG_LOCALE = Locale.ROOT;
 
-    public final static String VALUE_SEPARATOR = ",";
-
     private final static String GEO_URI_PREFIX = "geo:";
     private final static String GEO_URI_SEPARATOR = ",";
     private final static String GEO_URI_PARAM_PREFIX = "?";
@@ -34,19 +32,12 @@ public class NamedGeoPosition extends Position {
 
     private final static String DOUBLE_FORMAT = "%.6f";
 
-    private final String name;
-
-    public NamedGeoPosition(double lat, double lng) {
-        super(lat, lng);
-        this.name = "";
-    }
+    private String name;
 
     public NamedGeoPosition(String name, double lat, double lng) {
 
         super(lat, lng);
-
-        // remove VALUE_SEPARATOR occurrences to ensure serializability
-        this.name = name.replace(VALUE_SEPARATOR, " ");
+        this.setName(name);
     }
 
     public NamedGeoPosition(Address address) {
@@ -77,25 +68,15 @@ public class NamedGeoPosition extends Position {
         final double lat = Double.parseDouble(values[1]);
         final double lon = Double.parseDouble(values[2]);
 
-        NamedGeoPosition position = new NamedGeoPosition(name, lat, lon);
-
-        if (!position.isValid()) {
-            throw new IllegalArgumentException(
-                    "Values of latitude or longitude are not in valid range");
-        }
-
-        return position;
+        return new NamedGeoPosition(name, lat, lon);
     }
 
     /**
-     * Exports comma-separated values
+     * Exports name, latitude and longitude separated through VALUE_SEPARATOR
      */
     @Override
     public String toString() {
-
-        return this.getName() + VALUE_SEPARATOR
-                + this.getLatitude() + VALUE_SEPARATOR
-                + this.getLongitude();
+        return this.getName() + VALUE_SEPARATOR + super.toString();
     }
     
     /**
@@ -131,6 +112,14 @@ public class NamedGeoPosition extends Position {
     }
 
     public String getName() {
-        return name;
+        if (name == null)
+            return "";
+        else
+            return name;
+    }
+
+    /** Sets name and replaces occurences of VALUE_SEPARATOR with spaces. */
+    public void setName(String name) {
+        this.name = name.replace(VALUE_SEPARATOR, " ");;
     }
 }
