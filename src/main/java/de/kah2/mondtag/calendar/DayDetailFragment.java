@@ -36,10 +36,14 @@ public class DayDetailFragment extends android.app.DialogFragment {
         if (savedInstanceState != null) {
             Log.d(TAG, "onCreateView: loading savedInstanceState");
 
-            final LocalDate date = LocalDate.parse( savedInstanceState.getString(BUNDLE_KEY_DATE) );
+            final String dateStr = savedInstanceState.getString(BUNDLE_KEY_DATE);
 
-            this.day = ((Mondtag) getActivity().getApplicationContext()).getDataManager()
-                    .getCalendar().get(date);
+            if (dateStr != null) {
+                final LocalDate date = LocalDate.parse(dateStr);
+
+                this.day = ((Mondtag) getActivity().getApplicationContext()).getDataManager()
+                        .getCalendar().get(date);
+            }
         }
 
         DayDataDisplayer viewHolder = new DayDataDisplayer(view);

@@ -29,7 +29,6 @@
     <string name="action_info">Info</string>
     <string name="timezone">Zeitzone</string>
     <string name="location">Ort</string>
-    <string name="dialog_permission_message">Um die letzte bekannt Position des Gerätes zu ermitteln, muss Zugriff auf die Standort-Daten erlaubt sein.</string>
     <string name="dialog_button_close">schließen</string>
     <string name="dummy_action">Irgendeine Aktion</string>
     <string name="status_counting">Setze Tageszähler</string>

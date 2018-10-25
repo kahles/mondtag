@@ -15,10 +15,9 @@ import de.kah2.mondtag.R;
 import de.kah2.mondtag.datamanagement.DataManager;
 
 /**
- * This is an intent service to allow geocoing in background. See
+ * This is an intent service to allow geocoding in background. See
  * <a href="https://developer.android.com/training/location/display-address">Android docs</a> for
  * details.
- * TODO move to helpers?
  */
 public class GeocodeIntentService extends IntentService {
 
@@ -66,7 +65,7 @@ public class GeocodeIntentService extends IntentService {
 
         if (results == null) {
 
-            Log.e(TAG, "onHandleIntent: geocoder returned null value");
+            Log.e(TAG, "onHandleIntent: Geocoder returned null value");
 
             this.deliverResultToReceiver( RESULT_FAILURE,
                     null, R.string.location_search_connection_error);

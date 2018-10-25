@@ -12,6 +12,7 @@ import java.util.Locale;
 
 import de.kah2.libZodiac.Calendar;
 import de.kah2.libZodiac.DateRange;
+import de.kah2.libZodiac.planetary.Position;
 import de.kah2.mondtag.Mondtag;
 import de.kah2.mondtag.R;
 
@@ -54,19 +55,6 @@ public class DataManager {
     public DataManager(Context context) {
         this.context = context;
 
-        final SharedPreferences preferences = PreferenceManager
-                .getDefaultSharedPreferences(context);
-
-        final String prefKeyTz = context.getString(R.string.pref_key_timezone);
-
-        if (preferences.getString(prefKeyTz, null) == null) {
-            Log.d( TAG, "Setting default timezone: " + DEFAULT_TZ);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(prefKeyTz, DEFAULT_TZ);
-            editor.apply();
-            userShouldReviewConfig = true;
-        }
-
         this.fetcher = new DataFetcher(context);
         this.messenger = new DataFetchingMessenger();
 
@@ -77,13 +65,12 @@ public class DataManager {
 
         final LocalDate startDate = LocalDate.now();
 
+        final Position position = this.getPosition();
+        final ZoneId zoneId = this.getZoneId();
         final DateRange range = new DateRange( startDate,
                 startDate.plusDays(DAYS_TO_CALCULATE_AHEAD) );
 
-        final Calendar calendar = new Calendar(
-                this.getPosition(),
-                this.getZoneId(),
-                range );
+        final Calendar calendar = new Calendar( position, zoneId, range );
 
         calendar.addProgressListener(this.fetcher);
         calendar.addProgressListener(this.messenger);
@@ -115,6 +102,8 @@ public class DataManager {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString( prefKey, position.toString() );
             editor.apply();
+
+            this.userShouldReviewConfig = true;
         }
 
         return position;
@@ -123,14 +112,27 @@ public class DataManager {
     /**
      * <p>Loads the configured timezone needed for rise- and set-calculation.</p>
      * <p>We don't need to set a default, because the user can't type any time zone.</p>
-     * TODO set default here?
      */
     public ZoneId getZoneId() {
-        final SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(this.context);
+        final SharedPreferences preferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
 
-        String timezone = prefs.getString(
-                this.context.getString(R.string.pref_key_timezone), null);
+        final String prefKeyTz = context.getString(R.string.pref_key_timezone);
+
+        String timezone = preferences.getString(prefKeyTz, null);
+
+        if (timezone == null) {
+
+            Log.d( TAG, "Setting default timezone: " + DEFAULT_TZ);
+
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(prefKeyTz, DEFAULT_TZ);
+            editor.apply();
+
+            userShouldReviewConfig = true;
+
+            timezone = DEFAULT_TZ;
+        }
 
         return ZoneId.of(timezone);
     }

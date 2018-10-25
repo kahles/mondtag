@@ -15,7 +15,6 @@ import java.util.Set;
 /**
  * This class is used to get sorted Arrays of {@link ZoneId}s and the
  * corresponding strings to display.
- * TODO move to helpers?
  */
 class TimeZonesArrayGenerator {
 

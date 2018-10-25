@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 
 import de.kah2.mondtag.R;
 import de.kah2.mondtag.datamanagement.NamedGeoPosition;
-import de.kah2.mondtag.helpers.AbstractSimpleTextWatcher;
 
 import static de.kah2.mondtag.settings.LocationSearchResultListAdapter.LocationConsumer;
 
@@ -58,7 +56,6 @@ public class LocationSearchDialogFragment extends DialogFragment
                         GeocodeIntentService.BUNDLE_KEY_RESULTS );
 
                 if (strings != null) {
-                    // TODO use streams and remove
                     this.resultsAdapter.setResults( convertStringsToPositions(strings) );
                 }
         }
@@ -138,7 +135,7 @@ public class LocationSearchDialogFragment extends DialogFragment
             return;
         }
 
-        final ResultReceiver resultReceiver = new AddressResultReceiver(null);
+        final ResultReceiver resultReceiver = new AddressResultReceiver();
 
         final Intent intent = new Intent( getActivity().getApplicationContext(),
                 GeocodeIntentService.class );
@@ -162,8 +159,8 @@ public class LocationSearchDialogFragment extends DialogFragment
     /** Class to receive results of {@link GeocodeIntentService} */
     private class AddressResultReceiver extends ResultReceiver {
 
-        AddressResultReceiver(Handler handler) {
-            super(handler);
+        AddressResultReceiver() {
+            super(null);
         }
 
         @Override
@@ -183,7 +180,11 @@ public class LocationSearchDialogFragment extends DialogFragment
 
                 for (int i = 0; i < results.length; i++) {
 
-                    results[i] = new NamedGeoPosition( (Address) parcelables[i] );
+                    final Address address = (Address) parcelables[i];
+
+                    if (address != null) {
+                        results[i] = new NamedGeoPosition(address);
+                    }
                 }
 
                 LocationSearchDialogFragment.this.resultsAdapter.setResults(results);

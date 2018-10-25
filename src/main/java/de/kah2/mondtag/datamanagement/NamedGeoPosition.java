@@ -17,8 +17,6 @@ import de.kah2.libZodiac.planetary.Position;
 
 public class NamedGeoPosition extends Position {
 
-    private static final String TAG = NamedGeoPosition.class.getSimpleName();
-
     // Since it seems to be standard we use '.' as decimal separator
     private final static Locale LAT_LONG_LOCALE = Locale.ROOT;
 
@@ -118,9 +116,9 @@ public class NamedGeoPosition extends Position {
             return name;
     }
 
-    /** Sets name and replaces occurences of VALUE_SEPARATOR with spaces. */
+    /** Sets name and replaces occurrences of VALUE_SEPARATOR with spaces. */
     public void setName(String name) {
-        this.name = name.replace(VALUE_SEPARATOR, " ");;
+        this.name = name.replace(VALUE_SEPARATOR, " ");
     }
 
     /** See {@link #set(ValueType, double)} */

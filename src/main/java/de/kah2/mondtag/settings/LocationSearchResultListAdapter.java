@@ -51,7 +51,7 @@ public class LocationSearchResultListAdapter
     }
 
     /**
-     * Viewholder pattern implementation, that binds geocoordinates inclusive a describing name to
+     * View holder pattern implementation, that binds geocoordinates inclusive a describing name to
      * a list element.
      */
     class SearchResult extends RecyclerView.ViewHolder implements View.OnClickListener {

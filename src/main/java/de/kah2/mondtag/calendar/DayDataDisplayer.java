@@ -19,7 +19,7 @@ import de.kah2.mondtag.R;
 
 /**
  * This class is used to capsule basic day-display functionality used by
- * {@link CalendarRecyclerViewAdapter.Element} and
+ * {@link DayRecyclerViewAdapter.Item} and
  * {@link DayDetailFragment}.
  * Created by kahles on 21.03.17.
  */
@@ -129,7 +129,7 @@ class DayDataDisplayer {
             // If quality isn't neutral, we display it
             if (quality != Interpreter.Quality.NEUTRAL) {
 
-                // Show interpretername only if a quality is set
+                // Show interpreter name only if a quality is set
                 interpreterName = getTranslatedInterpreterString(day);
 
                 final Integer[] qualityStringIds = ResourceMapper.getResourceIds( quality );

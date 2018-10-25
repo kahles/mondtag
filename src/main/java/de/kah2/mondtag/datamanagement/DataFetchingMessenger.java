@@ -62,7 +62,7 @@ public class DataFetchingMessenger implements ProgressListener {
         String stateStr;
 
         if (state == null)
-            stateStr = "resetted";
+            stateStr = "reset";
         else
             stateStr = state.toString();
 

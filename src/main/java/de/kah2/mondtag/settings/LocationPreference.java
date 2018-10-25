@@ -21,7 +21,6 @@ import android.widget.TextView;
 import de.kah2.mondtag.R;
 import de.kah2.mondtag.datamanagement.DataManager;
 import de.kah2.mondtag.datamanagement.NamedGeoPosition;
-import de.kah2.mondtag.helpers.AbstractSimpleTextWatcher;
 
 import static de.kah2.mondtag.settings.LocationSearchResultListAdapter.LocationConsumer;
 
@@ -49,7 +48,7 @@ public class LocationPreference extends DialogPreference
     public LocationPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        setDialogLayoutResource(R.layout.location_picker_layout);
+        setDialogLayoutResource(R.layout.location_preference);
         setPositiveButtonText(android.R.string.ok);
         setNegativeButtonText(android.R.string.cancel);
 

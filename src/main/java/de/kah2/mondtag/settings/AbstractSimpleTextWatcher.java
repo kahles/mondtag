@@ -1,4 +1,4 @@
-package de.kah2.mondtag.helpers;
+package de.kah2.mondtag.settings;
 
 import android.text.Editable;
 import android.text.TextWatcher;

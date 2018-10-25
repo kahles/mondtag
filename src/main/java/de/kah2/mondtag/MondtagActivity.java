@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import de.kah2.libZodiac.Calendar;
 import de.kah2.mondtag.calendar.CalendarFragment;
 import de.kah2.mondtag.calendar.InfoDialogFragment;
 import de.kah2.mondtag.calendar.InterpretationMenuManager;
@@ -150,7 +151,7 @@ public class MondtagActivity extends AppCompatActivity
 
         final ActionBar actionBar = getSupportActionBar();
 
-        if (!this.isVisible) {
+        if (!this.isVisible || actionBar == null) {
 
             Log.d(TAG, "updateContent: UI not visible - skipping update");
             this.isUiUpdatePostponed = true;
@@ -234,13 +235,16 @@ public class MondtagActivity extends AppCompatActivity
      */
     @Override
     public void onBackPressed() {
+
         if (this.state != STATE_CONFIGURING) {
             super.onBackPressed();
         }
 
         this.getDataManager().setConfigReviewed();
 
-        if ( !this.getDataManager().getCalendar().isComplete() ) {
+        final Calendar calendar = this.getDataManager().getCalendar();
+
+        if ( calendar == null || !calendar.isComplete() ) {
             this.activateDataGeneration();
         } else {
             this.activateCalendarView();

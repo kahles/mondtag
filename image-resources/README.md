@@ -1,4 +1,4 @@
-# Infos about graphic design
+# Info about graphic design
 
 ## Some links regarding design
 
