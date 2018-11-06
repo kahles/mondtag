@@ -95,5 +95,6 @@
     <string name="location_search_no_geocoder">Kein Geocodingdienst verfügbar</string>
     <string name="location_search_connection_error">Fehler beim Verbinden zum Geocodingdienst</string>
     <string name="location_search_no_results">Keine Ergebnisse gefunden</string>
+    <string name="location_search_hint_select_result">Bitte unten ein Suchergebnis auswählen</string>
 
 </resources>

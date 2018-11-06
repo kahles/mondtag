@@ -87,23 +87,27 @@ public class LocationSearchResultListAdapter
             final LocationConsumer consumer = LocationSearchResultListAdapter.this.locationConsumer;
 
             if (consumer != null) {
-                consumer.setSearchResult(this.address);
+                consumer.setSelectedSearchResult(this.address);
             }
         }
     }
 
     void setLocationConsumer(LocationConsumer locationConsumer) {
+
         this.locationConsumer = locationConsumer;
     }
 
     void setResults(NamedGeoPosition[] results) {
+
         this.results = results;
+        this.notifyDataSetChanged();
     }
 
     public NamedGeoPosition[] getResults() { return results; }
 
     /** Simple interface to deliver a search result to another class */
     interface LocationConsumer {
-        void setSearchResult(NamedGeoPosition position);
+
+        void setSelectedSearchResult(NamedGeoPosition position);
     }
 }

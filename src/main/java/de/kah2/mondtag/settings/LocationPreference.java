@@ -5,24 +5,30 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.ResultReceiver;
 import android.preference.DialogPreference;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import de.kah2.mondtag.R;
 import de.kah2.mondtag.datamanagement.DataManager;
 import de.kah2.mondtag.datamanagement.NamedGeoPosition;
-
-import static de.kah2.mondtag.settings.LocationSearchResultListAdapter.LocationConsumer;
 
 /**
  * This is a subclass of {@link DialogPreference} which is used to set-up observer position needed
@@ -31,13 +37,17 @@ import static de.kah2.mondtag.settings.LocationSearchResultListAdapter.LocationC
  * Created by kahles on 16.11.16.
  */
 public class LocationPreference extends DialogPreference
-        implements LocationConsumer {
+        implements LocationSearchResultListAdapter.LocationConsumer {
 
     private final static String TAG = LocationPreference.class.getSimpleName();
 
     private TextView locationNameTextView;
     private EditText latitudeField;
     private EditText longitudeField;
+    private ProgressBar progressBar;
+    private TextView selectHintText;
+    private RecyclerView resultListView;
+    private LocationSearchResultListAdapter resultsAdapter;
 
     private int editTextDefaultColor;
 
@@ -59,13 +69,21 @@ public class LocationPreference extends DialogPreference
     protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
 
+        Log.d(TAG, "onBindDialogView: initializing view");
+
         this.initPositionTextFields(view);
 
         final Button locationSearchButton = view.findViewById(R.id.location_search_button);
-        locationSearchButton.setOnClickListener(v -> LocationPreference.this.openSearchDialog());
+        locationSearchButton.setOnClickListener(v -> LocationPreference.this.startSearch());
 
         final Button locationOpenButton = view.findViewById(R.id.location_open_button);
         locationOpenButton.setOnClickListener(v -> LocationPreference.this.showMap());
+
+        this.progressBar = view.findViewById(R.id.location_search_progressbar);
+        this.selectHintText = view.findViewById(R.id.location_search_hint_select_result);
+        this.resultListView = createResultListView(view);
+
+        this.updateResultsVisibility();
 
         this.editTextDefaultColor = this.latitudeField.getCurrentTextColor();
     }
@@ -78,7 +96,9 @@ public class LocationPreference extends DialogPreference
         this.longitudeField = view.findViewById(R.id.location_longitude);
 
         // set values
-        this.setSearchResult( this.getPosition() );
+        this.updatePositionInUI();
+
+        // FIXME listeners called when restoring view?
 
         // add listeners
         this.locationNameTextView.addTextChangedListener(new AbstractSimpleTextWatcher() {
@@ -104,6 +124,7 @@ public class LocationPreference extends DialogPreference
 
                     boolean isValid = true;
 
+                    // Only write to this.position if value is valid
                     try {
                         LocationPreference.this.position.set(target,
                                 Double.valueOf( s.toString() ) );
@@ -127,35 +148,78 @@ public class LocationPreference extends DialogPreference
         if (isValid) {
             inputField.setTextColor(this.editTextDefaultColor);
         } else {
-            inputField.setTextColor(ContextCompat.getColor(getContext(), R.color.invalid_text));
+            inputField.setTextColor(ContextCompat.getColor(super.getContext(), R.color.invalid_text));
         }
 
         ((AlertDialog) this.getDialog()).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(isValid);
     }
 
-    /**
-     * Opens a dialog for geocoding-search
-     */
-    private void openSearchDialog() {
-        Log.d(TAG, "opening position search dialog");
+    private void startSearch() {
 
-        final LocationSearchDialogFragment searchDialog = new LocationSearchDialogFragment();
+        this.progressBar.setVisibility(View.VISIBLE);
 
-        searchDialog.setLocationConsumer(this);
+        if (!Geocoder.isPresent()) {
+            Toast.makeText( super.getContext(),
+                    R.string.location_search_no_geocoder, Toast.LENGTH_LONG).show();
+            return;
+        }
 
-        searchDialog.show(
-                ((Activity) getContext()).getFragmentManager(),
-                LocationSearchDialogFragment.class.getSimpleName());
+        final ResultReceiver resultReceiver = new AddressResultReceiver();
+
+        final Intent intent = new Intent( super.getContext(), GeocodeIntentService.class );
+
+        intent.putExtra(GeocodeIntentService.BUNDLE_KEY_RECEIVER, resultReceiver);
+        intent.putExtra(GeocodeIntentService.BUNDLE_KEY_SEARCH_TERM, this.position.getName());
+
+        this.getActivity().startService(intent);
     }
 
-    /** Callback for {@link LocationSearchDialogFragment} */
+    private RecyclerView createResultListView(View parent) {
+
+        final RecyclerView view = parent.findViewById(R.id.locations_search_result_list);
+
+        final LinearLayoutManager linearLayoutManager =
+                new LinearLayoutManager(super.getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        view.setLayoutManager(linearLayoutManager);
+
+        this.resultsAdapter = new LocationSearchResultListAdapter();
+        this.resultsAdapter.setLocationConsumer(this);
+        view.setAdapter(this.resultsAdapter);
+
+        return view;
+    }
+
+    private void setSearchResults(NamedGeoPosition[] results) {
+
+        this.resultsAdapter.setResults(results);
+        this.updateResultsVisibility();
+    }
+
+    private void updateResultsVisibility() {
+
+        if (this.resultsAdapter.getItemCount() > 0) {
+            Log.d(TAG, "updateResultsVisibility: VISIBLE");
+            LocationPreference.this.selectHintText.setVisibility(View.VISIBLE);
+            LocationPreference.this.resultListView.setVisibility(View.VISIBLE);
+        } else {
+            // leave default "GONE"
+            Log.d(TAG, "updateResultsVisibility: GONE");
+        }
+    }
+
     @Override
-    public void setSearchResult(NamedGeoPosition position) {
+    public void setSelectedSearchResult(NamedGeoPosition position) {
+
+        this.position = position;
+        this.updatePositionInUI();
+    }
+
+    private void updatePositionInUI() {
 
         // do not trigger listeners
         this.listenersEnabled = false;
 
-        this.position = position;
         this.locationNameTextView.setText( this.position.getName() );
         this.latitudeField.setText( this.position.getFormattedLatitude() );
         this.longitudeField.setText( this.position.getFormattedLongitude() );
@@ -170,7 +234,7 @@ public class LocationPreference extends DialogPreference
         Log.d(TAG, "showing map");
         final Uri geoUri = this.getPosition().toGeoUri();
         Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
-        getContext().startActivity(mapCall);
+        super.getContext().startActivity(mapCall);
     }
 
     /**
@@ -194,13 +258,15 @@ public class LocationPreference extends DialogPreference
      */
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
+
+        // TODO is called when dialog is restored - where do we need to save value?
+
         if (restorePersistedValue) {
 
-            /*
-             * (From Android Docs) "You cannot use the defaultValue as the default value in the
-             * getPersisted*() method, because its value is always null when restorePersistedValue
-             * is true."
-             */
+            // (From Android Docs) "You cannot use the defaultValue as the default value in the
+            // getPersisted*() method, because its value is always null when restorePersistedValue
+            // is true."
+
             final String positionString = super.getPersistedString( null );
             try {
 
@@ -213,6 +279,8 @@ public class LocationPreference extends DialogPreference
             }
 
         } else {
+
+            // TODO why set default?!
 
             Log.d(TAG, "onSetInitialValue: no persisted position exists - setting default");
 
@@ -234,6 +302,46 @@ public class LocationPreference extends DialogPreference
         return position;
     }
 
+    /** Class to receive and process results of {@link GeocodeIntentService} */
+    private class AddressResultReceiver extends ResultReceiver {
+
+        AddressResultReceiver() {
+            super(null);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            if (resultData == null) {
+                return;
+            }
+
+            if (resultCode == GeocodeIntentService.RESULT_SUCCESS) {
+
+                final NamedGeoPosition[] results =
+                        NamedGeoPosition.convertParcelableAddressesToPositions(
+                            resultData.getParcelableArray(GeocodeIntentService.BUNDLE_KEY_RESULTS) );
+
+                getActivity().runOnUiThread( () ->
+                        LocationPreference.this.setSearchResults(results) );
+
+            } else {
+
+                final int errorMessageId =
+                        resultData.getInt(GeocodeIntentService.BUNDLE_KEY_ERROR_MESSAGE);
+
+                getActivity().runOnUiThread( () ->
+                        Toast.makeText(
+                                LocationPreference.super.getContext(),
+                                errorMessageId,
+                                Toast.LENGTH_SHORT).show() );
+            }
+
+            getActivity().runOnUiThread(() ->
+                    LocationPreference.this.progressBar.setVisibility(View.GONE));
+        }
+    }
+
     /*
      * Below some "magic" to save the state of this DialogPreference - see the android tutorial for
      * information ;)
@@ -252,6 +360,9 @@ public class LocationPreference extends DialogPreference
             Log.d(TAG, "onSaveInstanceState: preference is persistent - NOT saving position");
         }
 
+        // this isn't part of the persisted preference - we save it anyway
+        state.searchResults = this.resultsAdapter.getResults();
+
         return state;
     }
 
@@ -259,25 +370,39 @@ public class LocationPreference extends DialogPreference
     protected void onRestoreInstanceState(Parcelable state) {
 
         if ( !(state instanceof SavedState) ) {
-            Log.d(TAG, "onRestoreInstanceState: Didn't save the state, so call superclass");
+            Log.d(TAG, "onRestoreInstanceState: No state saved - can't be restored");
             super.onRestoreInstanceState(state);
             return;
         }
 
         final SavedState savedState = (SavedState) state;
+
+        // initializes text fields - we disable the listeners
+        this.listenersEnabled = false;
         super.onRestoreInstanceState(savedState.getSuperState());
+        this.listenersEnabled = true;
 
         if (savedState.position != null) {
+
             this.position = savedState.position;
             Log.d(TAG, "onRestoreInstanceState: location := " + savedState.position);
         }
-        Log.d(TAG, "onRestoreInstanceState: locationInfoText := " + savedState.infoText);
+
+        if (savedState.searchResults != null) {
+            this.resultsAdapter.setResults(savedState.searchResults);
+            Log.d(TAG, "onRestoreInstanceState: restored "
+                    + savedState.searchResults.length + " search results");
+        } else {
+            Log.d(TAG, "onRestoreInstanceState: no saved search results");
+        }
+
+        this.updateResultsVisibility();
     }
 
     private static class SavedState extends BaseSavedState {
 
         NamedGeoPosition position;
-        String infoText;
+        NamedGeoPosition[] searchResults;
 
         SavedState(Parcelable superState) {
             super(superState);
@@ -295,10 +420,18 @@ public class LocationPreference extends DialogPreference
 
             } catch (IllegalArgumentException e) {
 
-                Log.d(TAG, "SavedState: position couldn't be restored: " + serializedPosition);
+                Log.d(TAG, "SavedState: position couldn't be restored: "
+                        + serializedPosition);
                 this.position = null;
             }
-            this.infoText = source.readString();
+
+            try {
+                this.searchResults = NamedGeoPosition.convertStringsToPositions(
+                        source.createStringArray());
+                Log.d(TAG, "SavedState: restored " + this.searchResults.length + " results.");
+            } catch (IllegalArgumentException e) {
+                Log.d(TAG, "SavedState: search results couldn't be read");
+            }
         }
 
         @Override
@@ -308,6 +441,11 @@ public class LocationPreference extends DialogPreference
 
             if (this.position != null) {
                 dest.writeString( this.position.toString() );
+            }
+
+            if (this.searchResults != null) {
+                dest.writeStringArray(
+                        NamedGeoPosition.convertPositionsToStrings(this.searchResults) );
             }
 
             super.writeToParcel(dest, flags);
@@ -325,5 +463,9 @@ public class LocationPreference extends DialogPreference
                         return new SavedState[size];
                     }
                 };
+    }
+
+    private Activity getActivity() {
+        return (Activity) super.getContext();
     }
 }

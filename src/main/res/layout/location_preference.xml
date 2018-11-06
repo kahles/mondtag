@@ -4,6 +4,7 @@
               android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+    <!-- FIXME in landscape format last fields don't get shown -->
     <EditText
         android:id="@+id/location_name"
         android:layout_width="match_parent"
@@ -84,4 +85,22 @@
             android:width="0dp"
             android:layout_weight="1"/>
     </LinearLayout>
+    <ProgressBar
+        android:id="@+id/location_search_progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/location_search_hint_select_result"
+        android:text="@string/location_search_hint_select_result"
+        android:visibility="gone"
+        android:textAlignment="center"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/locations_search_result_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 </LinearLayout>

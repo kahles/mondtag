@@ -2,6 +2,8 @@ package de.kah2.mondtag.datamanagement;
 
 import android.location.Address;
 import android.net.Uri;
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.util.Locale;
@@ -32,19 +34,30 @@ public class NamedGeoPosition extends Position {
 
     private String name;
 
+    /**
+     * Instantiates a NamedGeoPosition.
+     * @throws IllegalArgumentException if vales for latitude or longitude are invalid
+     */
     public NamedGeoPosition(String name, double lat, double lng) {
 
         super(lat, lng);
         this.setName(name);
     }
 
-    public NamedGeoPosition(Address address) {
+    /**
+     * Creates a NamedGeoPosition from an {@link Address-object}.
+     * @throws {@link IllegalArgumentException} if address contains invalid values for latitude or longitude
+     */
+    public static NamedGeoPosition from(Address address) {
 
-        this( address.getAddressLine(0), address.getLatitude(), address.getLongitude());
+        return new NamedGeoPosition(
+                address.getAddressLine(0),
+                address.getLatitude(),
+                address.getLongitude() );
     }
 
     /**
-     * Creates a {@link NamedGeoPosition} object from comma-separated latitude,longitude
+     * Creates a NamedGeoPosition object from comma-separated latitude,longitude
      * @throws IllegalArgumentException if given {@link String} couldn't be parsed
      */
     public static NamedGeoPosition from(String commaSeparatedLatLonValues)
@@ -131,5 +144,71 @@ public class NamedGeoPosition extends Position {
             case LATITUDE: this.setLatitude(value); break;
             case LONGITUDE: this.setLongitude(value); break;
         }
+    }
+
+    // Below some boiler plate code to convert arrays
+
+    /**
+     * Converts an array of serialized NamedGeoPositions
+     * @throws IllegalArgumentException if a String couldn't be converted
+     * @return the resulting array or null, if given array was null
+     */
+    public static NamedGeoPosition[] convertStringsToPositions(@Nullable String[] strings) {
+
+        if (strings == null)
+            return null;
+
+        final NamedGeoPosition[] positions = new NamedGeoPosition[strings.length];
+
+        for (int i = 0; i < strings.length; i++) {
+            positions[i] = NamedGeoPosition.from(strings[i]);
+        }
+
+        return positions;
+    }
+
+    /**
+     * Serializes an array of NamedGeoPositions
+     * @return the resulting array or null, if given array was null
+     */
+    public static String[] convertPositionsToStrings(@Nullable NamedGeoPosition[] positions) {
+
+        if (positions == null)
+            return null;
+
+        final String[] strings = new String[positions.length];
+
+        for (int i = 0; i < positions.length; i++) {
+            strings[i] = positions[i].toString();
+        }
+
+        return strings;
+    }
+
+    /**
+     * Takes a parcelable array, casts the elements to {@link Address}-instances and returns an
+     * array of NamedGeoPositions
+     * @return the resulting array or null, if given array was null
+     */
+    public static NamedGeoPosition[] convertParcelableAddressesToPositions(
+            @Nullable  Parcelable[] addresses) {
+
+        if (addresses == null) {
+            return null;
+        }
+
+        final NamedGeoPosition[] results =
+                new NamedGeoPosition[addresses.length];
+
+        for (int i = 0; i < results.length; i++) {
+
+            final Address address = (Address) addresses[i];
+
+            if (address != null) {
+                results[i] = NamedGeoPosition.from(address);
+            }
+        }
+
+        return results;
     }
 }
