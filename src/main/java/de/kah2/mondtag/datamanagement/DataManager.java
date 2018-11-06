@@ -53,6 +53,7 @@ public class DataManager {
      * Should only be called by {@link Mondtag}!
      */
     public DataManager(Context context) {
+
         this.context = context;
 
         this.fetcher = new DataFetcher(context);
@@ -83,6 +84,7 @@ public class DataManager {
      * default if <strong>an invalid position</strong> was saved.
      */
     private NamedGeoPosition getPosition() {
+
         final SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(this.context);
 
@@ -93,11 +95,13 @@ public class DataManager {
         NamedGeoPosition position;
 
         try {
+
             position = NamedGeoPosition.from(positionString);
+
         } catch (Exception e) {
-            // TODO show exception message
-            Log.w(TAG, "getPosition: couldn't parse configured position \"" + positionString
-                    + "\", using default");
+
+            Log.i( TAG, "getPosition: couldn't parse position, using default. "
+                        + e.getMessage() );
             position = DEFAULT_LOCATION_MUNICH;
 
             SharedPreferences.Editor editor = prefs.edit();
@@ -115,6 +119,7 @@ public class DataManager {
      * <p>We don't need to set a default, because the user can't type any time zone.</p>
      */
     public ZoneId getZoneId() {
+
         final SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
 
@@ -139,6 +144,7 @@ public class DataManager {
     }
 
     public void extendExpectedRange() {
+
         final DateRange newRange = new DateRange(
                 calendar.getRangeExpected().getStart(),
                 calendar.getAllDays().getLast().getDate().plusDays(DAYS_TO_CALCULATE_AHEAD) );
@@ -181,6 +187,7 @@ public class DataManager {
      * To use on configuration changes to trigger recalculation of data
      */
     public void resetCalendar() {
+
         Log.d(TAG, "resetCalendar");
 
         this.calendar = this.createEmptyCalender();

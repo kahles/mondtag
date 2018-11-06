@@ -72,8 +72,8 @@ public class NamedGeoPosition extends Position {
         if (values.length != 3)
             throw new IllegalArgumentException("Wrong number of values - " +
                     "should be NAME" + VALUE_SEPARATOR
-                    + "LATITUDE" + VALUE_SEPARATOR
-                    + "LONGITUDE");
+                    + "LATITUDE" + VALUE_SEPARATOR + "LONGITUDE, "
+                    + "but is \"" + commaSeparatedLatLonValues + "\"" );
 
         final String name = values[0];
         final double lat = Double.parseDouble(values[1]);
