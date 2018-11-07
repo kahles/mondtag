@@ -120,19 +120,20 @@ public class LocationPreference extends DialogPreference
             public void afterTextChanged(Editable s) {
 
                 if (listenersEnabled) {
-                    final double value = Double.parseDouble( s.toString() );
 
                     boolean isValid = true;
 
                     // Only write to this.position if value is valid
                     try {
+
                         LocationPreference.this.position.set(target,
                                 Double.valueOf( s.toString() ) );
                         Log.d(TAG, "afterTextChanged: " + target + "=" + s.toString());
 
                     } catch (IllegalArgumentException e) {
 
-                        Log.d(TAG, "afterTextChanged: invalid " + target + ": " + value);
+                        Log.d(TAG, "afterTextChanged: invalid " + target + ": "
+                                + s.toString() );
                         isValid = false;
                     }
 
@@ -253,13 +254,10 @@ public class LocationPreference extends DialogPreference
     }
 
     /**
-     * Initializes this preference. Since we already set a default in
-     * {@link DataManager#getPosition()}, we don't need to do it here 😎
+     * Initializes this preference.
      */
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
-
-        // TODO is called when dialog is restored - where do we need to save value?
 
         if (restorePersistedValue) {
 
@@ -268,27 +266,12 @@ public class LocationPreference extends DialogPreference
             // is true."
 
             final String positionString = super.getPersistedString( null );
-            try {
 
-                this.position = NamedGeoPosition.from(positionString);
+            Log.d(TAG, "onSetInitialValue: setting position to " + positionString);
 
-            } catch (Exception e) {
-                Log.w(TAG, "onSetInitialValue: persisted position couldn't be loaded: \"" +
-                        positionString + "\" - setting default", e);
-                this.position = DataManager.DEFAULT_LOCATION_MUNICH;
-            }
-
-        } else {
-
-            // TODO why set default?!
-
-            Log.d(TAG, "onSetInitialValue: no persisted position exists - setting default");
-
-            final String positionString = (String) defaultValue;
-
+            // This shouldn't throw an exception because we already set a valid default at
+            // DataManager#getPosition
             this.position = NamedGeoPosition.from(positionString);
-
-            persistString(positionString);
         }
     }
 

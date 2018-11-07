@@ -30,7 +30,7 @@ public class SettingsFragment extends PreferenceFragment
 
         this.initTimezonesList();
 
-        // TODO is this necessary?
+        // this is needed to correctly display actual settings
         this.onSharedPreferenceChanged(null, getString(R.string.pref_key_location));
         this.onSharedPreferenceChanged(null, getString(R.string.pref_key_timezone));
     }
@@ -71,8 +71,11 @@ public class SettingsFragment extends PreferenceFragment
             Log.d(TAG, "onSharedPreferenceChanged: setting " + key + " to " + listPref.getEntry());
         }
 
-        // TODO is this check necessary?
+        // if any value is changed, it is delivered through sharedPreferences
+        // if nothing changed, it's null
         if (sharedPreferences != null) {
+
+            Log.d(TAG, "onSharedPreferenceChanged: resetting calendar");
             ((Mondtag) getActivity().getApplicationContext()).getDataManager().resetCalendar();
         }
     }

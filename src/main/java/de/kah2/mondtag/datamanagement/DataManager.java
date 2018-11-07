@@ -95,8 +95,9 @@ public class DataManager {
         try {
             position = NamedGeoPosition.from(positionString);
         } catch (Exception e) {
+            // TODO show exception message
             Log.w(TAG, "getPosition: couldn't parse configured position \"" + positionString
-                    + "\", using default", e);
+                    + "\", using default");
             position = DEFAULT_LOCATION_MUNICH;
 
             SharedPreferences.Editor editor = prefs.edit();
