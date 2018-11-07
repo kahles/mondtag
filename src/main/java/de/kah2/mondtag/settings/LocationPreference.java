@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -26,8 +26,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+
 import de.kah2.mondtag.R;
-import de.kah2.mondtag.datamanagement.DataManager;
 import de.kah2.mondtag.datamanagement.NamedGeoPosition;
 
 /**
@@ -41,7 +44,7 @@ public class LocationPreference extends DialogPreference
 
     private final static String TAG = LocationPreference.class.getSimpleName();
 
-    private TextView locationNameTextView;
+    private EditText locationNameField;
     private EditText latitudeField;
     private EditText longitudeField;
     private ProgressBar progressBar;
@@ -52,8 +55,6 @@ public class LocationPreference extends DialogPreference
     private int editTextDefaultColor;
 
     private NamedGeoPosition position;
-
-    private boolean listenersEnabled = true;
 
     public LocationPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -67,6 +68,7 @@ public class LocationPreference extends DialogPreference
 
     @Override
     protected void onBindDialogView(View view) {
+
         super.onBindDialogView(view);
 
         Log.d(TAG, "onBindDialogView: initializing view");
@@ -84,34 +86,35 @@ public class LocationPreference extends DialogPreference
         this.resultListView = createResultListView(view);
 
         this.updateResultsVisibility();
-
-        this.editTextDefaultColor = this.latitudeField.getCurrentTextColor();
     }
 
     private void initPositionTextFields(View view) {
 
         // get fields
-        this.locationNameTextView = view.findViewById(R.id.location_name);
+        this.locationNameField = view.findViewById(R.id.location_name);
         this.latitudeField = view.findViewById(R.id.location_latitude);
         this.longitudeField = view.findViewById(R.id.location_longitude);
 
-        // set values
-        this.updatePositionInUI();
-
-        // FIXME listeners called when restoring view?
+        // needed for #setUserInputValid called by listeners
+        this.editTextDefaultColor = this.latitudeField.getCurrentTextColor();
 
         // add listeners
-        this.locationNameTextView.addTextChangedListener(new AbstractSimpleTextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (listenersEnabled) {
-                    Log.d(TAG, "afterTextChanged: name = " + s.toString());
-                    LocationPreference.this.position.setName(s.toString());
-                }
-            }
-        });
+        this.addLocationNameListener();
         this.addLatLngListener(this.latitudeField, NamedGeoPosition.ValueType.LATITUDE);
         this.addLatLngListener(this.longitudeField, NamedGeoPosition.ValueType.LONGITUDE);
+
+        // set values
+        this.updatePositionFields();
+    }
+
+    private void addLocationNameListener() {
+        this.locationNameField.addTextChangedListener(new AbstractSimpleTextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.d(TAG, "afterTextChanged: name = " + s.toString());
+                LocationPreference.this.position.setName(s.toString());
+            }
+        });
     }
 
     private void addLatLngListener(EditText source, NamedGeoPosition.ValueType target) {
@@ -119,27 +122,24 @@ public class LocationPreference extends DialogPreference
             @Override
             public void afterTextChanged(Editable s) {
 
-                if (listenersEnabled) {
+                boolean isValid = true;
 
-                    boolean isValid = true;
+                // Only write to this.position if value is valid
+                try {
 
-                    // Only write to this.position if value is valid
-                    try {
+                    LocationPreference.this.position.set(target,
+                            Double.valueOf( s.toString() ) );
+                    Log.d(TAG, "afterTextChanged: " + target + "=" + s.toString());
 
-                        LocationPreference.this.position.set(target,
-                                Double.valueOf( s.toString() ) );
-                        Log.d(TAG, "afterTextChanged: " + target + "=" + s.toString());
+                } catch (IllegalArgumentException e) {
 
-                    } catch (IllegalArgumentException e) {
-
-                        Log.d(TAG, "afterTextChanged: invalid " + target + ": "
-                                + s.toString() );
-                        isValid = false;
-                    }
-
-                    // mark field to show invalid data was entered
-                    LocationPreference.this.setUserInputValid( isValid, source );
+                    Log.d(TAG, "afterTextChanged: invalid " + target + ": "
+                            + s.toString() );
+                    isValid = false;
                 }
+
+                // mark field to show invalid data was entered
+                LocationPreference.this.setUserInputValid( isValid, source );
             }
         });
     }
@@ -152,7 +152,11 @@ public class LocationPreference extends DialogPreference
             inputField.setTextColor(ContextCompat.getColor(super.getContext(), R.color.invalid_text));
         }
 
-        ((AlertDialog) this.getDialog()).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(isValid);
+        // Can be null, since listeners are triggert during view creation
+        final AlertDialog dialog = (AlertDialog) this.getDialog();
+        if (dialog != null) {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(isValid);
+        }
     }
 
     private void startSearch() {
@@ -213,19 +217,20 @@ public class LocationPreference extends DialogPreference
     public void setSelectedSearchResult(NamedGeoPosition position) {
 
         this.position = position;
-        this.updatePositionInUI();
+        this.updatePositionFields();
     }
 
-    private void updatePositionInUI() {
+    /**
+     * called by {@link #initPositionTextFields(View)} and
+     * @link #setSelectedSearchResult(NamedGeoPosition)}
+     */
+    private void updatePositionFields() {
 
-        // do not trigger listeners
-        this.listenersEnabled = false;
+        Log.d(TAG, "updatePositionFields called" );
 
-        this.locationNameTextView.setText( this.position.getName() );
+        this.locationNameField.setText( this.position.getName() );
         this.latitudeField.setText( this.position.getFormattedLatitude() );
         this.longitudeField.setText( this.position.getFormattedLongitude() );
-
-        this.listenersEnabled = true;
     }
 
     /**
@@ -344,7 +349,10 @@ public class LocationPreference extends DialogPreference
         }
 
         // this isn't part of the persisted preference - we save it anyway
-        state.searchResults = this.resultsAdapter.getResults();
+        // the adapter could be null, we have to check it 🙄
+        if (this.resultsAdapter != null) {
+            state.searchResults = this.resultsAdapter.getResults();
+        }
 
         return state;
     }
@@ -360,11 +368,6 @@ public class LocationPreference extends DialogPreference
 
         final SavedState savedState = (SavedState) state;
 
-        // initializes text fields - we disable the listeners
-        this.listenersEnabled = false;
-        super.onRestoreInstanceState(savedState.getSuperState());
-        this.listenersEnabled = true;
-
         if (savedState.position != null) {
 
             this.position = savedState.position;
@@ -379,7 +382,9 @@ public class LocationPreference extends DialogPreference
             Log.d(TAG, "onRestoreInstanceState: no saved search results");
         }
 
-        this.updateResultsVisibility();
+        // initialize text fields - calls also this.onBindDialogView() but sets stored fields
+        // afterwards again :-/
+        super.onRestoreInstanceState(savedState.getSuperState());
     }
 
     private static class SavedState extends BaseSavedState {
