@@ -83,23 +83,20 @@ public class CalendarFragment extends Fragment {
         final Calendar calendar =
                 ((Mondtag) getActivity().getApplicationContext()).getDataManager().getCalendar();
 
-        if (calendar != null) {
+        final LinkedList<Day> days = calendar.getValidDays();
+        this.dayRecyclerViewAdapter.setDays(days);
 
-            final LinkedList<Day> days = calendar.getValidDays();
-            this.dayRecyclerViewAdapter.setDays(days);
+        final LinearLayoutManager layoutManager =
+                (LinearLayoutManager) this.recyclerView.getLayoutManager();
 
-            final LinearLayoutManager layoutManager =
-                    (LinearLayoutManager) this.recyclerView.getLayoutManager();
+        int count = 0;
+        final LocalDate today = LocalDate.now();
 
-            int count = 0;
-            final LocalDate today = LocalDate.now();
-
-            for (Day day : days) {
-                if ( day.getDate().isEqual(today) ) break;
-                else count++;
-            }
-
-            layoutManager.scrollToPositionWithOffset(count, 25);
+        for (Day day : days) {
+            if ( day.getDate().isEqual(today) ) break;
+            else count++;
         }
+
+        layoutManager.scrollToPositionWithOffset(count, 25);
     }
 }

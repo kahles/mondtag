@@ -66,6 +66,7 @@ public class MondtagActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         Log.d(TAG, "onCreate");
@@ -78,14 +79,25 @@ public class MondtagActivity extends AppCompatActivity
         // if app wasn't already started ...
         if (savedInstanceState == null) {
 
+            // Mondtag#onCreate creates an empty calendar, when config is missing or invalid
+            // following will return true
             this.isFirstStart = this.getDataManager().userShouldReviewConfig();
             
             if (this.state == STATE_UNDEFINED) {
+
                 if (this.isFirstStart) {
+
+                    // automatically start configuration if config is missing/invalid
                     this.activateConfiguration();
+
                 } else if ( !getDataManager().getCalendar().isComplete() ) {
+
+                    // if days are missing in expected date range we automatically start generation
                     this.activateDataGeneration();
+
                 } else {
+
+                    // everything ok => show calendar
                     this.activateCalendarView();
                 }
             }
@@ -94,6 +106,7 @@ public class MondtagActivity extends AppCompatActivity
 
     @Override
     protected void onPause() {
+
         super.onPause();
         Log.d(TAG, "onPause");
 
@@ -106,6 +119,7 @@ public class MondtagActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
+
         super.onResume();
         Log.d(TAG, "onResume");
 
@@ -118,33 +132,38 @@ public class MondtagActivity extends AppCompatActivity
         }
     }
 
-    // called by onCreate and onOptionsItemSelected
+    /** called by onCreate and onOptionsItemSelected */
     private void activateConfiguration() {
+
         Log.d(TAG, "activateConfiguration");
         this.state = STATE_CONFIGURING;
         this.updateContent();
     }
 
+    /** Called when button to calculate more days is clicked */
     public void extendFuture() {
-        this.getDataManager().extendExpectedRange();
 
+        this.getDataManager().extendExpectedRange();
         this.activateDataGeneration();
     }
 
-    // called by onCreate and onBackPressed
+    /** called by onCreate and onBackPressed */
     private void activateDataGeneration() {
+
         Log.d(TAG, "activateDataGeneration");
         this.state = STATE_GENERATING;
         this.updateContent();
     }
 
-    // called by onCreate, onBackPressed and onDataReady
+    /** called by onCreate, onBackPressed and onDataReady */
     private void activateCalendarView() {
+
         Log.d(TAG, "activateCalendarView");
         this.state = STATE_DISPLAYING;
         this.updateContent();
     }
 
+    /** used to replace the fragments */
     private void updateContent() {
 
         final FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -191,6 +210,7 @@ public class MondtagActivity extends AppCompatActivity
         }
     }
 
+    /** Callback for {@link DataFetchingFragment} */
     public void onDataReady() {
         this.activateCalendarView();
     }
