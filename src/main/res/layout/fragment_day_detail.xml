@@ -211,7 +211,7 @@
     <Button
         android:id="@+id/buttonCreateReminder"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height"
+        android:layout_height="@dimen/standard_height"
         android:layout_below="@id/dayDetailDataTable"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

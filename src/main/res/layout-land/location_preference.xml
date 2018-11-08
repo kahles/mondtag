@@ -2,21 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-    <EditText
-        android:id="@+id/location_name"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/standard_height"
-        android:inputType="text"
-        android:text="@string/location"
-        android:hint="@string/location"
-        android:importantForAutofill="no"
-        tools:ignore="UnusedAttribute" />
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:layout_width="wrap_content">
+        <EditText
+            android:id="@+id/location_name"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/standard_height"
+            android:inputType="text"
+            android:text="@string/location"
+            android:hint="@string/location"
+            android:importantForAutofill="no"
+            tools:ignore="UnusedAttribute" />
         <TextView
             android:id="@+id/location_desc_lat"
             android:layout_width="wrap_content"
@@ -25,23 +25,17 @@
             android:layout_marginLeft="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:gravity="center_vertical|start"
             android:text="@string/location_latitude" />
         <EditText
             android:id="@+id/location_latitude"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/standard_height"
+            android:layout_width="wrap_content"
             android:inputType="numberDecimal"
             android:text="@string/dummy_decimal"
             android:layout_weight="1"
             android:hint="@string/dummy_decimal"
             android:importantForAutofill="no"
             tools:ignore="UnusedAttribute" />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
         <TextView
             android:id="@+id/location_desc_long"
             android:layout_width="wrap_content"
@@ -50,12 +44,11 @@
             android:layout_marginLeft="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:gravity="center_vertical|start"
             android:text="@string/location_longitude" />
         <EditText
             android:id="@+id/location_longitude"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/standard_height"
+            android:layout_width="wrap_content"
             android:inputType="numberDecimal"
             android:text="@string/dummy_decimal"
             android:layout_weight="1"
@@ -101,5 +94,6 @@
         android:id="@+id/locations_search_result_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:orientation="horizontal"/>
 </LinearLayout>
