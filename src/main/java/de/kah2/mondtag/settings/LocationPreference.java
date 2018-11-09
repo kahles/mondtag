@@ -16,7 +16,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -25,10 +24,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 
 import de.kah2.mondtag.R;
 import de.kah2.mondtag.datamanagement.NamedGeoPosition;
@@ -84,8 +79,6 @@ public class LocationPreference extends DialogPreference
         this.progressBar = view.findViewById(R.id.location_search_progressbar);
         this.selectHintText = view.findViewById(R.id.location_search_hint_select_result);
         this.resultListView = createResultListView(view);
-
-        this.updateResultsVisibility();
     }
 
     private void initPositionTextFields(View view) {
@@ -374,17 +367,22 @@ public class LocationPreference extends DialogPreference
             Log.d(TAG, "onRestoreInstanceState: location := " + savedState.position);
         }
 
-        if (savedState.searchResults != null) {
-            this.resultsAdapter.setResults(savedState.searchResults);
-            Log.d(TAG, "onRestoreInstanceState: restored "
-                    + savedState.searchResults.length + " search results");
-        } else {
-            Log.d(TAG, "onRestoreInstanceState: no saved search results");
-        }
-
         // initialize text fields - calls also this.onBindDialogView() but sets stored fields
         // afterwards again :-/
         super.onRestoreInstanceState(savedState.getSuperState());
+
+        // finally we set the search results if available - must happen after
+        // super#onRestoreInstanceState since the resultsAdapter is null before
+        if (savedState.searchResults != null) {
+
+            this.resultsAdapter.setResults(savedState.searchResults);
+            Log.d(TAG, "onRestoreInstanceState: restored "
+                    + savedState.searchResults.length + " search results");
+            this.updateResultsVisibility();
+
+        } else {
+            Log.d(TAG, "onRestoreInstanceState: no saved search results");
+        }
     }
 
     private static class SavedState extends BaseSavedState {
