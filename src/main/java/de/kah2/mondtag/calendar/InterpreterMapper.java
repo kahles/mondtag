@@ -85,6 +85,11 @@ public class InterpreterMapper {
         private final String i18n;
         private final Class<? extends Interpreter> interpreterClass;
 
+        /**
+         * @param id the android string resource id
+         * @param i18n the translated name to be able to sort the interpreters
+         * @param interpreterClass and the class used to do the interpretation
+         */
         private InterpreterMapping(int id, String i18n, Class<? extends Interpreter> interpreterClass) {
 
             this.id = id;

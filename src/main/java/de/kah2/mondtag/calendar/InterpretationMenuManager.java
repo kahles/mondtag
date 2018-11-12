@@ -53,6 +53,8 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
 
         if (interpretationChangeListener != null) {
             this.interpretationChangeListener.onInterpreterChanged(interpreterMapping);
+        } else {
+            Log.e(TAG, "onMenuItemClick: no listener available" );
         }
 
         return true;

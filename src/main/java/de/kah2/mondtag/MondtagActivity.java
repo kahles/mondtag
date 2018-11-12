@@ -222,7 +222,7 @@ public class MondtagActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Log.d(TAG, "onOptionsItemSelected: " + item.getTitle() + "selected.");
+        Log.d(TAG, "onOptionsItemSelected: " + item.getTitle() + " selected.");
 
         switch (item.getItemId()) {
             case R.id.action_info:
@@ -327,11 +327,13 @@ public class MondtagActivity extends AppCompatActivity
 
         if (mapping == null) {
 
+            Log.d(TAG, "onInterpreterChanged: mapping is null - removing interpreter");
             this.getDataManager().getCalendar().setInterpreterClass(null);
             this.interpretationNameResId = R.string.interpret_none;
 
         } else {
 
+            Log.d(TAG, "onInterpreterChanged: setting interpreter: " + mapping.getI18n());
             this.getDataManager().getCalendar().setInterpreterClass( mapping.getInterpreterClass() );
             this.interpretationNameResId = mapping.getId();
         }

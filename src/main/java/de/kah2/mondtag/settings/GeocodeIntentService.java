@@ -21,7 +21,7 @@ import de.kah2.mondtag.datamanagement.DataManager;
  */
 public class GeocodeIntentService extends IntentService {
 
-    public static final String TAG = GeocodeIntentService.class.getSimpleName();
+    private static final String TAG = GeocodeIntentService.class.getSimpleName();
 
     static final int RESULT_SUCCESS = 0;
     static final int RESULT_FAILURE = 1;

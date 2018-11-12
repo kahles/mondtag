@@ -46,9 +46,9 @@ public class NamedGeoPosition extends Position {
 
     /**
      * Creates a NamedGeoPosition from an {@link Address-object}.
-     * @throws {@link IllegalArgumentException} if address contains invalid values for latitude or longitude
+     * @throws IllegalArgumentException if address contains invalid values for latitude or longitude
      */
-    public static NamedGeoPosition from(Address address) {
+    public static NamedGeoPosition from(Address address) throws IllegalArgumentException {
 
         return new NamedGeoPosition(
                 address.getAddressLine(0),

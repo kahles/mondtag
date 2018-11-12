@@ -11,7 +11,6 @@ import org.threeten.bp.format.TextStyle;
 
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
-import java.util.Locale;
 
 import de.kah2.libZodiac.ProgressListener;
 import de.kah2.libZodiac.interpretation.Gardening;

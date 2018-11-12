@@ -24,8 +24,6 @@
     <string name="location_longitude">Longitude</string>
     <string name="location_open">View on map</string>
     <string name="location_search">Search location</string>
-    <string name="location_search_cancel">Cancel</string>
-    <string name="location_search_enter_name">Enter name</string>
     <string name="location_search_no_geocoder">No geocoding service available</string>
     <string name="location_search_connection_error">Error connecting to geocoding service</string>
     <string name="location_search_no_results">No results found</string>
