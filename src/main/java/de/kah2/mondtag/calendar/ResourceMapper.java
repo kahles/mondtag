@@ -99,12 +99,12 @@ public class ResourceMapper {
 		putString( Gardening.HarvestInterpreter.Usage.TO_DRY, R.string.interpret_gardening_harvest_dry );
 		putString( Gardening.HarvestInterpreter.Usage.CONSUME_IMMEDIATELY, R.string.interpret_gardening_harvest_consume );
 
-		putString( Gardening.WeedControlInterpreter.Annotations.DIG, R.string.interpret_gardening_dig );
-		putString( Gardening.WeedControlInterpreter.Annotations.WEED, R.string.interpret_gardening_weed);
-		putString( Gardening.WeedControlInterpreter.Annotations.WEED_BEFORE_NOON, R.string.interpret_gardening_weed_before_noon);
+		putString( Gardening.WeedControlInterpreter.Actions.DIG, R.string.interpret_gardening_dig );
+		putString( Gardening.WeedControlInterpreter.Actions.WEED, R.string.interpret_gardening_weed);
+		putString( Gardening.WeedControlInterpreter.Actions.WEED_BEFORE_NOON, R.string.interpret_gardening_weed_before_noon);
 
-		putString( Gardening.TrimInterpreter.Category.FRUIT_TREES, R.string.interpret_gardening_trim_fruit );
-		putString( Gardening.TrimInterpreter.Category.SICK_PLANTS, R.string.interpret_gardening_trim_sick );
+		putString( Gardening.TrimInterpreter.PlantCategory.FRUIT_TREES, R.string.interpret_gardening_trim_fruit );
+		putString( Gardening.TrimInterpreter.PlantCategory.SICK_PLANTS, R.string.interpret_gardening_trim_sick );
 
 		putString( Gardening.CombatPestsInterpreter.PestType.OVERTERRESTRIAL, R.string.interpret_gardening_combatpests_over );
 		putString( Gardening.CombatPestsInterpreter.PestType.SUBTERRESTRIAL, R.string.interpret_gardening_combatpests_sub );

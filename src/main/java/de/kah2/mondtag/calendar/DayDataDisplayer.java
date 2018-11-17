@@ -1,8 +1,6 @@
 package de.kah2.mondtag.calendar;
 
 import android.content.Context;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,11 +8,8 @@ import android.widget.TextView;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-
 import de.kah2.libZodiac.Day;
-import de.kah2.libZodiac.interpretation.Interpreter;
+import de.kah2.mondtag.Mondtag;
 import de.kah2.mondtag.R;
 
 /**
@@ -116,87 +111,39 @@ class DayDataDisplayer {
     private void initInterpretationFields(Day day, boolean isVerboseView) {
 
         int qualityIcon = 0;
-
-        // Use empty Strings as default, if no values are set
         String qualityText = "";
         String annotations = "";
-        String interpreterName = "";
+        String name = "";
 
-        if ( day.getInterpreter() != null ) { // An Interpretation is set
+        final InterpreterMapping interpreterMapping =
+                ((Mondtag) getContext()).getDataManager().getSelectedInterpreter();
 
-            final Interpreter.Quality quality = day.getInterpreter().getQuality();
+        if (interpreterMapping != null) {
 
-            // If quality isn't neutral, we display it
-            if (quality != Interpreter.Quality.NEUTRAL) {
+            interpreterMapping.interpret(day, getContext());
 
-                // Show interpreter name only if a quality is set
-                interpreterName = getTranslatedInterpreterString(day);
-
-                final Integer[] qualityStringIds = ResourceMapper.getResourceIds( quality );
-
-                qualityIcon = qualityStringIds[ResourceMapper.INDEX_IMAGE];
-                qualityText = getContext().getString(qualityStringIds[ResourceMapper.INDEX_STRING]);
-            }
-
-            // If annotations aren't empty, we fetch the Strings
-
-            final HashSet<String> annotationKeys = day.getInterpreter().getAnnotations();
-
-
-            if ( annotationKeys.size() > 0 ) {
-
-                final LinkedList<String> annotationStrings = new LinkedList<>();
-
-                for (String key : annotationKeys) {
-                    annotationStrings.add( getContext().getString(
-                        ResourceMapper.getResourceIds(key)[ResourceMapper.INDEX_STRING] ));
-                }
-
-                annotations = TextUtils.join(" | ", annotationStrings);
-            }
+            name = interpreterMapping.getInterpreterNameIfNotNeutral();
+            qualityIcon = interpreterMapping.getQualityIcon();
+            qualityText = interpreterMapping.getQualityText();
+            annotations = interpreterMapping.getAnnotations();
         }
 
         // Finally assign Strings to fields
-        this.interpretationIcon.setImageResource(qualityIcon);
-        this.interpretationIcon.setContentDescription(qualityText);
+        this.interpretationIcon.setImageResource( qualityIcon );
+        this.interpretationIcon.setContentDescription( qualityText );
 
-        this.interpretationQualityCategoryTextView.setText(annotations);
+        this.interpretationQualityCategoryTextView.setText( annotations );
 
         if (isVerboseView) {
+
+            // TODO create list of all interpretations
+
             // These fields we only have in fragment_day_detail
 
-            this.interpretationQualityTextView.setText(qualityText);
+            this.interpretationQualityTextView.setText( qualityText );
 
-            this.interpretationNameView.setText(interpreterName);
+            this.interpretationNameView.setText( name );
         }
-    }
-
-    private String getTranslatedInterpreterString(Day day) {
-
-        String interpreterName;
-
-        final String interpreterKey =
-                ResourceMapper.createInterpreterKey( day.getInterpreter() );
-
-        // Try to get a translated String for created key and throw an Exception if String is
-        // missing
-        try {
-
-            final int interpreterStringId = R.string.class
-                    .getDeclaredField(interpreterKey).getInt(null);
-            interpreterName = getContext().getString(interpreterStringId);
-
-        } catch (NoSuchFieldException e) {
-            Log.e(TAG, "initInterpretationFields: String id not found for "
-                    + interpreterKey);
-            interpreterName = interpreterKey;
-        } catch (IllegalAccessException e) {
-            // If the field isn't accessible - this shouldn't happen :)
-            e.printStackTrace();
-            return "";
-        }
-
-        return interpreterName;
     }
 
     private void initLunarRiseSetFields(Day day) {

@@ -44,7 +44,7 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
             return true;
         }
 
-        InterpreterMapper.InterpreterMapping interpreterMapping = InterpreterMapper.getMapping( item.getItemId() );
+        InterpreterMapping interpreterMapping = InterpreterMapper.getMapping( item.getItemId() );
 
         if ( interpreterMapping == null ) {
             Log.e( TAG, "onMenuItemClick: unknown interpreter" );
@@ -72,6 +72,6 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
 
     public interface InterpretationChangeListener {
 
-        void onInterpreterChanged(InterpreterMapper.InterpreterMapping interpreterMapping);
+        void onInterpreterChanged(InterpreterMapping interpreterMapping);
     }
 }

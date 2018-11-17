@@ -15,6 +15,7 @@ import de.kah2.mondtag.calendar.CalendarFragment;
 import de.kah2.mondtag.calendar.InfoDialogFragment;
 import de.kah2.mondtag.calendar.InterpretationMenuManager;
 import de.kah2.mondtag.calendar.InterpreterMapper;
+import de.kah2.mondtag.calendar.InterpreterMapping;
 import de.kah2.mondtag.datamanagement.DataFetchingFragment;
 import de.kah2.mondtag.datamanagement.DataManager;
 import de.kah2.mondtag.settings.SettingsFragment;
@@ -323,18 +324,19 @@ public class MondtagActivity extends AppCompatActivity
     }
 
     @Override
-    public void onInterpreterChanged(InterpreterMapper.InterpreterMapping mapping) {
+    public void onInterpreterChanged(InterpreterMapping mapping) {
 
         if (mapping == null) {
 
             Log.d(TAG, "onInterpreterChanged: mapping is null - removing interpreter");
-            this.getDataManager().getCalendar().setInterpreterClass(null);
+            this.getDataManager().setSelectedInterpreter(null);
             this.interpretationNameResId = R.string.interpret_none;
 
         } else {
 
-            Log.d(TAG, "onInterpreterChanged: setting interpreter: " + mapping.getI18n());
-            this.getDataManager().getCalendar().setInterpreterClass( mapping.getInterpreterClass() );
+            Log.d(TAG, "onInterpreterChanged: setting interpreter: "
+                    + mapping.getInterpreterName());
+            this.getDataManager().setSelectedInterpreter( mapping );
             this.interpretationNameResId = mapping.getId();
         }
 

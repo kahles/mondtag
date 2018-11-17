@@ -1,7 +1,6 @@
 package de.kah2.mondtag.calendar;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -48,7 +47,7 @@ public class InterpreterMapper {
         final LinkedList<Integer> keys = new LinkedList<>();
 
         for (InterpreterMapping mapping : mappings) {
-            keys.add( mapping.id );
+            keys.add( mapping.getId() );
         }
 
         return keys;
@@ -60,7 +59,7 @@ public class InterpreterMapper {
 
         for (InterpreterMapping mapping : mappings) {
 
-            if (mapping.id == id) {
+            if (mapping.getId() == id) {
                 return mapping;
             }
         }
@@ -71,62 +70,6 @@ public class InterpreterMapper {
     private static void checkMappings() {
         if (mappings == null) {
             throw new IllegalStateException( "No data - forgot to call init()?" );
-        }
-    }
-
-    /**
-     * This class is used to map an android string resource id to a Subclass of interpreter and
-     * provides {@link #compareTo(InterpreterMapping)} to be able to order these mappings by
-     * translated title.
-     */
-    public static class InterpreterMapping implements Comparable<InterpreterMapping>{
-
-        private final int id;
-        private final String i18n;
-        private final Class<? extends Interpreter> interpreterClass;
-
-        /**
-         * @param id the android string resource id
-         * @param i18n the translated name to be able to sort the interpreters
-         * @param interpreterClass and the class used to do the interpretation
-         */
-        private InterpreterMapping(int id, String i18n, Class<? extends Interpreter> interpreterClass) {
-
-            this.id = id;
-            this.i18n = i18n;
-            this.interpreterClass = interpreterClass;
-        }
-
-        /**
-         * @return The string resource id
-         */
-        public int getId() {
-            return id;
-        }
-
-        /**
-         * @return The translated title
-         */
-        public String getI18n() {
-            return i18n;
-        }
-
-        /**
-         * @return the corresponding subclass of {@link de.kah2.libZodiac.interpretation.Interpreter}
-         */
-        public Class<? extends Interpreter> getInterpreterClass() {
-            return interpreterClass;
-        }
-
-        @Override
-        public int compareTo(@NonNull InterpreterMapping interpreterMapping) {
-            return this.i18n.compareTo( interpreterMapping.i18n );
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return obj instanceof InterpreterMapping
-                    && i18n.equals( ((InterpreterMapping) obj).i18n );
         }
     }
 }
