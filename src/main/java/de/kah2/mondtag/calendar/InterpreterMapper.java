@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.Collections;
 import java.util.LinkedList;
 
+import de.kah2.libZodiac.Day;
 import de.kah2.libZodiac.interpretation.Gardening;
 import de.kah2.libZodiac.interpretation.Interpreter;
 import de.kah2.mondtag.R;
@@ -53,6 +54,7 @@ public class InterpreterMapper {
         return keys;
     }
 
+    /** @return a clone of the mapping to prevent external modification */
     static InterpreterMapping getMapping(int id) {
 
         checkMappings();
@@ -60,11 +62,35 @@ public class InterpreterMapper {
         for (InterpreterMapping mapping : mappings) {
 
             if (mapping.getId() == id) {
-                return mapping;
+
+                // return a copy to prevent modification of the original
+                return new InterpreterMapping( mapping );
             }
         }
 
         return null;
+    }
+
+    /**
+     * Uses all InterpreterMappings and returns a list of interpretations that aren't neutral.
+     */
+    static LinkedList<InterpreterMapping> getInterpretedMappings(Day day, Context context) {
+
+        checkMappings();
+
+        final LinkedList<InterpreterMapping> results = new LinkedList<>();
+
+        for (InterpreterMapping mapping : mappings) {
+
+            final InterpreterMapping clone = new InterpreterMapping( mapping );
+            clone.interpret(day, context);
+
+            if (!clone.isQualityNeutral()) {
+                results.addLast(clone);
+            }
+        }
+
+        return results;
     }
 
     private static void checkMappings() {

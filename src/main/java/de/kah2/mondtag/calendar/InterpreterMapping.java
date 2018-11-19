@@ -43,6 +43,11 @@ public class InterpreterMapping implements Comparable<InterpreterMapping> {
         this.interpreterClass = interpreterClass;
     }
 
+    /** To simply clone an {@link InterpreterMapping}. */
+    InterpreterMapping(InterpreterMapping original) {
+        this(original.interpreterNameStringid, original.interpreterName, original.interpreterClass);
+    }
+
     /**
      * Creates an interpretation object.
      * @param day the {@link Day} object containing the data to interpret.
@@ -111,19 +116,6 @@ public class InterpreterMapping implements Comparable<InterpreterMapping> {
     }
 
     /**
-     * To allow showing the name only if interpreted quality isn't neutral.
-     * @return the translated name or an empty string if quality is neutral
-     */
-    String getInterpreterNameIfNotNeutral() {
-
-        if (isQualityNeutral) {
-            return "";
-        } else {
-            return this.getInterpreterName();
-        }
-    }
-
-    /**
      * @return the image resource id of the quality icon or 0, if
      */
     int getQualityIcon() {
@@ -136,6 +128,10 @@ public class InterpreterMapping implements Comparable<InterpreterMapping> {
 
     String getAnnotations() {
         return this.annotations;
+    }
+
+    boolean isQualityNeutral() {
+        return isQualityNeutral;
     }
 
     @Override

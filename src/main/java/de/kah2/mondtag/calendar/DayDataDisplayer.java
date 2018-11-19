@@ -1,12 +1,16 @@
 package de.kah2.mondtag.calendar;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
+
+import java.util.LinkedList;
 
 import de.kah2.libZodiac.Day;
 import de.kah2.mondtag.Mondtag;
@@ -41,59 +45,50 @@ class DayDataDisplayer {
     private final ImageView zodiacElementIcon;
     private final TextView zodiacElementText;
     private final ImageView interpretationIcon;
-    private final TextView interpretationNameView;
-    private final TextView interpretationQualityTextView;
-    private final TextView interpretationQualityCategoryTextView;
+    private final TextView interpretationAnnotationTextView;
 
     DayDataDisplayer(View dayView) {
         this.dayView = dayView;
 
-        this.dayOfWeekView = dayView.findViewById(R.id.dayOfWeekText);
-        this.dateView = dayView.findViewById(R.id.dateText);
+        this.dayOfWeekView = dayView.findViewById(R.id.day_of_week_text);
+        this.dateView = dayView.findViewById(R.id.date_text);
 
-        this.solarRiseTextField = dayView.findViewById(R.id.sunRiseText);
-        this.solarSetTextView = dayView.findViewById(R.id.sunSetText);
+        this.solarRiseTextField = dayView.findViewById(R.id.sun_rise_text);
+        this.solarSetTextView = dayView.findViewById(R.id.sun_set_text);
 
-        this.lunarRiseSetFirstIcon = dayView.findViewById(R.id.lunarRiseSetFirstIcon);
+        this.lunarRiseSetFirstIcon = dayView.findViewById(R.id.lunar_rise_set_first_icon);
         this.lunarRiseSetFirstTextView =
-                dayView.findViewById(R.id.lunarRiseSetFirstText);
-        this.lunarRiseSetSecondIcon = dayView.findViewById(R.id.lunarRiseSetSecondIcon);
+                dayView.findViewById(R.id.lunar_rise_set_first_text);
+        this.lunarRiseSetSecondIcon = dayView.findViewById(R.id.lunar_rise_set_second_icon);
         this.lunarRiseSetSecondTextView =
-                dayView.findViewById(R.id.lunarRiseSetSecondText);
+                dayView.findViewById(R.id.lunar_rise_set_second_text);
 
-        this.lunarPhaseIcon = dayView.findViewById(R.id.lunarPhaseIcon);
-        this.lunarPhaseText = dayView.findViewById(R.id.lunarPhaseText);
-        this.zodiacSignIcon = dayView.findViewById(R.id.zodiacSignIcon);
-        this.zodiacSignText = dayView.findViewById(R.id.zodiacSignText);
-        this.zodiacDirectionIcon = dayView.findViewById(R.id.zodiacDirectionIcon);
-        this.zodiacDirectionText = dayView.findViewById(R.id.zodiacDirectionText);
-        this.zodiacElementIcon = dayView.findViewById(R.id.zodiacElementIcon);
-        this.zodiacElementText = dayView.findViewById(R.id.zodiacElementText);
-        this.interpretationIcon = dayView.findViewById(R.id.interpretationIcon);
-        this.interpretationNameView = dayView.findViewById(R.id.interpretationName);
-        this.interpretationQualityTextView = dayView.findViewById(R.id.interpretationQualityText);
-        this.interpretationQualityCategoryTextView=
-                dayView.findViewById(R.id.interpretationQualityCategoryText);
+        this.lunarPhaseIcon = dayView.findViewById(R.id.lunar_phase_icon);
+        this.lunarPhaseText = dayView.findViewById(R.id.lunar_phase_text);
+        this.zodiacSignIcon = dayView.findViewById(R.id.zodiac_sign_icon);
+        this.zodiacSignText = dayView.findViewById(R.id.zodiac_sign_text);
+        this.zodiacDirectionIcon = dayView.findViewById(R.id.zodiac_direction_icon);
+        this.zodiacDirectionText = dayView.findViewById(R.id.zodiac_direction_text);
+        this.zodiacElementIcon = dayView.findViewById(R.id.zodiac_element_icon);
+        this.zodiacElementText = dayView.findViewById(R.id.zodiac_element_text);
+        this.interpretationIcon = dayView.findViewById(R.id.interpretation_icon);
+        this.interpretationAnnotationTextView =
+                dayView.findViewById(R.id.interpretation_annotation_text);
     }
 
     /**
      * This method fills in the values:
      * @param day The day object containing the data to display
-     * @param isVerboseView if true, the views R.id.interpretationName and
-     *                      R.id.interpretationQualityText are also set - if false, only the icon
-     *                      and its description will be set.
+     * @param isDayDetailView must be true if used in {@link DayDetailFragment}, false if used in
+     *                        normal {@link CalendarFragment}
      */
-    void setDayData(final Day day, boolean isVerboseView) {
+    void setDayData(final Day day, boolean isDayDetailView) {
+
         dayOfWeekView.setText( ResourceMapper.formatDayOfWeek(day.getDate()) );
 
         dateView.setText( ResourceMapper.formatDate(day.getDate()) );
 
-        solarRiseTextField.setText(
-                ResourceMapper.formatTime( getContext(),
-                        day.getPlanetaryData().getSolarRiseSet().getRise() ) );
-        solarSetTextView.setText(
-                ResourceMapper.formatTime( getContext(),
-                        day.getPlanetaryData().getSolarRiseSet().getSet() ) );
+        this.initSolarRiseSetFields(day);
 
         this.initLunarRiseSetFields(day);
 
@@ -105,45 +100,24 @@ class DayDataDisplayer {
         this.initFields(day.getZodiacData().getSign(), zodiacSignIcon, zodiacSignText);
         this.initFields(day.getZodiacData().getElement(), zodiacElementIcon, zodiacElementText);
 
-        initInterpretationFields(day, isVerboseView);
+        if (isDayDetailView) {
+
+            this.initAllInterpretersList(day);
+
+        } else {
+
+            this.initSelectedInterpretationFields(day);
+        }
     }
 
-    private void initInterpretationFields(Day day, boolean isVerboseView) {
+    private void initSolarRiseSetFields(Day day) {
 
-        int qualityIcon = 0;
-        String qualityText = "";
-        String annotations = "";
-        String name = "";
-
-        final InterpreterMapping interpreterMapping =
-                ((Mondtag) getContext()).getDataManager().getSelectedInterpreter();
-
-        if (interpreterMapping != null) {
-
-            interpreterMapping.interpret(day, getContext());
-
-            name = interpreterMapping.getInterpreterNameIfNotNeutral();
-            qualityIcon = interpreterMapping.getQualityIcon();
-            qualityText = interpreterMapping.getQualityText();
-            annotations = interpreterMapping.getAnnotations();
-        }
-
-        // Finally assign Strings to fields
-        this.interpretationIcon.setImageResource( qualityIcon );
-        this.interpretationIcon.setContentDescription( qualityText );
-
-        this.interpretationQualityCategoryTextView.setText( annotations );
-
-        if (isVerboseView) {
-
-            // TODO create list of all interpretations
-
-            // These fields we only have in fragment_day_detail
-
-            this.interpretationQualityTextView.setText( qualityText );
-
-            this.interpretationNameView.setText( name );
-        }
+        this.solarRiseTextField.setText(
+                ResourceMapper.formatTime( getContext(),
+                        day.getPlanetaryData().getSolarRiseSet().getRise() ) );
+        this.solarSetTextView.setText(
+                ResourceMapper.formatTime( getContext(),
+                        day.getPlanetaryData().getSolarRiseSet().getSet() ) );
     }
 
     private void initLunarRiseSetFields(Day day) {
@@ -197,6 +171,49 @@ class DayDataDisplayer {
         imageView.setImageResource(ids[ResourceMapper.INDEX_IMAGE]);
         imageView.setContentDescription(text);
         if (textView != null) textView.setText(text);
+    }
+
+    private void initSelectedInterpretationFields(Day day) {
+
+        int qualityIcon = 0;
+        String qualityText = "";
+        String annotations = "";
+
+        final InterpreterMapping interpreterMapping =
+                ((Mondtag) getContext().getApplicationContext()).getDataManager()
+                        .getSelectedInterpreter();
+
+        if (interpreterMapping != null) {
+
+            interpreterMapping.interpret(day, getContext());
+
+            qualityIcon = interpreterMapping.getQualityIcon();
+            qualityText = interpreterMapping.getQualityText();
+            annotations = interpreterMapping.getAnnotations();
+        }
+
+        // Finally assign Strings to fields
+        this.interpretationIcon.setImageResource( qualityIcon );
+        this.interpretationIcon.setContentDescription( qualityText );
+
+        this.interpretationAnnotationTextView.setText( annotations );
+    }
+
+    private void initAllInterpretersList(Day day) {
+
+        final LinkedList<InterpreterMapping> interpreters =
+                InterpreterMapper.getInterpretedMappings(day, getContext());
+
+        final RecyclerView view = this.dayView.findViewById(R.id.interpretation_list);
+
+        final LinearLayoutManager linearLayoutManager =
+                new LinearLayoutManager( getContext() );
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        view.setLayoutManager(linearLayoutManager);
+
+        final DayDetailInterpretationListAdapter adapter =
+                new DayDetailInterpretationListAdapter(interpreters);
+        view.setAdapter(adapter);
     }
 
     /** Simple delegate to get a {@link Context}-object from the contained {@link View}. */

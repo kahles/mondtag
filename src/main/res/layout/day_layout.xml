@@ -13,7 +13,7 @@
 
         <!-- Date -->
         <TextView
-            android:id="@+id/dayOfWeekText"
+            android:id="@+id/day_of_week_text"
             android:text="@string/dummy_day_name"
             android:textSize="17sp"
             android:layout_width="wrap_content"
@@ -23,21 +23,21 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true" />
         <TextView
-            android:id="@+id/dateText"
+            android:id="@+id/date_text"
             android:layout_gravity="end"
             android:textAlignment="viewEnd"
             android:text="@string/dummy_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/dayOfWeekText"
-            android:layout_toRightOf="@id/dayOfWeekText"
+            android:layout_toEndOf="@id/day_of_week_text"
+            android:layout_toRightOf="@id/day_of_week_text"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true" />
 
         <!-- Phase, sign, direction and element -->
         <ImageView
-            android:id="@+id/lunarPhaseIcon"
+            android:id="@+id/lunar_phase_icon"
             android:src="@drawable/moon_waxing"
             android:contentDescription="@string/increasing"
             android:layout_width="wrap_content"
@@ -46,85 +46,85 @@
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
             android:scaleType="center"
-            android:layout_below="@id/dayOfWeekText"
+            android:layout_below="@id/day_of_week_text"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"/>
         <TextView
-            android:id="@+id/lunarPhaseText"
+            android:id="@+id/lunar_phase_text"
             android:text="@string/increasing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/dayOfWeekText"
-            android:layout_toRightOf="@id/lunarPhaseIcon"
-            android:layout_toEndOf="@id/lunarPhaseIcon" />
+            android:layout_below="@id/day_of_week_text"
+            android:layout_toRightOf="@id/lunar_phase_icon"
+            android:layout_toEndOf="@id/lunar_phase_icon" />
         <ImageView
-            android:id="@+id/zodiacDirectionIcon"
+            android:id="@+id/zodiac_direction_icon"
             android:src="@drawable/moon_ascending"
             android:contentDescription="@string/ascending"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:scaleType="center"
-            android:layout_below="@id/lunarPhaseIcon"
+            android:layout_below="@id/lunar_phase_icon"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true" />
         <TextView
-            android:id="@+id/zodiacDirectionText"
+            android:id="@+id/zodiac_direction_text"
             android:text="@string/ascending"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/lunarPhaseIcon"
-            android:layout_toRightOf="@id/lunarPhaseIcon"
-            android:layout_toEndOf="@id/lunarPhaseIcon" />
+            android:layout_below="@id/lunar_phase_icon"
+            android:layout_toRightOf="@id/lunar_phase_icon"
+            android:layout_toEndOf="@id/lunar_phase_icon" />
         <ImageView
-            android:id="@+id/zodiacSignIcon"
+            android:id="@+id/zodiac_sign_icon"
             android:src="@drawable/virgo"
             android:contentDescription="@string/virgo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:scaleType="center"
-            android:layout_below="@id/zodiacDirectionIcon"
+            android:layout_below="@id/zodiac_direction_icon"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true" />
         <TextView
-            android:id="@+id/zodiacSignText"
+            android:id="@+id/zodiac_sign_text"
             android:text="@string/virgo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/zodiacDirectionIcon"
-            android:layout_toRightOf="@id/lunarPhaseIcon"
-            android:layout_toEndOf="@id/lunarPhaseIcon" />
+            android:layout_below="@id/zodiac_direction_icon"
+            android:layout_toRightOf="@id/lunar_phase_icon"
+            android:layout_toEndOf="@id/lunar_phase_icon" />
         <ImageView
-            android:id="@+id/zodiacElementIcon"
+            android:id="@+id/zodiac_element_icon"
             android:src="@drawable/air"
             android:contentDescription="@string/air"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="center"
-            android:layout_below="@id/zodiacSignIcon"
+            android:layout_below="@id/zodiac_sign_icon"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true" />
         <TextView
-            android:id="@+id/zodiacElementText"
+            android:id="@+id/zodiac_element_text"
             android:text="@string/air"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/zodiacSignIcon"
-            android:layout_toRightOf="@id/lunarPhaseIcon"
-            android:layout_toEndOf="@id/lunarPhaseIcon" />
+            android:layout_below="@id/zodiac_sign_icon"
+            android:layout_toRightOf="@id/lunar_phase_icon"
+            android:layout_toEndOf="@id/lunar_phase_icon" />
 
         <!-- Sun rise and set-->
         <TextView
-            android:id="@+id/sunSetText"
+            android:id="@+id/sun_set_text"
             android:text="@string/dummy_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_below="@id/dayOfWeekText" />
+            android:layout_below="@id/day_of_week_text" />
         <ImageView
-            android:id="@+id/sunSetIcon"
+            android:id="@+id/sun_set_icon"
             android:src="@drawable/sun_set"
             android:contentDescription="@string/description_sun_set"
             android:layout_width="wrap_content"
@@ -132,84 +132,84 @@
             android:scaleType="center"
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
-            android:layout_toLeftOf="@id/sunSetText"
-            android:layout_toStartOf="@id/sunSetText"
-            android:layout_below="@id/dayOfWeekText" />
+            android:layout_toLeftOf="@id/sun_set_text"
+            android:layout_toStartOf="@id/sun_set_text"
+            android:layout_below="@id/day_of_week_text" />
         <TextView
-            android:id="@+id/sunRiseText"
+            android:id="@+id/sun_rise_text"
             android:text="@string/dummy_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/sunSetIcon"
-            android:layout_toStartOf="@id/sunSetIcon"
-            android:layout_below="@id/dayOfWeekText" />
+            android:layout_toLeftOf="@id/sun_set_icon"
+            android:layout_toStartOf="@id/sun_set_icon"
+            android:layout_below="@id/day_of_week_text" />
         <ImageView
-            android:id="@+id/sunRiseIcon"
+            android:id="@+id/sun_rise_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="center"
             android:src="@drawable/sun_rise"
             android:contentDescription="@string/description_sun_rise"
-            android:layout_below="@id/dayOfWeekText"
-            android:layout_toLeftOf="@id/sunRiseText"
-            android:layout_toStartOf="@id/sunRiseText"/>
+            android:layout_below="@id/day_of_week_text"
+            android:layout_toLeftOf="@id/sun_rise_text"
+            android:layout_toStartOf="@id/sun_rise_text"/>
 
         <!-- Lunar rise and set-->
         <TextView
-            android:id="@+id/lunarRiseSetSecondText"
+            android:id="@+id/lunar_rise_set_second_text"
             android:text="@string/dummy_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/lunarPhaseIcon"
+            android:layout_below="@id/lunar_phase_icon"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true" />
         <ImageView
-            android:id="@+id/lunarRiseSetSecondIcon"
+            android:id="@+id/lunar_rise_set_second_icon"
             android:src="@drawable/lunar_set"
             android:contentDescription="@string/description_lunar_set"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="center"
-            android:layout_below="@id/lunarPhaseIcon"
-            android:layout_toLeftOf="@id/sunSetText"
-            android:layout_toStartOf="@id/sunSetText" />
+            android:layout_below="@id/lunar_phase_icon"
+            android:layout_toLeftOf="@id/sun_set_text"
+            android:layout_toStartOf="@id/sun_set_text" />
         <TextView
-            android:id="@+id/lunarRiseSetFirstText"
+            android:id="@+id/lunar_rise_set_first_text"
             android:text="@string/dummy_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/lunarPhaseIcon"
-            android:layout_toLeftOf="@id/sunSetIcon"
-            android:layout_toStartOf="@id/sunSetIcon" />
+            android:layout_below="@id/lunar_phase_icon"
+            android:layout_toLeftOf="@id/sun_set_icon"
+            android:layout_toStartOf="@id/sun_set_icon" />
         <ImageView
-            android:id="@+id/lunarRiseSetFirstIcon"
+            android:id="@+id/lunar_rise_set_first_icon"
             android:src="@drawable/lunar_rise"
             android:contentDescription="@string/description_lunar_rise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="center"
-            android:layout_below="@id/lunarPhaseIcon"
-            android:layout_toLeftOf="@id/sunRiseText"
-            android:layout_toStartOf="@id/sunRiseText" />
+            android:layout_below="@id/lunar_phase_icon"
+            android:layout_toLeftOf="@id/sun_rise_text"
+            android:layout_toStartOf="@id/sun_rise_text" />
         <ImageView
-            android:id="@+id/interpretationIcon"
+            android:id="@+id/interpretation_icon"
             android:src="@drawable/quality_best"
             android:contentDescription="@string/dummy_interpretationQuality"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="center"
-            android:layout_alignBottom="@id/zodiacElementText"
-            android:layout_alignEnd="@id/lunarRiseSetSecondText"
-            android:layout_alignRight="@id/lunarRiseSetSecondText"/>
+            android:layout_alignBottom="@id/zodiac_element_text"
+            android:layout_alignEnd="@id/lunar_rise_set_second_text"
+            android:layout_alignRight="@id/lunar_rise_set_second_text"/>
         <TextView
-            android:id="@+id/interpretationQualityCategoryText"
+            android:id="@+id/interpretation_annotation_text"
             android:text="@string/dummy_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
-            android:layout_alignBottom="@id/interpretationIcon"
-            android:layout_toLeftOf="@id/interpretationIcon"
-            android:layout_toStartOf="@id/interpretationIcon"
+            android:layout_alignBottom="@id/interpretation_icon"
+            android:layout_toLeftOf="@id/interpretation_icon"
+            android:layout_toStartOf="@id/interpretation_icon"
             android:layout_marginEnd="5dp"/>
 
     </RelativeLayout>

@@ -111,7 +111,7 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
             if (day == null) {
 
                 // the actual list element is the extend button
-                itemView.findViewById(R.id.buttonExtendData).setOnClickListener((view)->{
+                itemView.findViewById(R.id.button_extend_data).setOnClickListener((view)->{
 
                     Log.d(Item.class.getSimpleName(),
                             "clickListener: extendButton clicked");

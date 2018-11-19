@@ -31,6 +31,9 @@ public class DayDetailFragment extends android.app.DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        this.getDialog().setCanceledOnTouchOutside(true);
+
         final View view = inflater.inflate(R.layout.fragment_day_detail, container, false);
 
         if (savedInstanceState != null) {
@@ -70,8 +73,8 @@ public class DayDetailFragment extends android.app.DialogFragment {
         final LocalDateTime rise = this.day.getPlanetaryData().getLunarRiseSet().getRise();
         final LocalDateTime set = this.day.getPlanetaryData().getLunarRiseSet().getSet();
 
-        final TextView lunarRSFirstDescriptionTextView = view.findViewById(R.id.lunarRiseSetFirstDescription);
-        final TextView lunarRSecondDescriptionTextView = view.findViewById(R.id.lunarRiseSetSecondDescription);
+        final TextView lunarRSFirstDescriptionTextView = view.findViewById(R.id.lunar_rise_set_first_description);
+        final TextView lunarRSecondDescriptionTextView = view.findViewById(R.id.lunar_rise_set_second_description);
 
         if ( !day.getDate().isEqual(LocalDate.from(rise)) ) {
 

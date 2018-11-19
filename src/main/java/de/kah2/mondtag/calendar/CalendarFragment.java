@@ -35,7 +35,7 @@ public class CalendarFragment extends Fragment {
 
         final View view = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-        this.recyclerView = view.findViewById(R.id.recycler_view);
+        this.recyclerView = view.findViewById(R.id.day_recycler_view);
         this.recyclerView.setLayoutManager( this.createLayoutManager() );
 
         this.dayRecyclerViewAdapter = new DayRecyclerViewAdapter();

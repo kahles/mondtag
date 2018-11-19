@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="5dp" >
+
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:columnCount="3">
+    <ImageView
+        android:id="@+id/interpretation_icon"
+        android:src="@drawable/quality_best"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_rowSpan="2"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"/>
+    <TextView
+        android:id="@+id/interpretation_name"
+        android:text="@string/dummy_interpretationText"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
+    <TextView
+        android:id="@+id/interpretation_quality_text"
+        android:text="@string/dummy_interpretationQuality"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"/>
+    <TextView
+        android:id="@+id/interpretation_annotation_text"
+        android:text="@string/dummy_action"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
+</GridLayout>
+
+</android.support.v7.widget.CardView>
