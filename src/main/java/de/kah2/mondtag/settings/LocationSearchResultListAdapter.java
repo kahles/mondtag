@@ -28,7 +28,7 @@ public class LocationSearchResultListAdapter
     @NonNull
     @Override
     public SearchResult onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View inflatedView = LayoutInflater.from(parent.getContext())
+        final View inflatedView = LayoutInflater.from(parent.getContext())
                 .inflate( R.layout.location_search_result , parent, false);
 
         return new SearchResult(inflatedView);
@@ -56,13 +56,10 @@ public class LocationSearchResultListAdapter
      */
     class SearchResult extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final View itemView;
-
         private NamedGeoPosition address;
 
         SearchResult(View itemView) {
             super(itemView);
-            this.itemView = itemView;
         }
 
         void bindElement(NamedGeoPosition address) {
@@ -77,7 +74,7 @@ public class LocationSearchResultListAdapter
             final TextView longitudeView = itemView.findViewById(R.id.location_search_result_longitude);
             longitudeView.setText( address.getFormattedLongitude() );
 
-            this.itemView.setOnClickListener(this);
+            itemView.setOnClickListener(this);
         }
 
         @Override

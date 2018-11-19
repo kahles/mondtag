@@ -49,7 +49,7 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
     @NonNull
     @Override
     public Item onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View inflatedView = LayoutInflater.from(parent.getContext())
+        final View inflatedView = LayoutInflater.from(parent.getContext())
                 .inflate( viewType , parent, false);
 
         return new Item(inflatedView);
@@ -95,13 +95,10 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
     class Item extends RecyclerView.ViewHolder
             implements View.OnClickListener, View.OnLongClickListener{
 
-        private final View itemView;
-
         private Day day;
 
         Item(View itemView) {
             super(itemView);
-            this.itemView = itemView;
         }
 
         /**
@@ -125,8 +122,8 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
 
             } else {
 
-                this.itemView.setOnClickListener(this);
-                this.itemView.setOnLongClickListener(this);
+                itemView.setOnClickListener(this);
+                itemView.setOnLongClickListener(this);
 
                 final DayDataDisplayer displayer = new DayDataDisplayer(itemView);
                 displayer.setDayData(day, false);
