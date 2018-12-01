@@ -141,6 +141,13 @@ public class ResourceMapper {
         return date.format( formatter );
     }
 
+    /** returns day of week and date */
+    public static String formatLongDate(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
+                .withLocale(DataManager.getLocale());
+        return date.format(formatter);
+    }
+
     /** Returns the formatted time string of a {@link LocalDateTime}-object. */
     public static String formatTime(Context context, LocalDateTime date) {
         /* Ignores 24h-format  - see https://github.com/JakeWharton/ThreeTenABP/issues/16 */

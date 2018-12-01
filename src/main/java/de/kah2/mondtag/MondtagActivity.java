@@ -11,11 +11,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import de.kah2.libZodiac.Calendar;
+import de.kah2.libZodiac.Day;
 import de.kah2.mondtag.calendar.CalendarFragment;
+import de.kah2.mondtag.calendar.DayDetailFragment;
 import de.kah2.mondtag.calendar.InfoDialogFragment;
 import de.kah2.mondtag.calendar.InterpretationMenuManager;
-import de.kah2.mondtag.calendar.InterpreterMapper;
 import de.kah2.mondtag.calendar.InterpreterMapping;
+import de.kah2.mondtag.calendar.ResourceMapper;
 import de.kah2.mondtag.datamanagement.DataFetchingFragment;
 import de.kah2.mondtag.datamanagement.DataManager;
 import de.kah2.mondtag.settings.SettingsFragment;
@@ -34,6 +36,7 @@ public class MondtagActivity extends AppCompatActivity
     private final static int STATE_DISPLAYING = 0;
     private final static int STATE_CONFIGURING = 1;
     private final static int STATE_GENERATING = 2;
+    private final static int STATE_DAY_DETAIL = 3;
 
     private final static String BUNDLE_KEY_STATE =
             MondtagActivity.class.getName() + ".state";
@@ -64,6 +67,8 @@ public class MondtagActivity extends AppCompatActivity
     private final static String BUNDLE_KEY_INTERPRETER_ID =
             MondtagActivity.class.getName() + ".interpretationNameResId";
     private int interpretationNameResId = R.string.interpret_none;
+
+    private Day selectedDay = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +169,15 @@ public class MondtagActivity extends AppCompatActivity
         this.updateContent();
     }
 
+    /**
+     * Shows detailed view for a selected {@link Day}.
+     */
+    public void activateDayDetailView(Day day) {
+        this.selectedDay = day;
+        this.state = STATE_DAY_DETAIL;
+        this.updateContent();
+    }
+
     /** used to replace the fragments */
     private void updateContent() {
 
@@ -178,8 +192,12 @@ public class MondtagActivity extends AppCompatActivity
 
         } else {
 
+            Log.d(TAG, "updateContent: state is " + state);
+
             switch (state) {
+
                 case STATE_CONFIGURING:
+
                     actionBar.setSubtitle(R.string.action_settings);
                     actionBar.setDisplayShowHomeEnabled(true);
                     SettingsFragment fragment = new SettingsFragment();
@@ -190,17 +208,38 @@ public class MondtagActivity extends AppCompatActivity
                         this.isFirstStart = false;
                     }
                     break;
+
                 case STATE_GENERATING:
+
                     actionBar.setSubtitle(R.string.data_fetching_toolbar_subtitle);
                     actionBar.setDisplayShowHomeEnabled(false);
                     transaction.replace(R.id.content_frame,
                             new DataFetchingFragment(), DataFetchingFragment.TAG);
                     break;
+
                 case STATE_DISPLAYING:
+
                     actionBar.setSubtitle(this.interpretationNameResId);
                     actionBar.setDisplayShowHomeEnabled(false);
                     transaction.replace(R.id.content_frame,
                             new CalendarFragment(), CalendarFragment.TAG);
+                    break;
+
+                case STATE_DAY_DETAIL:
+
+                    actionBar.setSubtitle(
+                            ResourceMapper.formatLongDate( this.selectedDay.getDate() ) );
+                    actionBar.setDisplayShowHomeEnabled(true);
+
+                    final DayDetailFragment dayDetailFragment = new DayDetailFragment();
+                    dayDetailFragment.setDay(this.selectedDay);
+
+                    // This is the only "normal" fragment - accessible only from CalendarFragment
+                    // so we push this to back-stack to be able to "normally" navigate back
+                    // TODO do this without back stack through a state change?
+                    transaction.replace(R.id.content_frame,
+                                dayDetailFragment, DayDetailFragment.TAG)
+                            .addToBackStack(DayDetailFragment.TAG);
                     break;
             }
 
@@ -248,7 +287,7 @@ public class MondtagActivity extends AppCompatActivity
                 }
         }
     }
-    
+
     /**
      * When the user presses "back" the app is closed, except if configuration is active. In this
      * case the app returns to calendar view if data is available OR to data fetching, if data needs
@@ -257,19 +296,30 @@ public class MondtagActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
 
-        if (this.state != STATE_CONFIGURING) {
+        if (this.state == STATE_CONFIGURING) {
+
+            this.getDataManager().setConfigReviewed();
+
+            final Calendar calendar = this.getDataManager().getCalendar();
+
+            if (calendar == null || !calendar.isComplete()) {
+                this.activateDataGeneration();
+            } else {
+                this.activateCalendarView();
+            }
+        } else {
+
+            if (state == STATE_DAY_DETAIL) {
+                // Although the calendar view is restored by back stack, we set the state and reset
+                // the selected day to avoid strange behaviour like disappearing menu after
+                // onRestoreInstanceState
+                this.selectedDay = null;
+                state = STATE_DISPLAYING;
+            }
+            
             super.onBackPressed();
         }
 
-        this.getDataManager().setConfigReviewed();
-
-        final Calendar calendar = this.getDataManager().getCalendar();
-
-        if ( calendar == null || !calendar.isComplete() ) {
-            this.activateDataGeneration();
-        } else {
-            this.activateCalendarView();
-        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 package de.kah2.mondtag.calendar;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -28,8 +29,11 @@ class DayDataDisplayer {
 
     private final View dayView;
 
-    private final TextView dayOfWeekView;
-    private final TextView dateView;
+    /** Exists only in normal day-layout! */
+    private TextView dateView;
+    /** Exists only in normal day-layout! */
+    private TextView dayOfWeekView;
+
     private final TextView solarRiseTextField;
     private final TextView solarSetTextView;
     private final ImageView lunarRiseSetFirstIcon;
@@ -49,9 +53,6 @@ class DayDataDisplayer {
 
     DayDataDisplayer(View dayView) {
         this.dayView = dayView;
-
-        this.dayOfWeekView = dayView.findViewById(R.id.day_of_week_text);
-        this.dateView = dayView.findViewById(R.id.date_text);
 
         this.solarRiseTextField = dayView.findViewById(R.id.sun_rise_text);
         this.solarSetTextView = dayView.findViewById(R.id.sun_set_text);
@@ -84,9 +85,7 @@ class DayDataDisplayer {
      */
     void setDayData(final Day day, boolean isDayDetailView) {
 
-        dayOfWeekView.setText( ResourceMapper.formatDayOfWeek(day.getDate()) );
-
-        dateView.setText( ResourceMapper.formatDate(day.getDate()) );
+        this.initDateFields(day, isDayDetailView);
 
         this.initSolarRiseSetFields(day);
 
@@ -107,6 +106,19 @@ class DayDataDisplayer {
         } else {
 
             this.initSelectedInterpretationFields(day);
+        }
+    }
+
+    private void initDateFields(Day day, boolean isDayDetailView) {
+
+        // In DayDetailFragment this is shown in title
+        if (!isDayDetailView) {
+
+            this.dayOfWeekView = this.dayView.findViewById(R.id.day_of_week_text);
+            this.dayOfWeekView.setText(ResourceMapper.formatDayOfWeek(day.getDate()));
+
+            this.dateView = this.dayView.findViewById(R.id.date_text);
+            this.dateView.setText(ResourceMapper.formatDate(day.getDate()));
         }
     }
 
@@ -223,7 +235,9 @@ class DayDataDisplayer {
 
     /**
      * Shortcut do get the subview of the contained View, that we don't have to handle with ids
-     * outside of this class.
+     * outside of this class. Used for highlighting today or weekends.
+     * <strong>May throw {@link NullPointerException}, when used on a view without date fields!
+     * (e.g. {@link DayDetailFragment})</strong>
      */
     TextView getDayOfWeekView() {
         return dayOfWeekView;

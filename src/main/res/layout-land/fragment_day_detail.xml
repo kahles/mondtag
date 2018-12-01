@@ -7,13 +7,10 @@
 
     <GridLayout
         android:id="@+id/day_detail_data_table"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/day_of_week_text"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:useDefaultMargins="true"
         android:alignmentMode="alignBounds"
         android:columnOrderPreserved="false"
@@ -164,25 +161,27 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/interpretation_list"
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:layout_below="@id/day_detail_data_table"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@id/day_detail_data_table"
+        android:layout_toRightOf="@id/day_detail_data_table"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"/>
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"/>
 
     <Button
         android:id="@+id/buttonCreateReminder"
         android:layout_width="match_parent"
         android:layout_height="@dimen/standard_height"
         android:layout_below="@id/interpretation_list"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignStart="@id/interpretation_list"
+        android:layout_alignLeft="@id/interpretation_list"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:text="@string/button_create_reminder"/>
+        android:text="@string/button_create_reminder" />
 
 </RelativeLayout>

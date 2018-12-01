@@ -55,6 +55,8 @@ public class LocationPreference extends DialogPreference
         super(context, attrs);
 
         setDialogLayoutResource(R.layout.location_preference);
+
+        // TODO do these buttons still exist?
         setPositiveButtonText(android.R.string.ok);
         setNegativeButtonText(android.R.string.cancel);
 

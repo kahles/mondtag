@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import de.kah2.libZodiac.Calendar;
 import de.kah2.libZodiac.Day;
 import de.kah2.mondtag.Mondtag;
+import de.kah2.mondtag.MondtagActivity;
 import de.kah2.mondtag.R;
 
 /**
@@ -61,10 +62,7 @@ public class CalendarFragment extends Fragment {
             public void onShortClick(Day day) {
                 Log.d(TAG, "onShortClick: " + day.getDate());
 
-                DayDetailFragment detailFragment = new DayDetailFragment();
-                detailFragment.setDay(day);
-                detailFragment.show(
-                        getFragmentManager(), DayDetailFragment.class.getSimpleName() );
+                ((MondtagActivity) getActivity()).activateDayDetailView(day);
             }
 
             @Override

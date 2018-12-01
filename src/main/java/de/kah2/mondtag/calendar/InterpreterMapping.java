@@ -85,16 +85,15 @@ public class InterpreterMapping implements Comparable<InterpreterMapping> {
             this.qualityText = context.getString(qualityStringIds[ResourceMapper.INDEX_STRING]);
         }
 
-        final String[] annotations = interpreter.getAnnotationsAsStringArray();
+        final String[] annotationKeys = interpreter.getAnnotationsAsStringArray();
 
-        if ( annotations.length > 0 ) {
+        if ( annotationKeys.length > 0 ) {
 
             final LinkedList<String> annotationStrings = new LinkedList<>();
 
-            for (String annotationKey : annotations) {
-
+            for (String key : annotationKeys) {
                 annotationStrings.add( context.getString(
-                        ResourceMapper.getResourceIds(annotationKey)[ResourceMapper.INDEX_STRING] ));
+                        ResourceMapper.getResourceIds(key)[ResourceMapper.INDEX_STRING] ));
             }
 
             this.annotations = TextUtils.join(" | ", annotationStrings);

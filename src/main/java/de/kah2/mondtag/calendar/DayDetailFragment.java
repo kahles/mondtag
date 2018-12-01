@@ -1,5 +1,6 @@
 package de.kah2.mondtag.calendar;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,12 +17,12 @@ import de.kah2.mondtag.Mondtag;
 import de.kah2.mondtag.R;
 
 /**
- * This is a {@link android.app.DialogFragment} to show daily information more verbose than the
+ * This is a {@link Fragment} to show daily information more verbose than the
  * {@link android.support.v7.widget.CardView}s of {@link CalendarFragment}.
  */
-public class DayDetailFragment extends android.app.DialogFragment {
+public class DayDetailFragment extends Fragment {
 
-    private final static String TAG = DayDetailFragment.class.getSimpleName();
+    public final static String TAG = DayDetailFragment.class.getSimpleName();
 
     private final static String BUNDLE_KEY_DATE =
             DayDetailFragment.class.getName() + ".Day";
@@ -31,8 +32,6 @@ public class DayDetailFragment extends android.app.DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        this.getDialog().setCanceledOnTouchOutside(true);
 
         final View view = inflater.inflate(R.layout.fragment_day_detail, container, false);
 
