@@ -5,6 +5,9 @@ import android.util.Log;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 import de.kah2.mondtag.calendar.InterpreterMapper;
 import de.kah2.mondtag.datamanagement.DataManager;
 
@@ -35,8 +38,6 @@ public class Mondtag extends Application {
     }
 
     public DataManager getDataManager() {
-
-        Log.d(LOG_TAG, "######### getDataManager called ############");
 
         return dataManager;
     }

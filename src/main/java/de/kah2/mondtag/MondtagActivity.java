@@ -33,10 +33,20 @@ public class MondtagActivity extends AppCompatActivity
     private final static String TAG = MondtagActivity.class.getSimpleName();
 
     private enum State {
+
+        /** when the app is started */
         UNDEFINED,
+
+        /** {@link CalendarFragment} is active */
         DISPLAYING,
+
+        /** {@link SettingsFragment} is active */
         CONFIGURING,
+
+        /** {@link DataFetchingFragment} is active */
         GENERATING,
+
+        /** show day details through {@link DayDetailFragment} */
         DAY_DETAILS
     }
 
@@ -175,6 +185,8 @@ public class MondtagActivity extends AppCompatActivity
      * Shows detailed view for a selected {@link Day}.
      */
     public void activateDayDetailView(Day day) {
+
+        Log.d(TAG, "activateDayDetailView");
         this.selectedDay = day;
         this.state = State.DAY_DETAILS;
         this.updateContent();
@@ -198,50 +210,16 @@ public class MondtagActivity extends AppCompatActivity
 
             switch (state) {
 
-                case CONFIGURING:
-
-                    actionBar.setSubtitle(R.string.action_settings);
-                    actionBar.setDisplayShowHomeEnabled(true);
-                    SettingsFragment fragment = new SettingsFragment();
-                    transaction.replace(R.id.content_frame,
-                            fragment, SettingsFragment.TAG);
-                    if (this.isFirstStart) {
-                        fragment.showHelpDialog();
-                        this.isFirstStart = false;
-                    }
+                case CONFIGURING: initConfiguration(transaction, actionBar);
                     break;
 
-                case GENERATING:
-
-                    actionBar.setSubtitle(R.string.data_fetching_toolbar_subtitle);
-                    actionBar.setDisplayShowHomeEnabled(false);
-                    transaction.replace(R.id.content_frame,
-                            new DataFetchingFragment(), DataFetchingFragment.TAG);
+                case GENERATING: initDataGeneration(transaction, actionBar);
                     break;
 
-                case DISPLAYING:
-
-                    actionBar.setSubtitle(this.interpretationNameResId);
-                    actionBar.setDisplayShowHomeEnabled(false);
-                    transaction.replace(R.id.content_frame,
-                            new CalendarFragment(), CalendarFragment.TAG);
+                case DISPLAYING: initCalendarView(transaction, actionBar);
                     break;
 
-                case DAY_DETAILS:
-
-                    actionBar.setSubtitle(
-                            ResourceMapper.formatLongDate( this.selectedDay.getDate() ) );
-                    actionBar.setDisplayShowHomeEnabled(true);
-
-                    final DayDetailFragment dayDetailFragment = new DayDetailFragment();
-                    dayDetailFragment.setDay(this.selectedDay);
-
-                    // This is the only "normal" fragment - accessible only from CalendarFragment
-                    // so we push this to back-stack to be able to "normally" navigate back
-                    // TODO do this without back stack through a state change?
-                    transaction.replace(R.id.content_frame,
-                                dayDetailFragment, DayDetailFragment.TAG)
-                            .addToBackStack(DayDetailFragment.TAG);
+                case DAY_DETAILS: initDayDetailView(transaction, actionBar);
                     break;
             }
 
@@ -250,6 +228,52 @@ public class MondtagActivity extends AppCompatActivity
             // This is needed or our menu isn't removed if settings are shown
             this.invalidateOptionsMenu();
         }
+    }
+
+    private void initConfiguration(FragmentTransaction transaction, ActionBar actionBar) {
+
+        actionBar.setSubtitle(R.string.action_settings);
+        actionBar.setDisplayShowHomeEnabled(true);
+
+        SettingsFragment fragment = new SettingsFragment();
+        transaction.replace(R.id.content_frame,
+                fragment, SettingsFragment.TAG);
+
+        if (this.isFirstStart) {
+            fragment.showHelpDialog();
+            this.isFirstStart = false;
+        }
+    }
+
+    private void initDataGeneration(FragmentTransaction transaction, ActionBar actionBar) {
+
+        actionBar.setSubtitle(R.string.data_fetching_toolbar_subtitle);
+        actionBar.setDisplayShowHomeEnabled(false);
+
+        transaction.replace(R.id.content_frame,
+                new DataFetchingFragment(), DataFetchingFragment.TAG);
+    }
+
+    private void initCalendarView(FragmentTransaction transaction, ActionBar actionBar) {
+
+        actionBar.setSubtitle(this.interpretationNameResId);
+        actionBar.setDisplayShowHomeEnabled(false);
+
+        transaction.replace(R.id.content_frame,
+                new CalendarFragment(), CalendarFragment.TAG);
+    }
+
+    private void initDayDetailView(FragmentTransaction transaction, ActionBar actionBar) {
+
+        actionBar.setSubtitle(
+                ResourceMapper.formatLongDate( this.selectedDay.getDate() ) );
+        actionBar.setDisplayShowHomeEnabled(true);
+
+        final DayDetailFragment dayDetailFragment = new DayDetailFragment();
+        dayDetailFragment.setDay(this.selectedDay);
+
+        transaction.replace(R.id.content_frame,
+                dayDetailFragment, DayDetailFragment.TAG);
     }
 
     /** Callback for {@link DataFetchingFragment} */
@@ -298,8 +322,11 @@ public class MondtagActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
 
+        Log.d(TAG, "onBackPressed: state was " + this.state);
+
         if (this.state == State.CONFIGURING) {
 
+            // User comes back from configuration
             this.getDataManager().setConfigReviewed();
 
             final Calendar calendar = this.getDataManager().getCalendar();
@@ -309,19 +336,61 @@ public class MondtagActivity extends AppCompatActivity
             } else {
                 this.activateCalendarView();
             }
-        } else {
+            
+        } else if (state == State.DAY_DETAILS) {
 
-            if (state == State.DAY_DETAILS) {
-                // Although the calendar view is restored by back stack, we set the state and reset
-                // the selected day to avoid strange behaviour like disappearing menu after
-                // onRestoreInstanceState
-                this.selectedDay = null;
-                state = State.DISPLAYING;
-            }
+            // here we could also use backstack but this would lead to more complexity for showing
+            // e.g. the menu
+            this.selectedDay = null;
+            this.activateCalendarView();
+                
+        } else {
 
             super.onBackPressed();
         }
+    }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        if (this.state == State.DISPLAYING) {
+            Log.d(TAG, "onPrepareOptionsMenu: showing main menu");
+
+            // clear - otherwise we get duplicate menu entries
+            menu.clear();
+
+            getMenuInflater().inflate(R.menu.menu, menu);
+
+            final Menu interpretationsMenu = menu.getItem(0).getSubMenu();
+            this.interpretationMenuManager.addInterpreters( interpretationsMenu );
+            this.interpretationMenuManager.setInterpretationChangeListener(this);
+
+            return true;
+
+        } else {
+            Log.d(TAG, "onPrepareOptionsMenu: hiding menu - state is " + this.state);
+            return false;
+        }
+    }
+
+    @Override
+    public void onInterpreterChanged(InterpreterMapping mapping) {
+
+        if (mapping == null) {
+
+            Log.d(TAG, "onInterpreterChanged: mapping is null - removing interpreter");
+            this.getDataManager().setSelectedInterpreter(null);
+            this.interpretationNameResId = R.string.interpret_none;
+
+        } else {
+
+            Log.d(TAG, "onInterpreterChanged: setting interpreter: "
+                    + mapping.getInterpreterName());
+            this.getDataManager().setSelectedInterpreter( mapping );
+            this.interpretationNameResId = mapping.getId();
+        }
+
+        this.updateContent();
     }
 
     @Override
@@ -350,48 +419,5 @@ public class MondtagActivity extends AppCompatActivity
 
     private DataManager getDataManager() {
         return ((Mondtag) getApplicationContext()).getDataManager();
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-
-        if (this.state == State.DISPLAYING) {
-            Log.d(TAG, "onPrepareOptionsMenu: showing main menu");
-
-            // clear - otherwise we get duplicate menu entries
-            menu.clear();
-
-            getMenuInflater().inflate(R.menu.menu, menu);
-
-            final Menu interpretationsMenu = menu.getItem(0).getSubMenu();
-            this.interpretationMenuManager.addInterpreters( interpretationsMenu );
-            this.interpretationMenuManager.setInterpretationChangeListener(this);
-
-            return true;
-
-        } else {
-            Log.d(TAG, "onPrepareOptionsMenu: hiding menu");
-            return false;
-        }
-    }
-
-    @Override
-    public void onInterpreterChanged(InterpreterMapping mapping) {
-
-        if (mapping == null) {
-
-            Log.d(TAG, "onInterpreterChanged: mapping is null - removing interpreter");
-            this.getDataManager().setSelectedInterpreter(null);
-            this.interpretationNameResId = R.string.interpret_none;
-
-        } else {
-
-            Log.d(TAG, "onInterpreterChanged: setting interpreter: "
-                    + mapping.getInterpreterName());
-            this.getDataManager().setSelectedInterpreter( mapping );
-            this.interpretationNameResId = mapping.getId();
-        }
-
-        this.updateContent();
     }
 }
