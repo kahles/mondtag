@@ -32,15 +32,17 @@ public class MondtagActivity extends AppCompatActivity
 
     private final static String TAG = MondtagActivity.class.getSimpleName();
 
-    private final static int STATE_UNDEFINED = -1;
-    private final static int STATE_DISPLAYING = 0;
-    private final static int STATE_CONFIGURING = 1;
-    private final static int STATE_GENERATING = 2;
-    private final static int STATE_DAY_DETAIL = 3;
+    private enum State {
+        UNDEFINED,
+        DISPLAYING,
+        CONFIGURING,
+        GENERATING,
+        DAY_DETAILS
+    }
 
     private final static String BUNDLE_KEY_STATE =
             MondtagActivity.class.getName() + ".state";
-    private int state = STATE_UNDEFINED;
+    private State state = State.UNDEFINED;
 
     private final static String BUNDLE_KEY_FIRST_START =
             MondtagActivity.class.getName() + ".isFirstStart";
@@ -89,7 +91,7 @@ public class MondtagActivity extends AppCompatActivity
             // following will return true
             this.isFirstStart = this.getDataManager().userShouldReviewConfig();
             
-            if (this.state == STATE_UNDEFINED) {
+            if (this.state == State.UNDEFINED) {
 
                 if (this.isFirstStart) {
 
@@ -142,7 +144,7 @@ public class MondtagActivity extends AppCompatActivity
     private void activateConfiguration() {
 
         Log.d(TAG, "activateConfiguration");
-        this.state = STATE_CONFIGURING;
+        this.state = State.CONFIGURING;
         this.updateContent();
     }
 
@@ -157,7 +159,7 @@ public class MondtagActivity extends AppCompatActivity
     private void activateDataGeneration() {
 
         Log.d(TAG, "activateDataGeneration");
-        this.state = STATE_GENERATING;
+        this.state = State.GENERATING;
         this.updateContent();
     }
 
@@ -165,7 +167,7 @@ public class MondtagActivity extends AppCompatActivity
     private void activateCalendarView() {
 
         Log.d(TAG, "activateCalendarView");
-        this.state = STATE_DISPLAYING;
+        this.state = State.DISPLAYING;
         this.updateContent();
     }
 
@@ -174,7 +176,7 @@ public class MondtagActivity extends AppCompatActivity
      */
     public void activateDayDetailView(Day day) {
         this.selectedDay = day;
-        this.state = STATE_DAY_DETAIL;
+        this.state = State.DAY_DETAILS;
         this.updateContent();
     }
 
@@ -196,7 +198,7 @@ public class MondtagActivity extends AppCompatActivity
 
             switch (state) {
 
-                case STATE_CONFIGURING:
+                case CONFIGURING:
 
                     actionBar.setSubtitle(R.string.action_settings);
                     actionBar.setDisplayShowHomeEnabled(true);
@@ -209,7 +211,7 @@ public class MondtagActivity extends AppCompatActivity
                     }
                     break;
 
-                case STATE_GENERATING:
+                case GENERATING:
 
                     actionBar.setSubtitle(R.string.data_fetching_toolbar_subtitle);
                     actionBar.setDisplayShowHomeEnabled(false);
@@ -217,7 +219,7 @@ public class MondtagActivity extends AppCompatActivity
                             new DataFetchingFragment(), DataFetchingFragment.TAG);
                     break;
 
-                case STATE_DISPLAYING:
+                case DISPLAYING:
 
                     actionBar.setSubtitle(this.interpretationNameResId);
                     actionBar.setDisplayShowHomeEnabled(false);
@@ -225,7 +227,7 @@ public class MondtagActivity extends AppCompatActivity
                             new CalendarFragment(), CalendarFragment.TAG);
                     break;
 
-                case STATE_DAY_DETAIL:
+                case DAY_DETAILS:
 
                     actionBar.setSubtitle(
                             ResourceMapper.formatLongDate( this.selectedDay.getDate() ) );
@@ -296,7 +298,7 @@ public class MondtagActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
 
-        if (this.state == STATE_CONFIGURING) {
+        if (this.state == State.CONFIGURING) {
 
             this.getDataManager().setConfigReviewed();
 
@@ -309,14 +311,14 @@ public class MondtagActivity extends AppCompatActivity
             }
         } else {
 
-            if (state == STATE_DAY_DETAIL) {
+            if (state == State.DAY_DETAILS) {
                 // Although the calendar view is restored by back stack, we set the state and reset
                 // the selected day to avoid strange behaviour like disappearing menu after
                 // onRestoreInstanceState
                 this.selectedDay = null;
-                state = STATE_DISPLAYING;
+                state = State.DISPLAYING;
             }
-            
+
             super.onBackPressed();
         }
 
@@ -325,7 +327,7 @@ public class MondtagActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(BUNDLE_KEY_STATE, this.state);
+        outState.putSerializable(BUNDLE_KEY_STATE, this.state);
         Log.d(TAG, "onSaveInstanceState: state = " + this.state);
         outState.putBoolean(BUNDLE_KEY_FIRST_START, this.isFirstStart);
         Log.d(TAG, "onSaveInstanceState: isFirstStart = " + this.isFirstStart);
@@ -337,7 +339,7 @@ public class MondtagActivity extends AppCompatActivity
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        this.state = savedInstanceState.getInt(BUNDLE_KEY_STATE);
+        this.state = (State) savedInstanceState.getSerializable(BUNDLE_KEY_STATE);
         Log.d(TAG, "onRestoreInstanceState: state := " + this.state);
         this.isFirstStart = savedInstanceState.getBoolean(BUNDLE_KEY_FIRST_START);
         Log.d(TAG, "onRestoreInstanceState: isFirstStart := " + this.isFirstStart);
@@ -353,7 +355,7 @@ public class MondtagActivity extends AppCompatActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
-        if (this.state == STATE_DISPLAYING) {
+        if (this.state == State.DISPLAYING) {
             Log.d(TAG, "onPrepareOptionsMenu: showing main menu");
 
             // clear - otherwise we get duplicate menu entries
