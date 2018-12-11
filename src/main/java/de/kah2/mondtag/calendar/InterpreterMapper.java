@@ -34,7 +34,7 @@ public class InterpreterMapper {
         add(context, R.string.interpret_Gardening_Water, Gardening.WaterInterpreter.class);
         add(context, R.string.interpret_Gardening_WeedControl, Gardening.WeedControlInterpreter.class);
 
-        Collections.sort(mappings);
+        Collections.sort(mappings, new InterpreterMapping.NameComparator());
     }
 
     private static void add(Context context, int id, Class<? extends Interpreter> interpreterClass) {
@@ -72,7 +72,10 @@ public class InterpreterMapper {
     }
 
     /**
-     * Uses all InterpreterMappings and returns a list of interpretations that aren't neutral.
+     * Uses all InterpreterMappings and returns a list of interpretations that aren't neutral sorted
+     * by quality.
+     * Used to show all interpretations id {@link DayDetailFragment}.
+     * @see de.kah2.mondtag.calendar.InterpreterMapping.QualityComparator
      */
     static LinkedList<InterpreterMapping> getInterpretedMappings(Day day, Context context) {
 
@@ -89,6 +92,8 @@ public class InterpreterMapper {
                 results.addLast(clone);
             }
         }
+
+        Collections.sort(results, new InterpreterMapping.QualityComparator());
 
         return results;
     }

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 
 import de.kah2.libZodiac.Day;
@@ -14,13 +15,18 @@ import de.kah2.libZodiac.interpretation.Interpreter;
  * This is a helper class to do an interpretation for a {@link Day}-object and provide translated
  * Strings and Icons.
  */
-public class InterpreterMapping implements Comparable<InterpreterMapping> {
+public class InterpreterMapping {
 
     public static final String TAG = InterpreterMapping.class.getSimpleName();
 
-    private final int interpreterNameStringid;
+    /** The android-string-resource-id */
+    private final int interpreterNameStringId;
+
+    /** The translated name to display and sort */
     private final String interpreterName;
+
     private final Class<? extends Interpreter> interpreterClass;
+    private Interpreter interpreterInstance;
 
     // Use empty Strings as default, if no values are set
     private String qualityText = "";
@@ -38,14 +44,14 @@ public class InterpreterMapping implements Comparable<InterpreterMapping> {
                                String nameString,
                                Class<? extends Interpreter> interpreterClass ) {
 
-        this.interpreterNameStringid = nameId;
+        this.interpreterNameStringId = nameId;
         this.interpreterName = nameString;
         this.interpreterClass = interpreterClass;
     }
 
     /** To simply clone an {@link InterpreterMapping}. */
     InterpreterMapping(InterpreterMapping original) {
-        this(original.interpreterNameStringid, original.interpreterName, original.interpreterClass);
+        this(original.interpreterNameStringId, original.interpreterName, original.interpreterClass);
     }
 
     /**
@@ -57,11 +63,11 @@ public class InterpreterMapping implements Comparable<InterpreterMapping> {
 
         try {
 
-            final Interpreter interpreter =
+            this.interpreterInstance =
                     this.interpreterClass.newInstance();
-            interpreter.setDayAndInterpret(day);
+            this.interpreterInstance.setDayAndInterpret(day);
 
-            this.processInterpreterResults(interpreter, context);
+            this.processInterpreterResults(context);
 
         } catch (Exception e) {
 
@@ -70,10 +76,9 @@ public class InterpreterMapping implements Comparable<InterpreterMapping> {
         }
     }
 
-    private void processInterpreterResults( Interpreter interpreter,
-                                            Context context) {
+    private void processInterpreterResults(Context context) {
 
-        final Interpreter.Quality quality = interpreter.getQuality();
+        final Interpreter.Quality quality = this.interpreterInstance.getQuality();
 
         final Integer[] qualityStringIds = ResourceMapper.getResourceIds( quality );
 
@@ -85,7 +90,7 @@ public class InterpreterMapping implements Comparable<InterpreterMapping> {
             this.qualityText = context.getString(qualityStringIds[ResourceMapper.INDEX_STRING]);
         }
 
-        final String[] annotationKeys = interpreter.getAnnotationsAsStringArray();
+        final String[] annotationKeys = this.interpreterInstance.getAnnotationsAsStringArray();
 
         if ( annotationKeys.length > 0 ) {
 
@@ -104,7 +109,7 @@ public class InterpreterMapping implements Comparable<InterpreterMapping> {
      * @return uses the string resource id of the interpreter name as unique id
      */
     public int getId() {
-        return this.interpreterNameStringid;
+        return this.interpreterNameStringId;
     }
 
     /**
@@ -134,14 +139,36 @@ public class InterpreterMapping implements Comparable<InterpreterMapping> {
     }
 
     @Override
-    public int compareTo(@NonNull InterpreterMapping interpreterMapping) {
-        return this.interpreterName.compareTo( interpreterMapping.interpreterName );
-    }
-
-    @Override
     public boolean equals(Object obj) {
         return obj instanceof InterpreterMapping
-                && this.interpreterName.equals(
-                        ((InterpreterMapping) obj).interpreterName );
+            && this.interpreterNameStringId == ((InterpreterMapping) obj).interpreterNameStringId;
+    }
+
+    /**
+     * Comparator to sort by translated name {@link #interpreterName}.
+     */
+    public static class NameComparator implements Comparator<InterpreterMapping> {
+
+        @Override
+        public int compare(InterpreterMapping interpreter1, InterpreterMapping interpreter2) {
+
+            return interpreter1.interpreterName.compareTo( interpreter2.interpreterName );
+        }
+    }
+
+    /**
+     * Comparator to sort {@link de.kah2.mondtag.calendar.InterpreterMapping}s by the calculated
+     * {@link de.kah2.libZodiac.interpretation.Interpreter.Quality} of their
+     * {@link Interpreter}s: Best qualities first, worst last.
+     * <strong>Be sure to call {@link InterpreterMapping#interpret(Day, Context)} first, to avoid
+     * {@link NullPointerException}s</strong>
+     */
+    public static class QualityComparator implements Comparator<InterpreterMapping> {
+        @Override
+        public int compare(InterpreterMapping interpreter1, InterpreterMapping interpreter2) {
+
+            return interpreter2.interpreterInstance.getQuality().compareTo(
+                    interpreter1.interpreterInstance.getQuality() );
+        }
     }
 }
