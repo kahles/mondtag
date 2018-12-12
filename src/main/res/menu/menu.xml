@@ -10,21 +10,19 @@
 
     <item android:id="@+id/menu_interpretations"
         android:title="@string/action_interpretations"
-        android:icon="@drawable/ic_lightbulb_outline_white_36dp"
+        android:icon="@drawable/ic_lightbulb"
         app:showAsAction="ifRoom|collapseActionView">
         <menu>
             <item android:id="@+id/interpretationDummy" android:title="@string/dummy_interpretationText"/>
         </menu>
     </item>
-
-    <item android:id="@+id/action_info"
-        android:title="@string/action_info"
-        app:showAsAction="never"
-        android:icon="@drawable/ic_info" />
-
+    
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
-        app:showAsAction="never"
-        android:icon="@drawable/ic_settings" />
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_info"
+          android:title="@string/action_info"
+          app:showAsAction="never" />
 
 </menu>
