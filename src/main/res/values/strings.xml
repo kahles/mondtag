@@ -3,6 +3,7 @@
     <string name="app_name" translatable="false">Mondtag</string>
     <string name="action_info">Info</string>
     <string name="action_settings">Settings</string>
+    <string name="action_scroll_to_today">Show today</string>
     <string name="action_interpretations">Interpretations</string>
     <string name="dialog_button_close">close</string>
 

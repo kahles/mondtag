@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import org.threeten.bp.LocalDate;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import de.kah2.libZodiac.Calendar;
 import de.kah2.libZodiac.Day;
@@ -78,12 +79,20 @@ public class CalendarFragment extends Fragment {
     }
 
     private void updateCalendar() {
-        final Calendar calendar =
-                ((Mondtag) getActivity().getApplicationContext()).getDataManager().getCalendar();
 
-        final LinkedList<Day> days = calendar.getValidDays();
+        final LinkedList<Day> days = this.getDaysToDisplay();
+
         this.dayRecyclerViewAdapter.setDays(days);
 
+        this.scrollToToday(days);
+    }
+
+    public void scrollToToday() {
+
+        this.scrollToToday( this.getDaysToDisplay() );
+    }
+
+    private void scrollToToday(List<Day> days) {
         final LinearLayoutManager layoutManager =
                 (LinearLayoutManager) this.recyclerView.getLayoutManager();
 
@@ -96,5 +105,13 @@ public class CalendarFragment extends Fragment {
         }
 
         layoutManager.scrollToPositionWithOffset(count, 25);
+    }
+
+    private LinkedList<Day> getDaysToDisplay() {
+
+        final Calendar calendar =
+                ((Mondtag) getActivity().getApplicationContext()).getDataManager().getCalendar();
+
+        return calendar.getValidDays();
     }
 }

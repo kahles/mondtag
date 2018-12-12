@@ -292,15 +292,16 @@ public class MondtagActivity extends AppCompatActivity
 
         switch (item.getItemId()) {
             case R.id.action_info:
-                Log.d(TAG, "Showing info ...");
-                DialogFragment infoDialog = new InfoDialogFragment();
-                infoDialog.show(getFragmentManager(), InfoDialogFragment.class.getSimpleName());
+                this.showInfo();
                 return true;
             case R.id.action_settings:
                 Log.d(TAG, "Showing settings ...");
                 this.activateConfiguration();
                 return true;
-            case R.id.action_interpretation:
+            case R.id.action_scroll_to_today:
+                this.scrollToToday();
+                return true;
+            case R.id.menu_interpretations:
                 // Nothing to do
                 return true;
             default:
@@ -311,6 +312,23 @@ public class MondtagActivity extends AppCompatActivity
                     Log.e(TAG, "Unknown Action: " + item.getTitle());
                     return super.onOptionsItemSelected(item);
                 }
+        }
+    }
+
+    private void showInfo() {
+
+        Log.d(TAG, "Showing info ...");
+        DialogFragment infoDialog = new InfoDialogFragment();
+        infoDialog.show(getFragmentManager(), InfoDialogFragment.class.getSimpleName());
+    }
+
+    private void scrollToToday() {
+
+        final CalendarFragment calendar =
+                (CalendarFragment) getFragmentManager().findFragmentByTag(CalendarFragment.TAG);
+
+        if (calendar != null) {
+            calendar.scrollToToday();
         }
     }
 
@@ -361,7 +379,8 @@ public class MondtagActivity extends AppCompatActivity
 
             getMenuInflater().inflate(R.menu.menu, menu);
 
-            final Menu interpretationsMenu = menu.getItem(0).getSubMenu();
+            final Menu interpretationsMenu = menu.findItem(R.id.menu_interpretations).getSubMenu();
+
             this.interpretationMenuManager.addInterpreters( interpretationsMenu );
             this.interpretationMenuManager.setInterpretationChangeListener(this);
 

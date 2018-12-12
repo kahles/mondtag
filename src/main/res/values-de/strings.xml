@@ -94,5 +94,6 @@
     <string name="location_search_connection_error">Fehler beim Verbinden zum Geocodingdienst</string>
     <string name="location_search_no_results">Keine Ergebnisse gefunden</string>
     <string name="location_search_hint_select_result">Bitte unten ein Suchergebnis auswählen</string>
+    <string name="action_scroll_to_today">Zeige aktuellen Tag</string>
 
 </resources>
