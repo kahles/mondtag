@@ -1,7 +1,6 @@
 package de.kah2.mondtag.calendar;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

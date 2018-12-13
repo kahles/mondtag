@@ -5,9 +5,6 @@ import android.util.Log;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-
 import de.kah2.mondtag.calendar.InterpreterMapper;
 import de.kah2.mondtag.datamanagement.DataManager;
 

@@ -1,7 +1,6 @@
 package de.kah2.mondtag.calendar;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -49,7 +48,10 @@ public class InterpreterMapping {
         this.interpreterClass = interpreterClass;
     }
 
-    /** To simply clone an {@link InterpreterMapping}. */
+    /**
+     * To simply clone an {@link InterpreterMapping}. Does not clone interpretation /
+     * {@link Interpreter}-instance!
+     */
     InterpreterMapping(InterpreterMapping original) {
         this(original.interpreterNameStringId, original.interpreterName, original.interpreterClass);
     }

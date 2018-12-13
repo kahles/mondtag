@@ -12,11 +12,9 @@ import java.util.Locale;
 
 import de.kah2.libZodiac.Calendar;
 import de.kah2.libZodiac.DateRange;
-import de.kah2.libZodiac.interpretation.Interpreter;
 import de.kah2.libZodiac.planetary.Position;
 import de.kah2.mondtag.Mondtag;
 import de.kah2.mondtag.R;
-import de.kah2.mondtag.calendar.InterpreterMapper;
 import de.kah2.mondtag.calendar.InterpreterMapping;
 
 /**
