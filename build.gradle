@@ -3,6 +3,10 @@ plugins {
 }
 apply plugin: 'com.android.application'
 
+androidGitVersion {
+    codeFormat 'MNNPPP'
+}
+
 android {
     compileSdkVersion 27
     defaultConfig {
