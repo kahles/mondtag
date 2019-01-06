@@ -1,6 +1,5 @@
 package de.kah2.mondtag;
 
-import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -14,7 +13,6 @@ import de.kah2.libZodiac.Calendar;
 import de.kah2.libZodiac.Day;
 import de.kah2.mondtag.calendar.CalendarFragment;
 import de.kah2.mondtag.calendar.DayDetailFragment;
-import de.kah2.mondtag.calendar.InfoDialogFragment;
 import de.kah2.mondtag.calendar.InterpretationMenuManager;
 import de.kah2.mondtag.calendar.InterpreterMapping;
 import de.kah2.mondtag.calendar.ResourceMapper;
@@ -318,8 +316,8 @@ public class MondtagActivity extends AppCompatActivity
     private void showInfo() {
 
         Log.d(TAG, "Showing info ...");
-        DialogFragment infoDialog = new InfoDialogFragment();
-        infoDialog.show(getFragmentManager(), InfoDialogFragment.class.getSimpleName());
+        InfoDialogFragment infoDialog = new InfoDialogFragment();
+        infoDialog.show( getFragmentManager() );
     }
 
     private void scrollToToday() {

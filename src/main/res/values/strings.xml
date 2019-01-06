@@ -6,6 +6,7 @@
     <string name="action_scroll_to_today">Show today</string>
     <string name="action_interpretations">Interpretations</string>
     <string name="dialog_button_close">close</string>
+    <string name="info_dialog_message">For technical information, source code and privacy statement, please visit <a href="Mondtag at github">https://github.com/kahles/mondtag</a>.</string>
 
     <!-- Data fetching -->
     <string name="data_fetching_toolbar_subtitle">Generating calendar …</string>

@@ -95,5 +95,6 @@
     <string name="location_search_no_results">Keine Ergebnisse gefunden</string>
     <string name="location_search_hint_select_result">Bitte unten ein Suchergebnis auswählen</string>
     <string name="action_scroll_to_today">Zeige aktuellen Tag</string>
+    <string name="info_dialog_message">Für technische Informationen, Quellcode und die Datenschutzerklärung besuchen sie bitte <a href="Mondtag auf github">https://github.com/kahles/mondtag</a>.</string>
 
 </resources>
