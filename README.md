@@ -28,5 +28,9 @@ libZodiac uses libnova/novaforjava for astronomical calculations - see libZodiac
 ### License
 This project is licensed under the GNU General Public License v3. See [LICENSE](LICENSE) for details.
 
+### Privacy Statement
+This software is open source and doesn't contain advertisements. No internet connection is needed and no user data gets utilised or stored outside the user's device.
+Sole exception is the search functionality to get geo coordinates: Therefor an Android-service is requested and the search term is submitted to Google.
+
 ### Contact
 Feel free to contact me if you have wishes, proposals or if want to contribute.
