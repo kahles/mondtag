@@ -13,7 +13,7 @@ All basic functionality including gardening interpretations is implemented and s
 See [developer.android.com](https://developer.android.com/studio/index.html)
 
 #### gradle
-A [gradle](https://gradle.org) build script is included to manage dependencies and automate testing and building. The plugin [gradle-android-git-version](https://github.com/gladed/gradle-android-git-version) is used to automate versioning based on git and also works well in a non-Android java project.
+A [gradle](https://gradle.org) build script is included to manage dependencies and automate testing and building. The plugin [gradle-android-git-version](https://github.com/gladed/gradle-android-git-version) is used to automate versioning based on git.
 
 #### libZodiac
 This app is based on [libZodiac](https://github.com/kahles/libZodiac), which is the library I created to calculate and manage calendar data.
