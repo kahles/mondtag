@@ -38,4 +38,41 @@ public class Mondtag extends Application {
 
         return dataManager;
     }
+
+    /**
+     * Helper-method to examine e.g. where a listener gets called.
+     * @return the stack trace where this method was called
+     * @param depth number of stack trace elements to append
+     */
+    public static String getStackTrace(int depth) {
+
+        final StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+
+        final int offset = 3;
+        int max = offset + depth;
+
+        if (max > trace.length) {
+            max = trace.length;
+        }
+
+        final StringBuilder builder = new StringBuilder();
+
+        for (int line = offset; line < max; line ++) {
+
+            final StackTraceElement el = trace[line];
+
+            if (line > offset) {
+                builder.append("\t@");
+            }
+
+            builder.append(el.getClassName());
+            builder.append("#");
+            builder.append(el.getMethodName());
+            builder.append(":");
+            builder.append(el.getLineNumber());
+            builder.append("\n");
+        }
+
+        return builder.toString();
+    }
 }
