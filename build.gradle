@@ -1,5 +1,5 @@
 plugins {
-    id "com.gladed.androidgitversion" version "0.4.5"
+    id 'com.gladed.androidgitversion' version '0.4.5'
 }
 apply plugin: 'com.android.application'
 
@@ -10,7 +10,7 @@ androidGitVersion {
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "de.kah2.mondtag"
+        applicationId 'de.kah2.mondtag'
         minSdkVersion 15
         targetSdkVersion 27
         versionCode androidGitVersion.code()
@@ -36,13 +36,15 @@ android {
     }
 }
 
+def androidLibsVersion = '27.1.1'
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:support-v13:27.1.1'
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.1.1'
+    implementation "com.android.support:appcompat-v7:${androidLibsVersion}"
+    implementation "com.android.support:cardview-v7:${androidLibsVersion}"
+    implementation "com.android.support:recyclerview-v7:${androidLibsVersion}"
+    implementation "com.android.support:support-v13:${androidLibsVersion}"
+    implementation "com.jakewharton.threetenabp:threetenabp:1.1.1"
     //    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
     //        exclude group: 'com.android.support', module: 'support-annotations'
     //    })
