@@ -2,15 +2,14 @@ package de.kah2.mondtag.settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.location.Geocoder;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.ResultReceiver;
 import android.preference.DialogPreference;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,13 +28,12 @@ import de.kah2.mondtag.R;
 import de.kah2.mondtag.datamanagement.NamedGeoPosition;
 
 /**
- * This is a subclass of {@link DialogPreference} which is used to set-up observer position needed
+ * This is a subclass of {@link DialogPreference} which is used to setup observer position needed
  * for rise- and set-calculation.
- *
- * Created by kahles on 16.11.16.
  */
 public class LocationPreference extends DialogPreference
-        implements LocationSearchResultListAdapter.LocationConsumer {
+        implements  LocationSearchResultListAdapter.LocationConsumer,
+                    GeocodeServiceObserverFragment.CallbackClass{
 
     private final static String TAG = LocationPreference.class.getSimpleName();
 
@@ -43,6 +41,7 @@ public class LocationPreference extends DialogPreference
     private EditText latitudeField;
     private EditText longitudeField;
     private ProgressBar progressBar;
+    private Button locationSearchButton;
     private TextView selectHintText;
     private RecyclerView resultListView;
     private LocationSearchResultListAdapter resultsAdapter;
@@ -71,13 +70,11 @@ public class LocationPreference extends DialogPreference
 
         this.initPositionTextFields(view);
 
-        final Button locationSearchButton = view.findViewById(R.id.location_search_button);
-        locationSearchButton.setOnClickListener(v -> LocationPreference.this.startSearch());
-
         final Button locationOpenButton = view.findViewById(R.id.location_open_button);
         locationOpenButton.setOnClickListener(v -> LocationPreference.this.showMap());
 
-        this.progressBar = view.findViewById(R.id.location_search_progressbar);
+        this.initSearchElements(view);
+
         this.selectHintText = view.findViewById(R.id.location_search_hint_select_result);
         this.resultListView = createResultListView(view);
     }
@@ -102,6 +99,7 @@ public class LocationPreference extends DialogPreference
     }
 
     private void addLocationNameListener() {
+
         this.locationNameField.addTextChangedListener(new AbstractSimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -153,9 +151,52 @@ public class LocationPreference extends DialogPreference
         }
     }
 
-    private void startSearch() {
+    private void initSearchElements(View view) {
 
-        this.progressBar.setVisibility(View.VISIBLE);
+        this.locationSearchButton = view.findViewById(R.id.location_search_button);
+        locationSearchButton.setOnClickListener(v -> LocationPreference.this.startGeocodeService());
+
+        this.progressBar = view.findViewById(R.id.location_search_progressbar);
+
+        final GeocodeServiceObserverFragment fragment =
+                this.getGeocodeServiceObserverFragment(false);
+
+        if (fragment == null) {
+
+            Log.d(TAG, "onBindDialogView: no fragment found");
+            this.setSearchActive( false );
+
+        } else {
+
+            Log.d(TAG, "onBindDialogView: fragment found");
+            this.setSearchActive( fragment.isSearching() );
+            fragment.setCallbackClass(this);
+        }
+    }
+
+    /**
+     * Tries to find an {@link GeocodeServiceObserverFragment}.
+     * @param createIfNotFound if true and no fragment is found, a new instance will be created
+     */
+    private GeocodeServiceObserverFragment getGeocodeServiceObserverFragment(
+            boolean createIfNotFound) {
+
+        final FragmentManager manager = ((Activity) getContext()).getFragmentManager();
+
+        GeocodeServiceObserverFragment fragment = (GeocodeServiceObserverFragment)
+                manager.findFragmentByTag(GeocodeServiceObserverFragment.TAG);
+
+        if (fragment == null && createIfNotFound) {
+
+            Log.d(TAG, "getGeocodeServiceObserverFragment: creating fragment ...");
+            fragment = new GeocodeServiceObserverFragment();
+            manager.beginTransaction().add(fragment, GeocodeServiceObserverFragment.TAG).commit();
+        }
+
+        return fragment;
+    }
+
+    private void startGeocodeService() {
 
         if (!Geocoder.isPresent()) {
             Toast.makeText( super.getContext(),
@@ -163,14 +204,52 @@ public class LocationPreference extends DialogPreference
             return;
         }
 
-        final ResultReceiver resultReceiver = new AddressResultReceiver();
+        Log.d(TAG, "startResultService");
 
-        final Intent intent = new Intent( super.getContext(), GeocodeIntentService.class );
+        this.setSearchActive( true );
 
-        intent.putExtra(GeocodeIntentService.BUNDLE_KEY_RECEIVER, resultReceiver);
-        intent.putExtra(GeocodeIntentService.BUNDLE_KEY_SEARCH_TERM, this.position.getName());
+        final GeocodeServiceObserverFragment fragment =
+                this.getGeocodeServiceObserverFragment( true );
 
-        this.getActivity().startService(intent);
+        fragment.setCallbackClass( this );
+        fragment.startService( getContext(), this.position.getName() );
+    }
+
+    @Override
+    public void onGeocodeServiceFinished(NamedGeoPosition[] result, int messageId) {
+
+        Log.d( TAG, "onGeocodeServiceFinished: result = " + result );
+
+        if (messageId == GeocodeServiceObserverFragment.NO_ERROR_MESSAGE) {
+
+            this.resultsAdapter.setResults(result);
+            this.updateResultsVisibility();
+
+        } else {
+
+            Toast.makeText(
+                    LocationPreference.super.getContext(),
+                    messageId,
+                    Toast.LENGTH_SHORT ).show();
+        }
+
+        this.setSearchActive( false );
+    }
+
+    /**
+     *  When true is passed, the {@link ProgressBar} is shown and the search button gets disabled.
+     */
+    private void setSearchActive(boolean isSearching) {
+
+        if (isSearching) {
+            Log.d(TAG, "setSearchActive: showing ProgressBar and disabling button");
+            this.progressBar.setVisibility(View.VISIBLE);
+            this.locationSearchButton.setEnabled(false);
+        } else {
+            Log.d(TAG, "setSearchActive: hiding ProgressBar and enabling button");
+            this.progressBar.setVisibility(View.GONE);
+            this.locationSearchButton.setEnabled(true);
+        }
     }
 
     private RecyclerView createResultListView(View parent) {
@@ -189,12 +268,6 @@ public class LocationPreference extends DialogPreference
         return view;
     }
 
-    private void setSearchResults(NamedGeoPosition[] results) {
-
-        this.resultsAdapter.setResults(results);
-        this.updateResultsVisibility();
-    }
-
     private void updateResultsVisibility() {
 
         if (this.resultsAdapter.getItemCount() > 0) {
@@ -208,7 +281,7 @@ public class LocationPreference extends DialogPreference
     }
 
     @Override
-    public void setSelectedSearchResult(NamedGeoPosition position) {
+    public void onSearchResultSelected(NamedGeoPosition position) {
 
         this.position = position;
         this.updatePositionFields();
@@ -216,7 +289,7 @@ public class LocationPreference extends DialogPreference
 
     /**
      * called by {@link #initPositionTextFields(View)} and
-     * @link #setSelectedSearchResult(NamedGeoPosition)}
+     * @link #onSearchResultSelected(NamedGeoPosition)}
      */
     private void updatePositionFields() {
 
@@ -282,46 +355,6 @@ public class LocationPreference extends DialogPreference
     /** Getter for the actually configured position. */
     NamedGeoPosition getPosition() {
         return position;
-    }
-
-    /** Class to receive and process results of {@link GeocodeIntentService} */
-    private class AddressResultReceiver extends ResultReceiver {
-
-        AddressResultReceiver() {
-            super(null);
-        }
-
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-
-            if (resultData == null) {
-                return;
-            }
-
-            if (resultCode == GeocodeIntentService.RESULT_SUCCESS) {
-
-                final NamedGeoPosition[] results =
-                        NamedGeoPosition.convertParcelableAddressesToPositions(
-                            resultData.getParcelableArray(GeocodeIntentService.BUNDLE_KEY_RESULTS) );
-
-                getActivity().runOnUiThread( () ->
-                        LocationPreference.this.setSearchResults(results) );
-
-            } else {
-
-                final int errorMessageId =
-                        resultData.getInt(GeocodeIntentService.BUNDLE_KEY_ERROR_MESSAGE);
-
-                getActivity().runOnUiThread( () ->
-                        Toast.makeText(
-                                LocationPreference.super.getContext(),
-                                errorMessageId,
-                                Toast.LENGTH_SHORT).show() );
-            }
-
-            getActivity().runOnUiThread(() ->
-                    LocationPreference.this.progressBar.setVisibility(View.GONE));
-        }
     }
 
     /*
@@ -450,9 +483,5 @@ public class LocationPreference extends DialogPreference
                         return new SavedState[size];
                     }
                 };
-    }
-
-    private Activity getActivity() {
-        return (Activity) super.getContext();
     }
 }
