@@ -24,8 +24,6 @@ import de.kah2.mondtag.R;
  */
 class DayDataDisplayer {
 
-    private final static String TAG = DayDataDisplayer.class.getSimpleName();
-
     private final View dayView;
 
     /** Exists only in normal day-layout! */

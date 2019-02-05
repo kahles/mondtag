@@ -15,7 +15,7 @@ import de.kah2.mondtag.datamanagement.NamedGeoPosition;
  *
  * <p>... and a {@link Fragment}, that doesn't get destroyed on configuration changes (e.g. screen
  * rotation). This is needed to be available, when {@link GeocodeIntentService} finishes, to receive
- * results and to deliver them, when bound to a {@link LocationPreference}-instance.</p>
+ * results and to deliver them when bound to a {@link LocationPreference}-instance.</p>
  * <p>See
  * <a href="https://www.androiddesignpatterns.com/2013/04/retaining-objects-across-config-changes.html">this post</a>
  * and <a href="https://stanmots.blogspot.com/2016/10/androids-bad-company-intentservice.html">this post</a>
@@ -25,8 +25,6 @@ import de.kah2.mondtag.datamanagement.NamedGeoPosition;
 public class GeocodeServiceObserverFragment extends Fragment {
 
     public static final String TAG = GeocodeServiceObserverFragment.class.getSimpleName();
-
-    static final int NO_ERROR_MESSAGE = -1;
 
     private GeocodeResultReceiver geocodeResultReceiver;
     private CallbackClass callbackClass;
@@ -72,8 +70,8 @@ public class GeocodeServiceObserverFragment extends Fragment {
 
     /**
      * Sets the class to be notified, when search is finished. If a search result couldn't be
-     * delivered, because no {@link CallbackClass} or context was available, this triggers
-     * delivering the last result.
+     * delivered, because no {@link CallbackClass} or context was available, this method also
+     * triggers delivering the last result.
      */
     void setCallbackClass(CallbackClass callbackClass) {
 
@@ -85,7 +83,8 @@ public class GeocodeServiceObserverFragment extends Fragment {
 
             Log.d(TAG, "setCallbackClass: delivering result was postponed - delivering now");
             this.isResultDeliverancePostponed = false;
-            GeocodeServiceObserverFragment.this.callbackClass.onGeocodeServiceFinished( result, messageId );
+            GeocodeServiceObserverFragment.this.callbackClass.onGeocodeServiceFinished(
+                    result, messageId );
         }
     }
 
@@ -108,7 +107,7 @@ public class GeocodeServiceObserverFragment extends Fragment {
                                 resultData.getParcelableArray(
                                         GeocodeIntentService.BUNDLE_KEY_RESULTS ) );
 
-                tryDeliverResult(result, NO_ERROR_MESSAGE);
+                tryDeliverResult(result, CallbackClass.NO_ERROR_MESSAGE);
 
             } else {
 
@@ -135,10 +134,9 @@ public class GeocodeServiceObserverFragment extends Fragment {
             } else {
 
                 Log.d(TAG, "tryDeliverResult: delivering result");
-                activity.runOnUiThread(() -> {
+                activity.runOnUiThread( () ->
                     GeocodeServiceObserverFragment.this.callbackClass.onGeocodeServiceFinished(
-                            result, messageId );
-                });
+                        result, messageId ) );
             }
 
             GeocodeServiceObserverFragment.this.isSearching = false;
@@ -147,6 +145,14 @@ public class GeocodeServiceObserverFragment extends Fragment {
 
     /** Interface to deliver a result list or an error message */
     interface CallbackClass {
+
+        int NO_ERROR_MESSAGE = -1;
+
+        /**
+         * @param result a list of results or null if no results are available
+         * @param messageId an Android String resource ID of an error message or
+         * {@link #NO_ERROR_MESSAGE}, if no error occured and results are available
+         */
         void onGeocodeServiceFinished(NamedGeoPosition[] result, int messageId);
     }
 

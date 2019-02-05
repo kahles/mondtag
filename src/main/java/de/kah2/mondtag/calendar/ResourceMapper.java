@@ -12,6 +12,7 @@ import org.threeten.bp.format.TextStyle;
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 
+import de.kah2.libZodiac.Day;
 import de.kah2.libZodiac.ProgressListener;
 import de.kah2.libZodiac.interpretation.Gardening;
 import de.kah2.libZodiac.interpretation.Interpreter;
@@ -156,20 +157,6 @@ public class ResourceMapper {
         SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getTimeFormat(context);
         DateTimeFormatter format = DateTimeFormatter.ofPattern(sdf.toPattern());
         return format.format(date);
-    }
-
-    /**
-     * Creates a resource-id for obtaining translated strings.
-     * See {@link DayDataDisplayer}#initInterpretationFields for a usage example.
-     */
-    public static String createInterpreterKey(Interpreter interpreter) {
-        final String className = interpreter.getClass().getName();
-
-        final int splitAt = className.lastIndexOf('.') + 1;
-        return INTERPRETER_KEY_PREFIX
-                + className.substring(splitAt)
-                    .replace('$', '_')
-                    .replace("Interpreter", "");
     }
 
     private static void putString(Enum<?> key, int stringId) {

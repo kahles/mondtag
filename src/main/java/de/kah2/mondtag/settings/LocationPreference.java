@@ -28,7 +28,7 @@ import de.kah2.mondtag.R;
 import de.kah2.mondtag.datamanagement.NamedGeoPosition;
 
 /**
- * This is a subclass of {@link DialogPreference} which is used to setup observer position needed
+ * This is a subclass of {@link DialogPreference} and is used to setup observer position needed
  * for rise- and set-calculation.
  */
 public class LocationPreference extends DialogPreference
@@ -40,8 +40,10 @@ public class LocationPreference extends DialogPreference
     private EditText locationNameField;
     private EditText latitudeField;
     private EditText longitudeField;
+
     private ProgressBar progressBar;
     private Button locationSearchButton;
+
     private TextView selectHintText;
     private RecyclerView resultListView;
     private LocationSearchResultListAdapter resultsAdapter;
@@ -144,7 +146,7 @@ public class LocationPreference extends DialogPreference
             inputField.setTextColor(ContextCompat.getColor(super.getContext(), R.color.invalid_text));
         }
 
-        // Can be null, since listeners are triggert during view creation
+        // Can be null, since listeners are triggered during view creation
         final AlertDialog dialog = (AlertDialog) this.getDialog();
         if (dialog != null) {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(isValid);
@@ -200,7 +202,7 @@ public class LocationPreference extends DialogPreference
 
         if (!Geocoder.isPresent()) {
             Toast.makeText( super.getContext(),
-                    R.string.location_search_no_geocoder, Toast.LENGTH_LONG).show();
+                    R.string.location_search_no_geocoder, Toast.LENGTH_LONG ).show();
             return;
         }
 
@@ -218,14 +220,17 @@ public class LocationPreference extends DialogPreference
     @Override
     public void onGeocodeServiceFinished(NamedGeoPosition[] result, int messageId) {
 
-        Log.d( TAG, "onGeocodeServiceFinished: result = " + result );
+        if (messageId == GeocodeServiceObserverFragment.CallbackClass.NO_ERROR_MESSAGE) {
 
-        if (messageId == GeocodeServiceObserverFragment.NO_ERROR_MESSAGE) {
+            Log.d( TAG, "onGeocodeServiceFinished: got " + result.length + " results" );
 
             this.resultsAdapter.setResults(result);
             this.updateResultsVisibility();
 
         } else {
+
+            Log.d( TAG,
+                "onGeocodeServiceFinished: an error occured and a message gets displayed");
 
             Toast.makeText(
                     LocationPreference.super.getContext(),
@@ -289,7 +294,7 @@ public class LocationPreference extends DialogPreference
 
     /**
      * called by {@link #initPositionTextFields(View)} and
-     * @link #onSearchResultSelected(NamedGeoPosition)}
+     * {@link #onSearchResultSelected(NamedGeoPosition)}
      */
     private void updatePositionFields() {
 
@@ -311,7 +316,7 @@ public class LocationPreference extends DialogPreference
     }
 
     /**
-     * Saves the configured position if dialog was closed by clicking ok-button.
+     * Saves the configured position if dialog was closed by clicking the ok-button.
      */
     @Override
     protected void onDialogClosed(boolean okPressed) {

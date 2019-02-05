@@ -60,7 +60,9 @@ public class GeocodeIntentService extends IntentService {
             results = geocoder.getFromLocationName(searchTerm, MAX_RESULTS);
 
         } catch (IOException e) {
+
             Log.e(TAG, "Error while geocoding:", e);
+            // results are still null => Error gets displayed to user below
         }
 
         if (results == null) {
@@ -78,7 +80,7 @@ public class GeocodeIntentService extends IntentService {
 
         } else {
 
-            final Address[] resultArray =results.toArray( new Address[0] );
+            final Address[] resultArray = results.toArray( new Address[0] );
             deliverResultToReceiver( RESULT_SUCCESS, resultArray, 0);
         }
     }
