@@ -104,6 +104,7 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
         /**
          * If a day is passed as argument its data will be displayed using
          * {@link DayDataDisplayer}.
+         * FIXME Interpreters aren't refreshed correctly
          */
         void bindElement(Day day) {
             this.day = day;
@@ -111,7 +112,7 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
             if (day == null) {
 
                 // the actual list element is the extend button
-                itemView.findViewById(R.id.button_extend_data).setOnClickListener((view)->{
+                super.itemView.findViewById(R.id.button_extend_data).setOnClickListener((view)->{
 
                     Log.d(Item.class.getSimpleName(),
                             "clickListener: extendButton clicked");
@@ -122,8 +123,8 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
 
             } else {
 
-                itemView.setOnClickListener(this);
-                itemView.setOnLongClickListener(this);
+                super.itemView.setOnClickListener(this);
+                super.itemView.setOnLongClickListener(this);
 
                 final DayDataDisplayer displayer = new DayDataDisplayer(itemView);
                 displayer.setDayData(day, false);

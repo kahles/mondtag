@@ -216,8 +216,22 @@ public class DataManager {
         return calendar;
     }
 
+    /** @return the selected interpreter or null if none is selected */
     public InterpreterMapping getSelectedInterpreter() {
         return selectedInterpreter;
+    }
+
+    /**
+     * @return the resource id of the selected interpreter's name or R.string.interpret_none if none
+     * is selected.
+     */
+    public int getSelectedInterpreterNameId() {
+
+        if (getSelectedInterpreter() == null) {
+            return R.string.interpret_none;
+        } else {
+            return getSelectedInterpreter().getId();
+        }
     }
 
     public void setSelectedInterpreter(InterpreterMapping interpreter) {

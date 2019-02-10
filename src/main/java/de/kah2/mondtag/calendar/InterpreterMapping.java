@@ -21,7 +21,10 @@ public class InterpreterMapping {
     /** The android-string-resource-id */
     private final int interpreterNameStringId;
 
-    /** The translated name to display and sort */
+    /**
+     * The translated name to display and sort
+     * TODO use only for sorting?
+     */
     private final String interpreterName;
 
     private final Class<? extends Interpreter> interpreterClass;

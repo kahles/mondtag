@@ -20,7 +20,7 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
 
         menu.clear();
 
-        int order =0;
+        int order = 0;
 
         menu.add(Menu.NONE, R.string.interpret_none, order, R.string.interpret_none);
 

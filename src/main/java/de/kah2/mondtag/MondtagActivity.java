@@ -2,6 +2,7 @@ package de.kah2.mondtag;
 
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -56,6 +57,9 @@ public class MondtagActivity extends AppCompatActivity
             MondtagActivity.class.getName() + ".isFirstStart";
     private boolean isFirstStart = false;
 
+    /** To store the action bar's subtitle at {@link #onSaveInstanceState(Bundle)} */
+    public static final String BUNDLE_KEY_SUBTITLE = MondtagActivity.class.getName() + ".subtitle";
+
     /**
      * Indicates if the UI is in foreground and Fragment transactions are possible.
      * true between {@link #onResume()} and {@link #onPause()}.
@@ -73,10 +77,6 @@ public class MondtagActivity extends AppCompatActivity
 
     private final InterpretationMenuManager interpretationMenuManager =
             new InterpretationMenuManager();
-
-    private final static String BUNDLE_KEY_INTERPRETER_ID =
-            MondtagActivity.class.getName() + ".interpretationNameResId";
-    private int interpretationNameResId = R.string.interpret_none;
 
     private Day selectedDay = null;
 
@@ -142,6 +142,7 @@ public class MondtagActivity extends AppCompatActivity
         this.isVisible = true;
 
         if (this.isUiUpdatePostponed) {
+
             Log.d(TAG, "onResume: UI update was postponed - doing it now");
             this.updateContent();
             this.isUiUpdatePostponed = false;
@@ -195,20 +196,16 @@ public class MondtagActivity extends AppCompatActivity
 
         final FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-        final ActionBar actionBar = getSupportActionBar();
+        if (this.isVisible) {
 
-        if (!this.isVisible || actionBar == null) {
-
-            Log.d(TAG, "updateContent: UI not visible - skipping update");
-            this.isUiUpdatePostponed = true;
-
-        } else {
+            final ActionBar actionBar = this.getSupportActionBar();
 
             Log.d(TAG, "updateContent: state is " + state);
 
             switch (state) {
 
-                case CONFIGURING: initConfiguration(transaction, actionBar);
+                case CONFIGURING:
+                    initConfiguration(transaction, actionBar);
                     break;
 
                 case GENERATING: initDataGeneration(transaction, actionBar);
@@ -225,7 +222,26 @@ public class MondtagActivity extends AppCompatActivity
 
             // This is needed or our menu isn't removed if settings are shown
             this.invalidateOptionsMenu();
+
+        } else {
+
+            Log.d(TAG, "updateContent: UI not visible - skipping update");
+            this.isUiUpdatePostponed = true;
         }
+    }
+
+    /**
+     * Shortcut for {@link AppCompatActivity#getSupportActionBar()}.
+     * <p>Since this is our only Activity and we set an ActionBar at {@link #onCreate(Bundle)}, this
+     * should never be null.</p>
+     */
+    @NonNull
+    @Override
+    public ActionBar getSupportActionBar() {
+        // We should always have an ActionBar if the view is visible
+        final ActionBar actionBar = super.getSupportActionBar();
+        assert actionBar != null;
+        return actionBar;
     }
 
     private void initConfiguration(FragmentTransaction transaction, ActionBar actionBar) {
@@ -254,7 +270,7 @@ public class MondtagActivity extends AppCompatActivity
 
     private void initCalendarView(FragmentTransaction transaction, ActionBar actionBar) {
 
-        actionBar.setSubtitle(this.interpretationNameResId);
+        actionBar.setSubtitle( this.getDataManager().getSelectedInterpreterNameId() );
         actionBar.setDisplayShowHomeEnabled(false);
 
         transaction.replace(R.id.content_frame,
@@ -397,14 +413,12 @@ public class MondtagActivity extends AppCompatActivity
 
             Log.d(TAG, "onInterpreterChanged: mapping is null - removing interpreter");
             this.getDataManager().setSelectedInterpreter(null);
-            this.interpretationNameResId = R.string.interpret_none;
 
         } else {
 
             Log.d(TAG, "onInterpreterChanged: setting interpreter: "
                     + mapping.getInterpreterName());
             this.getDataManager().setSelectedInterpreter( mapping );
-            this.interpretationNameResId = mapping.getId();
         }
 
         this.updateContent();
@@ -417,9 +431,14 @@ public class MondtagActivity extends AppCompatActivity
         Log.d(TAG, "onSaveInstanceState: state = " + this.state);
         outState.putBoolean(BUNDLE_KEY_FIRST_START, this.isFirstStart);
         Log.d(TAG, "onSaveInstanceState: isFirstStart = " + this.isFirstStart);
-        outState.putInt(BUNDLE_KEY_INTERPRETER_ID, this.interpretationNameResId);
-        Log.d(TAG, "onSaveInstanceState: interpretationNameResId = "
-                + this.interpretationNameResId);
+
+        final ActionBar bar = this.getSupportActionBar();
+        String subtitle = "";
+        if ( bar.getSubtitle() != null ) {
+            subtitle = bar.getSubtitle().toString();
+        }
+        outState.putString( BUNDLE_KEY_SUBTITLE, subtitle );
+        Log.d(TAG, "onSaveInstanceState: subtitle = " + subtitle);
     }
 
     @Override
@@ -429,9 +448,11 @@ public class MondtagActivity extends AppCompatActivity
         Log.d(TAG, "onRestoreInstanceState: state := " + this.state);
         this.isFirstStart = savedInstanceState.getBoolean(BUNDLE_KEY_FIRST_START);
         Log.d(TAG, "onRestoreInstanceState: isFirstStart := " + this.isFirstStart);
-        this.interpretationNameResId = savedInstanceState.getInt(BUNDLE_KEY_INTERPRETER_ID);
-        Log.d(TAG, "onRestoreInstanceState: interpretationNameResId := "
-                + this.interpretationNameResId);
+
+        final ActionBar bar = this.getSupportActionBar();
+        final String subtitle = savedInstanceState.getString(BUNDLE_KEY_SUBTITLE);
+        bar.setSubtitle( subtitle );
+        Log.d(TAG, "onRestoreInstanceState: subtitle := " + subtitle);
     }
 
     private DataManager getDataManager() {
