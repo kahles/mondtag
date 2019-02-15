@@ -59,7 +59,7 @@ public class DayDetailInterpretationListAdapter
             ( (ImageView) itemView.findViewById(R.id.interpretation_icon) )
                     .setImageResource( mapping.getQualityIcon() );
             ( (TextView) itemView.findViewById(R.id.interpretation_name) )
-                    .setText( mapping.getInterpreterName() );
+                    .setText( mapping.getId() );
             ( (TextView) itemView.findViewById(R.id.interpretation_quality_text) )
                     .setText( mapping.getQualityText() );
             ( (TextView) itemView.findViewById(R.id.interpretation_annotation_text) )

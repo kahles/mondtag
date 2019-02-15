@@ -22,8 +22,8 @@ public class InterpreterMapping {
     private final int interpreterNameStringId;
 
     /**
-     * The translated name to display and sort
-     * TODO use only for sorting?
+     * The translated name needed for sorting. To display the name use the resource id of
+     * {@link #getId()} to avoid problems if the user switches language while the app is active.
      */
     private final String interpreterName;
 
@@ -55,6 +55,7 @@ public class InterpreterMapping {
      * To simply clone an {@link InterpreterMapping}. Does not clone interpretation /
      * {@link Interpreter}-instance!
      */
+    @SuppressWarnings("CopyConstructorMissesField")
     InterpreterMapping(InterpreterMapping original) {
         this(original.interpreterNameStringId, original.interpreterName, original.interpreterClass);
     }
@@ -111,17 +112,10 @@ public class InterpreterMapping {
     }
 
     /**
-     * @return uses the string resource id of the interpreter name as unique id
+     * @return the string resource id of the interpreter name as unique id
      */
     public int getId() {
         return this.interpreterNameStringId;
-    }
-
-    /**
-     * @return The translated name
-     */
-    public String getInterpreterName() {
-        return this.interpreterName;
     }
 
     /**

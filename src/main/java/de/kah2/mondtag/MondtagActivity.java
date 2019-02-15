@@ -417,7 +417,7 @@ public class MondtagActivity extends AppCompatActivity
         } else {
 
             Log.d(TAG, "onInterpreterChanged: setting interpreter: "
-                    + mapping.getInterpreterName());
+                    + getApplicationContext().getString( mapping.getId() ) );
             this.getDataManager().setSelectedInterpreter( mapping );
         }
 
