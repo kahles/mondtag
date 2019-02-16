@@ -91,7 +91,12 @@ public class InterpreterMapping {
         // to allow showing name only if quality isn't neutral
         this.isQualityNeutral = (quality == Interpreter.Quality.NEUTRAL);
 
-        if ( !this.isQualityNeutral ) {
+        if ( this.isQualityNeutral ) {
+
+            this.qualityIcon = 0;
+            this.qualityText = "";
+
+        } else {
             this.qualityIcon = qualityStringIds[ResourceMapper.INDEX_IMAGE];
             this.qualityText = context.getString(qualityStringIds[ResourceMapper.INDEX_STRING]);
         }

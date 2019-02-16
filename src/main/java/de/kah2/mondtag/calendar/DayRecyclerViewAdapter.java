@@ -104,7 +104,6 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
         /**
          * If a day is passed as argument its data will be displayed using
          * {@link DayDataDisplayer}.
-         * FIXME Interpreters aren't refreshed correctly
          */
         void bindElement(Day day) {
             this.day = day;
