@@ -28,7 +28,7 @@ public class InfoDialogFragment extends DialogFragment {
         return this.createAlertDialog( getActivity() );
     }
 
-    protected void show(FragmentManager fragmentManager) {
+    public void show(FragmentManager fragmentManager) {
 
         super.show(fragmentManager, TAG);
     }

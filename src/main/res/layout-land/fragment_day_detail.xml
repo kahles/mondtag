@@ -159,6 +159,7 @@
             android:layout_height="wrap_content"/>
     </GridLayout>
 
+    <!-- FIXME fill display vertically - button disappears -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/interpretation_list"
         android:layout_width="wrap_content"

@@ -16,7 +16,7 @@ import de.kah2.libZodiac.interpretation.Interpreter;
  */
 public class InterpreterMapping {
 
-    public static final String TAG = InterpreterMapping.class.getSimpleName();
+    private static final String TAG = InterpreterMapping.class.getSimpleName();
 
     /** The android-string-resource-id */
     private final int interpreterNameStringId;

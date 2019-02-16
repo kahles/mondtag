@@ -51,7 +51,7 @@ public class DayDetailInterpretationListAdapter
 
     class InterpretationListItem extends RecyclerView.ViewHolder {
 
-        public InterpretationListItem(View itemView) {
+        InterpretationListItem(View itemView) {
             super(itemView);
         }
 

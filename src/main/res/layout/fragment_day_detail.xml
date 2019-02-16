@@ -162,6 +162,7 @@
             android:layout_height="wrap_content"/>
     </GridLayout>
 
+    <!-- TODO fill display -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/interpretation_list"
         android:layout_width="match_parent"

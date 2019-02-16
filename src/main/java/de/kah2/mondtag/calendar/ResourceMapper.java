@@ -35,8 +35,6 @@ public class ResourceMapper {
     public final static int INDEX_IMAGE = 0;
     public final static int INDEX_STRING = 1;
 
-    private final static String INTERPRETER_KEY_PREFIX = "interpret_";
-
     private final static Hashtable<String, Integer[]> mappings = new Hashtable<>();
 
     static {
