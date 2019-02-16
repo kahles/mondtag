@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import de.kah2.libZodiac.Calendar;
 import de.kah2.libZodiac.Day;
@@ -58,7 +59,7 @@ public class MondtagActivity extends AppCompatActivity
     private boolean isFirstStart = false;
 
     /** To store the action bar's subtitle at {@link #onSaveInstanceState(Bundle)} */
-    public static final String BUNDLE_KEY_SUBTITLE = MondtagActivity.class.getName() + ".subtitle";
+    private static final String BUNDLE_KEY_SUBTITLE = MondtagActivity.class.getName() + ".subtitle";
 
     /**
      * Indicates if the UI is in foreground and Fragment transactions are possible.
@@ -90,6 +91,7 @@ public class MondtagActivity extends AppCompatActivity
         setContentView(R.layout.activity_mondtag);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
+
         super.setSupportActionBar(toolbar);
 
         // if app wasn't already started ...
@@ -247,7 +249,7 @@ public class MondtagActivity extends AppCompatActivity
     private void initConfiguration(FragmentTransaction transaction, ActionBar actionBar) {
 
         actionBar.setSubtitle(R.string.action_settings);
-        actionBar.setDisplayShowHomeEnabled(true);
+        this.setupActionBarsBackButton(actionBar, true);
 
         SettingsFragment fragment = new SettingsFragment();
         transaction.replace(R.id.content_frame,
@@ -262,7 +264,7 @@ public class MondtagActivity extends AppCompatActivity
     private void initDataGeneration(FragmentTransaction transaction, ActionBar actionBar) {
 
         actionBar.setSubtitle(R.string.data_fetching_toolbar_subtitle);
-        actionBar.setDisplayShowHomeEnabled(false);
+        this.setupActionBarsBackButton(actionBar, false);
 
         transaction.replace(R.id.content_frame,
                 new DataFetchingFragment(), DataFetchingFragment.TAG);
@@ -271,7 +273,7 @@ public class MondtagActivity extends AppCompatActivity
     private void initCalendarView(FragmentTransaction transaction, ActionBar actionBar) {
 
         actionBar.setSubtitle( this.getDataManager().getSelectedInterpreterNameId() );
-        actionBar.setDisplayShowHomeEnabled(false);
+        this.setupActionBarsBackButton(actionBar, false);
 
         transaction.replace(R.id.content_frame,
                 new CalendarFragment(), CalendarFragment.TAG);
@@ -281,13 +283,18 @@ public class MondtagActivity extends AppCompatActivity
 
         actionBar.setSubtitle(
                 ResourceMapper.formatLongDate( this.selectedDay.getDate() ) );
-        actionBar.setDisplayShowHomeEnabled(true);
+        this.setupActionBarsBackButton(actionBar, true);
 
         final DayDetailFragment dayDetailFragment = new DayDetailFragment();
         dayDetailFragment.setDay(this.selectedDay);
 
         transaction.replace(R.id.content_frame,
                 dayDetailFragment, DayDetailFragment.TAG);
+    }
+
+    private void setupActionBarsBackButton(ActionBar actionBar, boolean visible) {
+        actionBar.setDisplayHomeAsUpEnabled(visible);
+        actionBar.setDisplayShowHomeEnabled(visible);
     }
 
     /** Callback for {@link DataFetchingFragment} */
@@ -318,12 +325,16 @@ public class MondtagActivity extends AppCompatActivity
             case R.id.menu_interpretations:
                 // Nothing to do
                 return true;
+            case android.R.id.home:
+                this.onBackPressed();
+                return true;
             default:
                 if ( this.interpretationMenuManager.onMenuItemClick(item) ) {
                     // click got handled by InterpretationMenuManager
                     return true;
                 } else {
-                    Log.e(TAG, "Unknown Action: " + item.getTitle());
+                    Log.e(TAG, "Unknown Action: "
+                            + item.getTitle() + " / " + item.getItemId());
                     return super.onOptionsItemSelected(item);
                 }
         }
@@ -347,9 +358,9 @@ public class MondtagActivity extends AppCompatActivity
     }
 
     /**
-     * When the user presses "back" the app is closed, except if configuration is active. In this
-     * case the app returns to calendar view if data is available OR to data fetching, if data needs
-     * to be generated.
+     * When the user presses "back" the app is closed, except if {@link SettingsFragment} or
+     * {@link DayDetailFragment} are active. In this case the app returns to calendar view if data
+     * is available OR to data fetching, if data needs to be generated.
      */
     @Override
     public void onBackPressed() {
@@ -371,8 +382,8 @@ public class MondtagActivity extends AppCompatActivity
             
         } else if (state == State.DAY_DETAILS) {
 
-            // here we could also use backstack but this would lead to more complexity for showing
-            // e.g. the menu
+            // here we could also use the backstack but this would lead to more complexity for
+            // showing e.g. the menu
             this.selectedDay = null;
             this.activateCalendarView();
                 
