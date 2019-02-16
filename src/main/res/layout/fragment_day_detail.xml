@@ -1,22 +1,16 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="de.kah2.mondtag.calendar.DayDetailFragment"
-    android:padding="5dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context="de.kah2.mondtag.calendar.DayDetailFragment"
+              android:padding="5dp"
+              android:orientation="vertical">
 
     <GridLayout
         android:id="@+id/day_detail_data_table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/day_of_week_text"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:useDefaultMargins="true"
-        android:alignmentMode="alignBounds"
-        android:columnOrderPreserved="false"
         android:columnCount="3">
 
         <!-- Sun rise and set-->
@@ -162,16 +156,11 @@
             android:layout_height="wrap_content"/>
     </GridLayout>
 
-    <!-- TODO fill display -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/interpretation_list"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:layout_below="@id/day_detail_data_table"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"/>
 
@@ -179,11 +168,6 @@
         android:id="@+id/buttonCreateReminder"
         android:layout_width="match_parent"
         android:layout_height="@dimen/standard_height"
-        android:layout_below="@id/interpretation_list"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:text="@string/button_create_reminder"/>
 
-</RelativeLayout>
+</LinearLayout>
