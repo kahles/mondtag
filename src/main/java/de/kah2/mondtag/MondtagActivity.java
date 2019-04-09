@@ -7,16 +7,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import de.kah2.libZodiac.Calendar;
 import de.kah2.libZodiac.Day;
 import de.kah2.mondtag.calendar.CalendarFragment;
 import de.kah2.mondtag.calendar.DayDetailFragment;
-import de.kah2.mondtag.calendar.InterpretationMenuManager;
-import de.kah2.mondtag.calendar.InterpreterMapping;
 import de.kah2.mondtag.calendar.ResourceMapper;
 import de.kah2.mondtag.datamanagement.DataFetchingFragment;
 import de.kah2.mondtag.datamanagement.DataManager;
@@ -27,8 +23,7 @@ import de.kah2.mondtag.settings.SettingsFragment;
  * I switched to only replacing fragments instead of using multiple activities, because state
  * handling is much easier this way - e.g. when the app gets interrupted during start.
  */
-public class MondtagActivity extends AppCompatActivity
-        implements InterpretationMenuManager.InterpretationChangeListener{
+public class MondtagActivity extends AppCompatActivity {
 
     private final static String TAG = MondtagActivity.class.getSimpleName();
 
@@ -76,29 +71,25 @@ public class MondtagActivity extends AppCompatActivity
      */
     private boolean isUiUpdatePostponed = false;
 
-    private final InterpretationMenuManager interpretationMenuManager =
-            new InterpretationMenuManager();
-
     private Day selectedDay = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
-
         Log.d(TAG, "onCreate");
 
-        setContentView(R.layout.activity_mondtag);
+        super.onCreate(savedInstanceState);
+
+        super.setContentView(R.layout.activity_mondtag);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
-
         super.setSupportActionBar(toolbar);
 
         // if app wasn't already started ...
         if (savedInstanceState == null) {
 
-            // Mondtag#onCreate creates an empty calendar, when config is missing or invalid
-            // following will return true
+            // Mondtag#onCreate creates an empty calendar, when config is missing or invalid.
+            // In this case following method call will return true.
             this.isFirstStart = this.getDataManager().userShouldReviewConfig();
             
             if (this.state == State.UNDEFINED) {
@@ -131,8 +122,6 @@ public class MondtagActivity extends AppCompatActivity
         // Prevents running #updateContent when app was sent to background. This could be the case
         // if app is suspended during calculation and calculation finishes is background.
         this.isVisible = false;
-
-        this.interpretationMenuManager.resetInterpretationChangeListener();
     }
 
     @Override
@@ -148,11 +137,12 @@ public class MondtagActivity extends AppCompatActivity
             Log.d(TAG, "onResume: UI update was postponed - doing it now");
             this.updateContent();
             this.isUiUpdatePostponed = false;
+
         }
     }
 
-    /** called by onCreate and onOptionsItemSelected */
-    private void activateConfiguration() {
+    /** called by onCreate and {@link CalendarFragment#onOptionsItemSelected(MenuItem)} */
+    public void activateConfiguration() {
 
         Log.d(TAG, "activateConfiguration");
         this.state = State.CONFIGURING;
@@ -222,9 +212,6 @@ public class MondtagActivity extends AppCompatActivity
 
             transaction.commit();
 
-            // This is needed or our menu isn't removed if settings are shown
-            this.invalidateOptionsMenu();
-
         } else {
 
             Log.d(TAG, "updateContent: UI not visible - skipping update");
@@ -240,7 +227,7 @@ public class MondtagActivity extends AppCompatActivity
     @NonNull
     @Override
     public ActionBar getSupportActionBar() {
-        // We should always have an ActionBar if the view is visible
+
         final ActionBar actionBar = super.getSupportActionBar();
         assert actionBar != null;
         return actionBar;
@@ -249,7 +236,6 @@ public class MondtagActivity extends AppCompatActivity
     private void initConfiguration(FragmentTransaction transaction, ActionBar actionBar) {
 
         actionBar.setSubtitle(R.string.action_settings);
-        this.setupActionBarsBackButton(actionBar, true);
 
         SettingsFragment fragment = new SettingsFragment();
         transaction.replace(R.id.content_frame,
@@ -264,7 +250,6 @@ public class MondtagActivity extends AppCompatActivity
     private void initDataGeneration(FragmentTransaction transaction, ActionBar actionBar) {
 
         actionBar.setSubtitle(R.string.data_fetching_toolbar_subtitle);
-        this.setupActionBarsBackButton(actionBar, false);
 
         transaction.replace(R.id.content_frame,
                 new DataFetchingFragment(), DataFetchingFragment.TAG);
@@ -272,8 +257,7 @@ public class MondtagActivity extends AppCompatActivity
 
     private void initCalendarView(FragmentTransaction transaction, ActionBar actionBar) {
 
-        actionBar.setSubtitle( this.getDataManager().getSelectedInterpreterNameId() );
-        this.setupActionBarsBackButton(actionBar, false);
+        // Handles subtitle for itself
 
         transaction.replace(R.id.content_frame,
                 new CalendarFragment(), CalendarFragment.TAG);
@@ -283,7 +267,6 @@ public class MondtagActivity extends AppCompatActivity
 
         actionBar.setSubtitle(
                 ResourceMapper.formatLongDate( this.selectedDay.getDate() ) );
-        this.setupActionBarsBackButton(actionBar, true);
 
         final DayDetailFragment dayDetailFragment = new DayDetailFragment();
         dayDetailFragment.setDay(this.selectedDay);
@@ -292,69 +275,9 @@ public class MondtagActivity extends AppCompatActivity
                 dayDetailFragment, DayDetailFragment.TAG);
     }
 
-    private void setupActionBarsBackButton(ActionBar actionBar, boolean visible) {
-        actionBar.setDisplayHomeAsUpEnabled(visible);
-        actionBar.setDisplayShowHomeEnabled(visible);
-    }
-
     /** Callback for {@link DataFetchingFragment} */
     public void onDataReady() {
         this.activateCalendarView();
-    }
-
-    /**
-     * Called when the user clicks on a {@link MenuItem}.
-     * Can open the info dialog or the settings.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        Log.d(TAG, "onOptionsItemSelected: " + item.getTitle() + " selected.");
-
-        switch (item.getItemId()) {
-            case R.id.action_info:
-                this.showInfo();
-                return true;
-            case R.id.action_settings:
-                Log.d(TAG, "Showing settings ...");
-                this.activateConfiguration();
-                return true;
-            case R.id.action_scroll_to_today:
-                this.scrollToToday();
-                return true;
-            case R.id.menu_interpretations:
-                // Nothing to do
-                return true;
-            case android.R.id.home:
-                this.onBackPressed();
-                return true;
-            default:
-                if ( this.interpretationMenuManager.onMenuItemClick(item) ) {
-                    // click got handled by InterpretationMenuManager
-                    return true;
-                } else {
-                    Log.e(TAG, "Unknown Action: "
-                            + item.getTitle() + " / " + item.getItemId());
-                    return super.onOptionsItemSelected(item);
-                }
-        }
-    }
-
-    private void showInfo() {
-
-        Log.d(TAG, "Showing info ...");
-        InfoDialogFragment infoDialog = new InfoDialogFragment();
-        infoDialog.show( getFragmentManager() );
-    }
-
-    private void scrollToToday() {
-
-        final CalendarFragment calendar =
-                (CalendarFragment) getFragmentManager().findFragmentByTag(CalendarFragment.TAG);
-
-        if (calendar != null) {
-            calendar.scrollToToday();
-        }
     }
 
     /**
@@ -391,48 +314,6 @@ public class MondtagActivity extends AppCompatActivity
 
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-
-        if (this.state == State.DISPLAYING) {
-            Log.d(TAG, "onPrepareOptionsMenu: showing main menu");
-
-            // clear - otherwise we get duplicate menu entries
-            menu.clear();
-
-            getMenuInflater().inflate(R.menu.menu, menu);
-
-            final Menu interpretationsMenu = menu.findItem(R.id.menu_interpretations).getSubMenu();
-
-            this.interpretationMenuManager.addInterpreters( interpretationsMenu );
-            this.interpretationMenuManager.setInterpretationChangeListener(this);
-
-            return true;
-
-        } else {
-            Log.d(TAG, "onPrepareOptionsMenu: hiding menu - state is " + this.state);
-            return false;
-        }
-    }
-
-    @Override
-    public void onInterpreterChanged(InterpreterMapping mapping) {
-
-        if (mapping == null) {
-
-            Log.d(TAG, "onInterpreterChanged: mapping is null - removing interpreter");
-            this.getDataManager().setSelectedInterpreter(null);
-
-        } else {
-
-            Log.d(TAG, "onInterpreterChanged: setting interpreter: "
-                    + getApplicationContext().getString( mapping.getId() ) );
-            this.getDataManager().setSelectedInterpreter( mapping );
-        }
-
-        this.updateContent();
     }
 
     @Override
