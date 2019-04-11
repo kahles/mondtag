@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import org.threeten.bp.LocalDateTime;
 
 import de.kah2.libZodiac.Day;
 import de.kah2.mondtag.Mondtag;
+import de.kah2.mondtag.MondtagActivity;
 import de.kah2.mondtag.R;
 
 /**
@@ -61,7 +63,24 @@ public class DayDetailFragment extends Fragment {
             DayDetailFragment.this.startActivity( event.toIntent() );
         });
 
+        ((MondtagActivity) getActivity()).setUpButtonVisible(true);
+
+        // Needed for #onOptionsItemSelected to work
+        this.setHasOptionsMenu(true);
+
         return view;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+
+            getActivity().onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void setDay(Day day) {

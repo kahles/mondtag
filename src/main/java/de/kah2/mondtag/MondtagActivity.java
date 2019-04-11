@@ -203,7 +203,7 @@ public class MondtagActivity extends AppCompatActivity {
                 case GENERATING: initDataGeneration(transaction, actionBar);
                     break;
 
-                case DISPLAYING: initCalendarView(transaction, actionBar);
+                case DISPLAYING: initCalendarView(transaction);
                     break;
 
                 case DAY_DETAILS: initDayDetailView(transaction, actionBar);
@@ -233,6 +233,17 @@ public class MondtagActivity extends AppCompatActivity {
         return actionBar;
     }
 
+    /**
+     * To hide or show the back-/up-button - should be called by every fragment to ensure proper
+     * display of the actionbar.
+     */
+    public void setUpButtonVisible(boolean visible) {
+
+        final ActionBar bar = getSupportActionBar();
+        bar.setDisplayShowHomeEnabled(visible);
+        bar.setDisplayHomeAsUpEnabled(visible);
+    }
+
     private void initConfiguration(FragmentTransaction transaction, ActionBar actionBar) {
 
         actionBar.setSubtitle(R.string.action_settings);
@@ -255,7 +266,7 @@ public class MondtagActivity extends AppCompatActivity {
                 new DataFetchingFragment(), DataFetchingFragment.TAG);
     }
 
-    private void initCalendarView(FragmentTransaction transaction, ActionBar actionBar) {
+    private void initCalendarView(FragmentTransaction transaction) {
 
         // Handles subtitle for itself
 
@@ -302,16 +313,17 @@ public class MondtagActivity extends AppCompatActivity {
             } else {
                 this.activateCalendarView();
             }
-            
+
         } else if (state == State.DAY_DETAILS) {
 
-            // here we could also use the backstack but this would lead to more complexity for
-            // showing e.g. the menu
+            // here we could also use the backstack but this would lead to more complexity at
+            // #updateContent
             this.selectedDay = null;
             this.activateCalendarView();
-                
+
         } else {
 
+            Log.d(TAG, "onBackPressed: calling super.onBackPressed()");
             super.onBackPressed();
         }
     }

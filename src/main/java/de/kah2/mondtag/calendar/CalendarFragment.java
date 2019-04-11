@@ -58,6 +58,9 @@ public class CalendarFragment extends Fragment
 
         this.setHasOptionsMenu(true);
 
+        // When we return from DayDetailFragment or SettingsFragment, we need to disable the back button
+        ((MondtagActivity) getActivity()).setUpButtonVisible(false);
+
         updateCalendar();
 
         return view;

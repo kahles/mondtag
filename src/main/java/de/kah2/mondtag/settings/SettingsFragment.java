@@ -8,8 +8,10 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.util.Log;
+import android.view.MenuItem;
 
 import de.kah2.mondtag.Mondtag;
+import de.kah2.mondtag.MondtagActivity;
 import de.kah2.mondtag.R;
 
 /**
@@ -33,6 +35,23 @@ public class SettingsFragment extends PreferenceFragment
         // this is needed to correctly display actual settings
         this.onSharedPreferenceChanged(null, getString(R.string.pref_key_location));
         this.onSharedPreferenceChanged(null, getString(R.string.pref_key_timezone));
+
+        ((MondtagActivity) getActivity()).setUpButtonVisible(true);
+
+        // Needed for #onOptionsItemSelected to work
+        this.setHasOptionsMenu(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+
+            getActivity().onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

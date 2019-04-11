@@ -38,6 +38,8 @@ public class DataFetchingFragment extends Fragment
     @Override
     public void onAttach(Context context) {
 
+        Log.d(TAG, "onAttach");
+
         super.onAttach(context);
 
         this.mondtagActivity = (MondtagActivity) context;
@@ -65,11 +67,14 @@ public class DataFetchingFragment extends Fragment
             this.actionTextView.setText( getString(R.string.status_generating) );
         }
 
+        this.mondtagActivity.setUpButtonVisible(false);
+
         final DataManager dataManager =
                 ((Mondtag) getActivity().getApplicationContext()).getDataManager();
 
         dataManager.getDataFetchingMessenger().setDisplayer(this);
 
+        // TODO why did I do this exactly? 🤔
         dataManager.startCalendarGeneration();
 
         return view;
