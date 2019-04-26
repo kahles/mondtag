@@ -74,8 +74,7 @@ public class DataFetchingFragment extends Fragment
 
         dataManager.getDataFetchingMessenger().setDisplayer(this);
 
-        // TODO why did I do this exactly? 🤔
-        dataManager.startCalendarGeneration();
+        dataManager.startCalendarGenerationIfNotAlreadyWorking();
 
         return view;
     }

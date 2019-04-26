@@ -25,7 +25,7 @@ import de.kah2.mondtag.Mondtag;
  */
 class DataFetcher implements ProgressListener{
 
-    private final static String LOG_TAG = DataFetcher.class.getSimpleName();
+    private final static String TAG = DataFetcher.class.getSimpleName();
 
     private final Context context;
 
@@ -33,7 +33,7 @@ class DataFetcher implements ProgressListener{
 
     private Instant startTime = null;
 
-    public DataFetcher(Context context) {
+    DataFetcher(Context context) {
         this.context = context;
         this.databaseHelper = new DatabaseHelper(context);
     }
@@ -41,14 +41,14 @@ class DataFetcher implements ProgressListener{
     /**
      * Loads existing data and removes days outside expected range
      */
-    public void importData(Calendar calendar) {
+    void importData(Calendar calendar) {
         final List<DayStorableDataSet> loadedData = this.loadData();
 
         calendar.importDays(loadedData);
-        Log.d(LOG_TAG, "Imported " + loadedData.size() + " days");
+        Log.d(TAG, "Imported " + loadedData.size() + " days");
 
         final List<Day> daysDeleted = calendar.removeOverhead(false);
-        Log.d(LOG_TAG, "Deleting " + daysDeleted.size() + " unused days from database.");
+        Log.d(TAG, "Deleting " + daysDeleted.size() + " unused days from database.");
         this.deleteFromDb(daysDeleted);
     }
 
@@ -75,7 +75,7 @@ class DataFetcher implements ProgressListener{
             final String[] dates = {joinDates(days)};
             final int deleted = db.delete(DatabaseDayEntry.TABLE_NAME, selection, dates);
 
-            Log.d(LOG_TAG, "Deleted " + deleted + " days");
+            Log.d(TAG, "Deleted " + deleted + " days");
             db.close();
         }
     }
@@ -115,7 +115,7 @@ class DataFetcher implements ProgressListener{
         while ( !cursor.isAfterLast() ) {
             DatabaseDayEntry entry = new DatabaseDayEntry(cursor);
             long id = cursor.getInt(cursor.getColumnIndex(DatabaseDayEntry._ID));
-            Log.d(LOG_TAG, "Read entry with ID " + id + ": " + entry.getDate());
+            Log.d(TAG, "Read entry with ID " + id + ": " + entry.getDate());
             result.add(entry);
             cursor.moveToNext();
         }
@@ -129,6 +129,8 @@ class DataFetcher implements ProgressListener{
     @Override
     public void onStateChanged(State state) {
 
+        Log.d(TAG, "onStateChanged: " + state);
+
         if (state == State.FINISHED) {
 
             SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
@@ -139,19 +141,19 @@ class DataFetcher implements ProgressListener{
             for (Day day : generatedDays) {
                 ContentValues values = new DatabaseDayEntry(day).toContentValues();
                 long id = db.insert(DatabaseDayEntry.TABLE_NAME, null, values);
-                Log.d(LOG_TAG, "Wrote day " + day.getDate() + " --> ID: " + id);
+                Log.d(TAG, "Wrote day " + day.getDate() + " --> ID: " + id);
             }
             db.close();
 
             Instant endTime = Clock.systemUTC().instant();
 
-            Log.d( LOG_TAG, "Calculation finished in: "
+            Log.i( TAG, "Calculation finished in: "
                     + Duration.between(this.startTime, endTime) );
         }
     }
 
     @Override
     public void onCalculationProgress(float percent) {
-        Log.d(LOG_TAG, "Calculation progress is: " + percent);
+        Log.d(TAG, "Calculation progress is: " + percent);
     }
 }

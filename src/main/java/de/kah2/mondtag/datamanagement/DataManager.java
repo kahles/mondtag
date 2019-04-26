@@ -41,8 +41,8 @@ public class DataManager {
     private final Context context;
 
     private final DataFetcher fetcher;
-
     private final DataFetchingMessenger messenger;
+    private boolean isDataFetcherWorking = false;
 
     private boolean userShouldReviewConfig = false;
 
@@ -156,14 +156,22 @@ public class DataManager {
     }
 
     /**
-     * Starts calendar generation in a separate Thread to not block the UI.
+     * Starts calendar generation using a separate thread to not block the
+     * UI - or does nothing if a thread was already started.
      */
-     void startCalendarGeneration() {
+     void startCalendarGenerationIfNotAlreadyWorking() {
 
-         final Runnable worker = this.createLibZodiacWorker();
-         final Thread workerThread = new Thread(worker);
+         if (isDataFetcherWorking) {
 
-         workerThread.start();
+             Log.d(TAG, "startCalendarGenerationIfNotAlreadyWorking: already working - NOT starting new thread");
+
+         } else {
+
+             final Runnable worker = this.createLibZodiacWorker();
+             final Thread workerThread = new Thread(worker);
+
+             workerThread.start();
+         }
     }
 
     /**
@@ -172,6 +180,8 @@ public class DataManager {
     private Runnable createLibZodiacWorker() {
 
         return () -> {
+
+            DataManager.this.isDataFetcherWorking = true;
 
             // Moves the current Thread into the background
             android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
@@ -183,6 +193,8 @@ public class DataManager {
             }
 
             this.fetcher.startGeneratingMissingDays(this.calendar);
+
+            DataManager.this.isDataFetcherWorking = false;
         };
     }
 
