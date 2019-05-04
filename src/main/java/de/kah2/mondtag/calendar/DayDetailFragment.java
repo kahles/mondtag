@@ -31,13 +31,43 @@ public class DayDetailFragment extends Fragment {
 
     private Day day;
 
-    // FIXME loses subtitle on resume
+    /**
+     * Sets a {@link de.kah2.libZodiac.Day} to display - must be set before fragment is created
+     * and will be overwritten if fragment is restored from saved instance state.
+     */
+    public void setDay(Day day) {
+        this.day = day;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         final View view = inflater.inflate(R.layout.fragment_day_detail, container, false);
+
+        this.restoreDayIfAvailable(savedInstanceState);
+
+        DayDataDisplayer viewHolder = new DayDataDisplayer(view);
+        viewHolder.setDayData(this.day, true);
+        this.setLunarRiseSetDescriptions(view);
+
+        this.setupReminderButton(view);
+
+        this.setupActionBar();
+
+        // Needed for #onOptionsItemSelected to work
+        this.setHasOptionsMenu(true);
+
+        return view;
+    }
+
+    /**
+     * Restores this.day if a date was found in savedInstanceState and a corresponding
+     * {@link de.kah2.libZodiac.Day}-object exists.
+     *
+     * If not, this method does nothing.
+     */
+    private void restoreDayIfAvailable(Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {
             Log.d(TAG, "onCreateView: loading savedInstanceState");
@@ -51,11 +81,9 @@ public class DayDetailFragment extends Fragment {
                         .getCalendar().get(date);
             }
         }
+    }
 
-        DayDataDisplayer viewHolder = new DayDataDisplayer(view);
-        viewHolder.setDayData(this.day, true);
-        this.setLunarRiseSetDescriptions(view);
-
+    private void setupReminderButton(View view) {
         final Button reminderButton = view.findViewById(R.id.buttonCreateReminder);
         reminderButton.setOnClickListener(v -> {
             Log.d(TAG, "reminderButton clicked");
@@ -64,13 +92,16 @@ public class DayDetailFragment extends Fragment {
                     getActivity().getApplicationContext(), DayDetailFragment.this.day);
             DayDetailFragment.this.startActivity( event.toIntent() );
         });
+    }
 
-        ((MondtagActivity) getActivity()).setUpButtonVisible(true);
+    private void setupActionBar() {
 
-        // Needed for #onOptionsItemSelected to work
-        this.setHasOptionsMenu(true);
+        final MondtagActivity mondtagActivity = (MondtagActivity) getActivity();
 
-        return view;
+        mondtagActivity.getSupportActionBar().setSubtitle(
+                ResourceMapper.formatLongDate( this.day.getDate() ) );
+
+        mondtagActivity.setUpButtonVisible(true);
     }
 
     @Override
@@ -83,10 +114,6 @@ public class DayDetailFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void setDay(Day day) {
-        this.day = day;
     }
 
     private void setLunarRiseSetDescriptions(final View view) {

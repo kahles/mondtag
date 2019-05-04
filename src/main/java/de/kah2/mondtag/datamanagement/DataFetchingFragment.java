@@ -67,6 +67,7 @@ public class DataFetchingFragment extends Fragment
             this.actionTextView.setText( getString(R.string.status_generating) );
         }
 
+        this.mondtagActivity.getSupportActionBar().setSubtitle(R.string.data_fetching_toolbar_subtitle);
         this.mondtagActivity.setUpButtonVisible(false);
 
         final DataManager dataManager =

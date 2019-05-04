@@ -187,23 +187,25 @@ public class MondtagActivity extends AppCompatActivity {
 
         if (this.isVisible) {
 
-            final ActionBar actionBar = this.getSupportActionBar();
-
             Log.d(TAG, "updateContent: state is " + state);
 
             switch (state) {
 
                 case CONFIGURING:
-                    initConfiguration(transaction, actionBar);
+                    initConfiguration(transaction);
                     break;
 
-                case FETCHING_DATA: initDataGeneration(transaction, actionBar);
+                case FETCHING_DATA:
+                    transaction.replace(R.id.content_frame,
+                        new DataFetchingFragment(), DataFetchingFragment.TAG);
                     break;
 
-                case DISPLAYING: initCalendarView(transaction);
+                case DISPLAYING:
+                    transaction.replace(R.id.content_frame,
+                        new CalendarFragment(), CalendarFragment.TAG);
                     break;
 
-                case DAY_DETAILS: initDayDetailView(transaction, actionBar);
+                case DAY_DETAILS: initDayDetailView(transaction);
                     break;
             }
 
@@ -214,6 +216,27 @@ public class MondtagActivity extends AppCompatActivity {
             Log.d(TAG, "updateContent: UI not visible - skipping update");
             this.isUiUpdatePostponed = true;
         }
+    }
+
+    private void initConfiguration(FragmentTransaction transaction) {
+
+        SettingsFragment fragment = new SettingsFragment();
+        transaction.replace(R.id.content_frame,
+                fragment, SettingsFragment.TAG);
+
+        // We do this here to not show the help dialog again if e.g. screen is rotated
+        if ( this.getDataManager().userShouldReviewConfig() ) {
+            fragment.showHelpDialog();
+        }
+    }
+
+    private void initDayDetailView(FragmentTransaction transaction) {
+
+        final DayDetailFragment dayDetailFragment = new DayDetailFragment();
+        dayDetailFragment.setDay(this.selectedDay);
+
+        transaction.replace(R.id.content_frame,
+                dayDetailFragment, DayDetailFragment.TAG);
     }
 
     /**
@@ -240,47 +263,6 @@ public class MondtagActivity extends AppCompatActivity {
 
         bar.setDisplayShowHomeEnabled(visible);
         bar.setDisplayHomeAsUpEnabled(visible);
-    }
-
-    private void initConfiguration(FragmentTransaction transaction, ActionBar actionBar) {
-
-        actionBar.setSubtitle(R.string.action_settings);
-
-        SettingsFragment fragment = new SettingsFragment();
-        transaction.replace(R.id.content_frame,
-                fragment, SettingsFragment.TAG);
-
-        if ( this.getDataManager().userShouldReviewConfig() ) {
-            fragment.showHelpDialog();
-        }
-    }
-
-    private void initDataGeneration(FragmentTransaction transaction, ActionBar actionBar) {
-
-        actionBar.setSubtitle(R.string.data_fetching_toolbar_subtitle);
-
-        transaction.replace(R.id.content_frame,
-                new DataFetchingFragment(), DataFetchingFragment.TAG);
-    }
-
-    private void initCalendarView(FragmentTransaction transaction) {
-
-        // Handles subtitle for itself
-
-        transaction.replace(R.id.content_frame,
-                new CalendarFragment(), CalendarFragment.TAG);
-    }
-
-    private void initDayDetailView(FragmentTransaction transaction, ActionBar actionBar) {
-
-        actionBar.setSubtitle(
-                ResourceMapper.formatLongDate( this.selectedDay.getDate() ) );
-
-        final DayDetailFragment dayDetailFragment = new DayDetailFragment();
-        dayDetailFragment.setDay(this.selectedDay);
-
-        transaction.replace(R.id.content_frame,
-                dayDetailFragment, DayDetailFragment.TAG);
     }
 
     /** Callback for {@link DataFetchingFragment} */

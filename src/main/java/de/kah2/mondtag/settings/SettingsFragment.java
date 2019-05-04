@@ -36,10 +36,16 @@ public class SettingsFragment extends PreferenceFragment
         this.onSharedPreferenceChanged(null, getString(R.string.pref_key_location));
         this.onSharedPreferenceChanged(null, getString(R.string.pref_key_timezone));
 
-        ((MondtagActivity) getActivity()).setUpButtonVisible(true);
+        this.setupActionBar();
 
         // Needed for #onOptionsItemSelected to work
         this.setHasOptionsMenu(true);
+    }
+
+    private void setupActionBar() {
+        final MondtagActivity mondtagActivity = (MondtagActivity) getActivity();
+        mondtagActivity.getSupportActionBar().setSubtitle(R.string.action_settings);
+        mondtagActivity.setUpButtonVisible(true);
     }
 
     @Override
