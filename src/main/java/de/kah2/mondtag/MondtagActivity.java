@@ -71,12 +71,13 @@ public class MondtagActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate");
 
-        super.onCreate(savedInstanceState);
-
         super.setContentView(R.layout.activity_mondtag);
 
+        // toolbar must be set before #onCreate
         final Toolbar toolbar = findViewById(R.id.toolbar);
         super.setSupportActionBar(toolbar);
+
+        super.onCreate(savedInstanceState);
 
         // TODO also called at onResume - is this needed at both places?
         this.isVisible = true;
@@ -237,7 +238,6 @@ public class MondtagActivity extends AppCompatActivity {
 
         final ActionBar bar = this.getSupportActionBar();
 
-        // FIXME bar may be null in settingsfragment / when entering location ...?
         bar.setDisplayShowHomeEnabled(visible);
         bar.setDisplayHomeAsUpEnabled(visible);
     }
