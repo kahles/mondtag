@@ -13,7 +13,6 @@ import de.kah2.libZodiac.Calendar;
 import de.kah2.libZodiac.Day;
 import de.kah2.mondtag.calendar.CalendarFragment;
 import de.kah2.mondtag.calendar.DayDetailFragment;
-import de.kah2.mondtag.calendar.ResourceMapper;
 import de.kah2.mondtag.datamanagement.DataFetchingFragment;
 import de.kah2.mondtag.datamanagement.DataManager;
 import de.kah2.mondtag.settings.SettingsFragment;
@@ -79,34 +78,9 @@ public class MondtagActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        // TODO also called at onResume - is this needed at both places?
-        this.isVisible = true;
-
         if (savedInstanceState != null) {
             this.state = (State) savedInstanceState.getSerializable(BUNDLE_KEY_STATE);
-            Log.d(TAG, "onRestoreInstanceState: state := " + this.state);
-        }
-
-        // TODO do this at onResume - see above?
-        if (this.state == State.UNDEFINED) {
-
-            // Mondtag#onCreate constructs a new DataManager which tries to load the config.
-            // If config isn't valid the following call will return true.
-            if ( this.getDataManager().userShouldReviewConfig() ) {
-
-                // automatically start configuration if config is missing/invalid
-                this.activateConfiguration();
-
-            } else if ( !getDataManager().getCalendar().isComplete() ) {
-
-                // if days are missing in expected date range we automatically start generation
-                this.activateDataGeneration();
-
-            } else {
-
-                // everything ok => show calendar
-                this.activateCalendarView();
-            }
+            Log.d(TAG, "onCreate: restoring state := " + this.state);
         }
     }
 
@@ -129,12 +103,38 @@ public class MondtagActivity extends AppCompatActivity {
 
         this.isVisible = true;
 
+        this.setInitialStateIfUndefined();
+
         if (this.isUiUpdatePostponed) {
 
             Log.d(TAG, "onResume: UI update was postponed - doing it now");
             this.updateContent();
             this.isUiUpdatePostponed = false;
 
+        }
+    }
+
+    private void setInitialStateIfUndefined() {
+
+        if (this.state == State.UNDEFINED) {
+
+            // Mondtag#onCreate constructs a new DataManager which tries to load the config.
+            // If config isn't valid the following call will return true.
+            if ( this.getDataManager().userShouldReviewConfig() ) {
+
+                // automatically start configuration if config is missing/invalid
+                this.activateConfiguration();
+
+            } else if ( ! this.getDataManager().getCalendar().isComplete() ) {
+
+                // if days are missing in expected date range we automatically start generation
+                this.activateDataGeneration();
+
+            } else {
+
+                // everything ok => show calendar
+                this.activateCalendarView();
+            }
         }
     }
 
@@ -169,9 +169,7 @@ public class MondtagActivity extends AppCompatActivity {
         this.updateContent();
     }
 
-    /**
-     * Shows detailed view for a selected {@link Day}.
-     */
+    /** Shows detailed view for a selected {@link Day}. */
     public void activateDayDetailView(Day day) {
 
         Log.d(TAG, "activateDayDetailView");
@@ -192,7 +190,7 @@ public class MondtagActivity extends AppCompatActivity {
             switch (state) {
 
                 case CONFIGURING:
-                    initConfiguration(transaction);
+                    showConfiguration(transaction);
                     break;
 
                 case FETCHING_DATA:
@@ -205,7 +203,7 @@ public class MondtagActivity extends AppCompatActivity {
                         new CalendarFragment(), CalendarFragment.TAG);
                     break;
 
-                case DAY_DETAILS: initDayDetailView(transaction);
+                case DAY_DETAILS: showDayDetailView(transaction);
                     break;
             }
 
@@ -218,7 +216,7 @@ public class MondtagActivity extends AppCompatActivity {
         }
     }
 
-    private void initConfiguration(FragmentTransaction transaction) {
+    private void showConfiguration(FragmentTransaction transaction) {
 
         SettingsFragment fragment = new SettingsFragment();
         transaction.replace(R.id.content_frame,
@@ -230,7 +228,7 @@ public class MondtagActivity extends AppCompatActivity {
         }
     }
 
-    private void initDayDetailView(FragmentTransaction transaction) {
+    private void showDayDetailView(FragmentTransaction transaction) {
 
         final DayDetailFragment dayDetailFragment = new DayDetailFragment();
         dayDetailFragment.setDay(this.selectedDay);

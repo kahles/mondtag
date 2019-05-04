@@ -12,7 +12,6 @@ import org.threeten.bp.format.TextStyle;
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 
-import de.kah2.libZodiac.Day;
 import de.kah2.libZodiac.ProgressListener;
 import de.kah2.libZodiac.interpretation.Gardening;
 import de.kah2.libZodiac.interpretation.Interpreter;
