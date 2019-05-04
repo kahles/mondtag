@@ -31,6 +31,8 @@ public class DayDetailFragment extends Fragment {
 
     private Day day;
 
+    // FIXME loses subtitle on resume
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -39,7 +39,7 @@ public class MondtagActivity extends AppCompatActivity {
         CONFIGURING,
 
         /** {@link DataFetchingFragment} is active */
-        GENERATING,
+        FETCHING_DATA,
 
         /** show day details through {@link DayDetailFragment} */
         DAY_DETAILS
@@ -48,13 +48,6 @@ public class MondtagActivity extends AppCompatActivity {
     private final static String BUNDLE_KEY_STATE =
             MondtagActivity.class.getName() + ".state";
     private State state = State.UNDEFINED;
-
-    private final static String BUNDLE_KEY_FIRST_START =
-            MondtagActivity.class.getName() + ".isFirstStart";
-    private boolean isFirstStart = false;
-
-    /** To store the action bar's subtitle at {@link #onSaveInstanceState(Bundle)} */
-    private static final String BUNDLE_KEY_SUBTITLE = MondtagActivity.class.getName() + ".subtitle";
 
     /**
      * Indicates if the UI is in foreground and Fragment transactions are possible.
@@ -85,30 +78,33 @@ public class MondtagActivity extends AppCompatActivity {
         final Toolbar toolbar = findViewById(R.id.toolbar);
         super.setSupportActionBar(toolbar);
 
-        // if app wasn't already started ...
-        if (savedInstanceState == null) {
+        // TODO also called at onResume - is this needed at both places?
+        this.isVisible = true;
 
-            // Mondtag#onCreate creates an empty calendar, when config is missing or invalid.
-            // In this case following method call will return true.
-            this.isFirstStart = this.getDataManager().userShouldReviewConfig();
-            
-            if (this.state == State.UNDEFINED) {
+        if (savedInstanceState != null) {
+            this.state = (State) savedInstanceState.getSerializable(BUNDLE_KEY_STATE);
+            Log.d(TAG, "onRestoreInstanceState: state := " + this.state);
+        }
 
-                if (this.isFirstStart) {
+        // TODO do this at onResume - see above?
+        if (this.state == State.UNDEFINED) {
 
-                    // automatically start configuration if config is missing/invalid
-                    this.activateConfiguration();
+            // Mondtag#onCreate constructs a new DataManager which tries to load the config.
+            // If config isn't valid the following call will return true.
+            if ( this.getDataManager().userShouldReviewConfig() ) {
 
-                } else if ( !getDataManager().getCalendar().isComplete() ) {
+                // automatically start configuration if config is missing/invalid
+                this.activateConfiguration();
 
-                    // if days are missing in expected date range we automatically start generation
-                    this.activateDataGeneration();
+            } else if ( !getDataManager().getCalendar().isComplete() ) {
 
-                } else {
+                // if days are missing in expected date range we automatically start generation
+                this.activateDataGeneration();
 
-                    // everything ok => show calendar
-                    this.activateCalendarView();
-                }
+            } else {
+
+                // everything ok => show calendar
+                this.activateCalendarView();
             }
         }
     }
@@ -160,7 +156,7 @@ public class MondtagActivity extends AppCompatActivity {
     private void activateDataGeneration() {
 
         Log.d(TAG, "activateDataGeneration");
-        this.state = State.GENERATING;
+        this.state = State.FETCHING_DATA;
         this.updateContent();
     }
 
@@ -200,7 +196,7 @@ public class MondtagActivity extends AppCompatActivity {
                     initConfiguration(transaction, actionBar);
                     break;
 
-                case GENERATING: initDataGeneration(transaction, actionBar);
+                case FETCHING_DATA: initDataGeneration(transaction, actionBar);
                     break;
 
                 case DISPLAYING: initCalendarView(transaction);
@@ -239,7 +235,9 @@ public class MondtagActivity extends AppCompatActivity {
      */
     public void setUpButtonVisible(boolean visible) {
 
-        final ActionBar bar = getSupportActionBar();
+        final ActionBar bar = this.getSupportActionBar();
+
+        // FIXME bar may be null in settingsfragment / when entering location ...?
         bar.setDisplayShowHomeEnabled(visible);
         bar.setDisplayHomeAsUpEnabled(visible);
     }
@@ -252,9 +250,8 @@ public class MondtagActivity extends AppCompatActivity {
         transaction.replace(R.id.content_frame,
                 fragment, SettingsFragment.TAG);
 
-        if (this.isFirstStart) {
+        if ( this.getDataManager().userShouldReviewConfig() ) {
             fragment.showHelpDialog();
-            this.isFirstStart = false;
         }
     }
 
@@ -331,32 +328,10 @@ public class MondtagActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        // Save the state to be recovered at #onCreate
         outState.putSerializable(BUNDLE_KEY_STATE, this.state);
         Log.d(TAG, "onSaveInstanceState: state = " + this.state);
-        outState.putBoolean(BUNDLE_KEY_FIRST_START, this.isFirstStart);
-        Log.d(TAG, "onSaveInstanceState: isFirstStart = " + this.isFirstStart);
-
-        final ActionBar bar = this.getSupportActionBar();
-        String subtitle = "";
-        if ( bar.getSubtitle() != null ) {
-            subtitle = bar.getSubtitle().toString();
-        }
-        outState.putString( BUNDLE_KEY_SUBTITLE, subtitle );
-        Log.d(TAG, "onSaveInstanceState: subtitle = " + subtitle);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        this.state = (State) savedInstanceState.getSerializable(BUNDLE_KEY_STATE);
-        Log.d(TAG, "onRestoreInstanceState: state := " + this.state);
-        this.isFirstStart = savedInstanceState.getBoolean(BUNDLE_KEY_FIRST_START);
-        Log.d(TAG, "onRestoreInstanceState: isFirstStart := " + this.isFirstStart);
-
-        final ActionBar bar = this.getSupportActionBar();
-        final String subtitle = savedInstanceState.getString(BUNDLE_KEY_SUBTITLE);
-        bar.setSubtitle( subtitle );
-        Log.d(TAG, "onRestoreInstanceState: subtitle := " + subtitle);
     }
 
     private DataManager getDataManager() {
