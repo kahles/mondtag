@@ -10,7 +10,7 @@
     <string name="descending">absteigend</string>
     <string name="dummy_date">12.34.5678</string>
     <string name="dummy_day_name">Eintag</string>
-    <string name="dummy_time">22:34</string>
+    <string name="dummy_time">22:23</string>
     <string name="earth">Erde</string>
     <string name="fire">Feuer</string>
     <string name="full_moon">Vollmond</string>
@@ -96,5 +96,6 @@
     <string name="location_search_hint_select_result">Bitte unten ein Suchergebnis auswählen</string>
     <string name="action_scroll_to_today">Zeige aktuellen Tag</string>
     <string name="info_dialog_message">Für technische Informationen, Quellcode und die Datenschutzerklärung besuchen sie bitte <a href="Mondtag auf github">https://github.com/kahles/mondtag</a>.</string>
+    <string name="dummy_time_2">1:23</string>
 
 </resources>

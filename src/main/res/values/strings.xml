@@ -37,7 +37,8 @@
     <string name="dummy_day_name">Someday</string>
     <string name="dummy_date">1234–56–78</string>
     <string name="dummy_decimal">12.34</string>
-    <string name="dummy_time">12:34 pm</string>
+    <string name="dummy_time">10:23 PM</string>
+    <string name="dummy_time_2">1:23 AM</string>
     <string name="dummy_interpretationText">Interpretation</string>
     <string name="dummy_interpretationQuality">maybe good</string>
 

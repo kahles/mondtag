@@ -36,6 +36,7 @@ class DayDataDisplayer {
     private final ImageView lunarRiseSetFirstIcon;
     private final TextView lunarRiseSetFirstTextView;
     private final ImageView lunarRiseSetSecondIcon;
+    private final TextView lunarRiseSetSecondDescription;
     private final TextView lunarRiseSetSecondTextView;
     private final ImageView lunarPhaseIcon;
     private final TextView lunarPhaseText;
@@ -48,6 +49,8 @@ class DayDataDisplayer {
     private final ImageView interpretationIcon;
     private final TextView interpretationAnnotationTextView;
 
+    private boolean isDayDetailView;
+
     DayDataDisplayer(View dayView) {
         this.dayView = dayView;
 
@@ -58,6 +61,8 @@ class DayDataDisplayer {
         this.lunarRiseSetFirstTextView =
                 dayView.findViewById(R.id.lunar_rise_set_first_text);
         this.lunarRiseSetSecondIcon = dayView.findViewById(R.id.lunar_rise_set_second_icon);
+        this.lunarRiseSetSecondDescription = dayView.findViewById(
+                R.id.lunar_rise_set_second_description);
         this.lunarRiseSetSecondTextView =
                 dayView.findViewById(R.id.lunar_rise_set_second_text);
 
@@ -81,6 +86,8 @@ class DayDataDisplayer {
      *                        normal {@link CalendarFragment}
      */
     void setDayData(final Day day, boolean isDayDetailView) {
+
+        this.isDayDetailView = isDayDetailView;
 
         this.initDateFields(day, isDayDetailView);
 
@@ -130,47 +137,75 @@ class DayDataDisplayer {
     }
 
     private void initLunarRiseSetFields(Day day) {
-        final LocalDateTime rise = day.getPlanetaryData().getLunarRiseSet().getRise();
-        final LocalDateTime set = day.getPlanetaryData().getLunarRiseSet().getSet();
 
         final Context context = this.getContext();
 
+        final LocalDateTime rise = day.getPlanetaryData().getLunarRiseSet().getRise();
+        final String localRise = ResourceMapper.formatTime(context, rise);
+
+        final LocalDateTime set = day.getPlanetaryData().getLunarRiseSet().getSet();
+        final String localSet = ResourceMapper.formatTime(context, set);
+
+        // We can have four cases:
         if ( !day.getDate().isEqual(LocalDate.from(rise)) ) {
 
-            // No rise today
+            // 1. No rise
             this.lunarRiseSetFirstIcon.setImageResource(R.drawable.lunar_set);
-            this.lunarRiseSetFirstIcon.setContentDescription(
-                    getContext().getString(R.string.description_lunar_set));
-            this.lunarRiseSetFirstTextView.setText( ResourceMapper.formatTime(context, set) );
-            this.lunarRiseSetSecondIcon.setImageResource(0);
-            this.lunarRiseSetSecondIcon.setContentDescription("");
-            this.lunarRiseSetSecondTextView.setText("");
+            this.lunarRiseSetFirstIcon.setContentDescription(getContext().getString(R.string.description_lunar_set));
+            this.lunarRiseSetFirstTextView.setText(localSet);
+
+            this.disableSecondLunarFields();
 
         } else if (!day.getDate().isEqual(LocalDate.from(set))) {
 
-            // No set today
-            this.lunarRiseSetFirstTextView.setText(ResourceMapper.formatTime(context, rise));
-            this.lunarRiseSetSecondIcon.setImageResource(0);
-            this.lunarRiseSetSecondIcon.setContentDescription("");
-            this.lunarRiseSetSecondTextView.setText("");
+            // 2. No set
+            this.lunarRiseSetFirstTextView.setText(localRise);
+            this.lunarRiseSetFirstIcon.setImageResource(R.drawable.lunar_rise);
+            this.lunarRiseSetFirstIcon.setContentDescription(
+                    getContext().getString(R.string.description_lunar_rise));
+
+            this.disableSecondLunarFields();
 
         } else if (rise.isBefore(set)) {
 
-            // Everything normal - just set times
-            this.lunarRiseSetFirstTextView.setText(ResourceMapper.formatTime(context, rise));
-            this.lunarRiseSetSecondTextView.setText(ResourceMapper.formatTime(context, set));
+            // 3. First rise, then set
+            this.lunarRiseSetFirstTextView.setText(localRise);
+            this.lunarRiseSetFirstIcon.setImageResource(R.drawable.lunar_rise);
+            this.lunarRiseSetFirstIcon.setContentDescription(
+                    getContext().getString(R.string.description_lunar_rise));
+
+            this.lunarRiseSetSecondTextView.setText(localSet);
+            this.lunarRiseSetSecondIcon.setImageResource(R.drawable.lunar_set);
+            this.lunarRiseSetSecondIcon.setContentDescription(
+                    getContext().getString(R.string.description_lunar_set));
 
         } else {
 
-            // Set is before rise
+            // 4. Set is before rise
             this.lunarRiseSetFirstIcon.setImageResource(R.drawable.lunar_set);
             this.lunarRiseSetFirstIcon.setContentDescription(
                     getContext().getString(R.string.description_lunar_set));
-            this.lunarRiseSetFirstTextView.setText(ResourceMapper.formatTime(context, set));
+            this.lunarRiseSetFirstTextView.setText(localSet);
+
             this.lunarRiseSetSecondIcon.setImageResource(R.drawable.lunar_rise);
-            this.lunarRiseSetSecondIcon.setContentDescription(
-                    getContext().getString(R.string.description_lunar_rise));
-            this.lunarRiseSetSecondTextView.setText(ResourceMapper.formatTime(context, rise));
+            this.lunarRiseSetSecondIcon.setContentDescription(getContext().getString(R.string.description_lunar_rise));
+            this.lunarRiseSetSecondTextView.setText(localRise);
+        }
+    }
+
+    private void disableSecondLunarFields() {
+
+        if (isDayDetailView) {
+
+            this.lunarRiseSetSecondIcon.setVisibility(View.GONE);
+            this.lunarRiseSetSecondDescription.setVisibility(View.GONE);
+            this.lunarRiseSetSecondTextView.setVisibility(View.GONE);
+
+        } else {
+
+            this.lunarRiseSetSecondIcon.setImageResource(0);
+            this.lunarRiseSetSecondIcon.setContentDescription("");
+            this.lunarRiseSetSecondTextView.setText("");
         }
     }
 

@@ -8,8 +8,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:columnCount="4"
         android:padding="5dp">
+
 
         <!-- Date -->
         <TextView
@@ -35,162 +35,144 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true" />
 
-        <!-- Phase, sign, direction and element -->
-        <ImageView
-            android:id="@+id/lunar_phase_icon"
-            android:src="@drawable/moon_waxing"
-            android:contentDescription="@string/increasing"
+        <GridLayout
+            android:id="@+id/lunar_table"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:scaleType="center"
+            android:columnCount="2"
             android:layout_below="@id/day_of_week_text"
             android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"/>
-        <TextView
-            android:id="@+id/lunar_phase_text"
-            android:text="@string/increasing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/day_of_week_text"
-            android:layout_toRightOf="@id/lunar_phase_icon"
-            android:layout_toEndOf="@id/lunar_phase_icon" />
-        <ImageView
-            android:id="@+id/zodiac_direction_icon"
-            android:src="@drawable/moon_ascending"
-            android:contentDescription="@string/ascending"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:scaleType="center"
-            android:layout_below="@id/lunar_phase_icon"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true" />
-        <TextView
-            android:id="@+id/zodiac_direction_text"
-            android:text="@string/ascending"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/lunar_phase_icon"
-            android:layout_toRightOf="@id/lunar_phase_icon"
-            android:layout_toEndOf="@id/lunar_phase_icon" />
-        <ImageView
-            android:id="@+id/zodiac_sign_icon"
-            android:src="@drawable/virgo"
-            android:contentDescription="@string/virgo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:scaleType="center"
-            android:layout_below="@id/zodiac_direction_icon"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true" />
-        <TextView
-            android:id="@+id/zodiac_sign_text"
-            android:text="@string/virgo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/zodiac_direction_icon"
-            android:layout_toRightOf="@id/lunar_phase_icon"
-            android:layout_toEndOf="@id/lunar_phase_icon" />
-        <ImageView
-            android:id="@+id/zodiac_element_icon"
-            android:src="@drawable/air"
-            android:contentDescription="@string/air"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="center"
-            android:layout_below="@id/zodiac_sign_icon"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true" />
-        <TextView
-            android:id="@+id/zodiac_element_text"
-            android:text="@string/air"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/zodiac_sign_icon"
-            android:layout_toRightOf="@id/lunar_phase_icon"
-            android:layout_toEndOf="@id/lunar_phase_icon" />
+            android:layout_alignParentLeft="true">
 
-        <!-- Sun rise and set-->
-        <TextView
-            android:id="@+id/sun_set_text"
-            android:text="@string/dummy_time"
+            <!-- Phase, sign, direction and element -->
+            <ImageView
+                android:id="@+id/lunar_phase_icon"
+                android:src="@drawable/moon_waxing"
+                android:contentDescription="@string/increasing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
+                android:scaleType="center" />
+            <TextView
+                android:id="@+id/lunar_phase_text"
+                android:text="@string/increasing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/zodiac_direction_icon"
+                android:src="@drawable/moon_ascending"
+                android:contentDescription="@string/ascending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:scaleType="center" />
+            <TextView
+                android:id="@+id/zodiac_direction_text"
+                android:text="@string/ascending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/zodiac_sign_icon"
+                android:src="@drawable/virgo"
+                android:contentDescription="@string/virgo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:scaleType="center" />
+            <TextView
+                android:id="@+id/zodiac_sign_text"
+                android:text="@string/virgo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/zodiac_element_icon"
+                android:src="@drawable/air"
+                android:contentDescription="@string/air"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center" />
+            <TextView
+                android:id="@+id/zodiac_element_text"
+                android:text="@string/air"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </GridLayout>
+
+        <GridLayout
+            android:id="@+id/rise_set_table"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:columnCount="4"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_below="@id/day_of_week_text" />
-        <ImageView
-            android:id="@+id/sun_set_icon"
-            android:src="@drawable/sun_set"
-            android:contentDescription="@string/description_sun_set"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="center"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_toLeftOf="@id/sun_set_text"
-            android:layout_toStartOf="@id/sun_set_text"
-            android:layout_below="@id/day_of_week_text" />
-        <TextView
-            android:id="@+id/sun_rise_text"
-            android:text="@string/dummy_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/sun_set_icon"
-            android:layout_toStartOf="@id/sun_set_icon"
-            android:layout_below="@id/day_of_week_text" />
-        <ImageView
-            android:id="@+id/sun_rise_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="center"
-            android:src="@drawable/sun_rise"
-            android:contentDescription="@string/description_sun_rise"
-            android:layout_below="@id/day_of_week_text"
-            android:layout_toLeftOf="@id/sun_rise_text"
-            android:layout_toStartOf="@id/sun_rise_text"/>
+            android:layout_below="@id/day_of_week_text" >
 
-        <!-- Lunar rise and set-->
-        <TextView
-            android:id="@+id/lunar_rise_set_second_text"
-            android:text="@string/dummy_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/lunar_phase_icon"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
-        <ImageView
-            android:id="@+id/lunar_rise_set_second_icon"
-            android:src="@drawable/lunar_set"
-            android:contentDescription="@string/description_lunar_set"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="center"
-            android:layout_below="@id/lunar_phase_icon"
-            android:layout_toLeftOf="@id/sun_set_text"
-            android:layout_toStartOf="@id/sun_set_text" />
-        <TextView
-            android:id="@+id/lunar_rise_set_first_text"
-            android:text="@string/dummy_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/lunar_phase_icon"
-            android:layout_toLeftOf="@id/sun_set_icon"
-            android:layout_toStartOf="@id/sun_set_icon" />
-        <ImageView
-            android:id="@+id/lunar_rise_set_first_icon"
-            android:src="@drawable/lunar_rise"
-            android:contentDescription="@string/description_lunar_rise"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="center"
-            android:layout_below="@id/lunar_phase_icon"
-            android:layout_toLeftOf="@id/sun_rise_text"
-            android:layout_toStartOf="@id/sun_rise_text" />
+            <!-- Sun rise and set-->
+            <ImageView
+                android:id="@+id/sun_rise_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                android:src="@drawable/sun_rise"
+                android:contentDescription="@string/description_sun_rise" />
+            <TextView
+                android:id="@+id/sun_rise_text"
+                android:text="@string/dummy_time_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end" />
+            <ImageView
+                android:id="@+id/sun_set_icon"
+                android:src="@drawable/sun_set"
+                android:contentDescription="@string/description_sun_set"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:scaleType="center" />
+            <TextView
+                android:id="@+id/sun_set_text"
+                android:text="@string/dummy_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="end" />
+
+            <!-- Lunar rise and set-->
+            <ImageView
+                android:id="@+id/lunar_rise_set_first_icon"
+                android:src="@drawable/lunar_rise"
+                android:contentDescription="@string/description_lunar_rise"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center" />
+            <TextView
+                android:id="@+id/lunar_rise_set_first_text"
+                android:text="@string/dummy_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end" />
+            <ImageView
+                android:id="@+id/lunar_rise_set_second_icon"
+                android:src="@drawable/lunar_set"
+                android:contentDescription="@string/description_lunar_set"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center" />
+            <TextView
+                android:id="@+id/lunar_rise_set_second_text"
+                android:text="@string/dummy_time_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="end" />
+
+        </GridLayout>
+
+        <!-- Interpretation -->
         <ImageView
             android:id="@+id/interpretation_icon"
             android:src="@drawable/quality_best"
@@ -198,9 +180,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="center"
-            android:layout_alignBottom="@id/zodiac_element_text"
-            android:layout_alignEnd="@id/lunar_rise_set_second_text"
-            android:layout_alignRight="@id/lunar_rise_set_second_text"/>
+            android:layout_alignBottom="@id/lunar_table"
+            android:layout_alignEnd="@id/rise_set_table"
+            android:layout_alignRight="@id/rise_set_table"/>
         <TextView
             android:id="@+id/interpretation_annotation_text"
             android:text="@string/dummy_action"
