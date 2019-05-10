@@ -194,9 +194,9 @@ public class CalendarFragment extends Fragment
     }
 
     @Override
-    public void onInterpreterChanged(InterpreterMapping mapping) {
+    public void onInterpreterChanged(MappedInterpreter interpreter) {
 
-        if (mapping == null) {
+        if (interpreter == null) {
 
             Log.d(TAG, "onInterpreterChanged: mapping is null - removing interpreter");
             this.getDataManager().setSelectedInterpreter(null);
@@ -204,8 +204,8 @@ public class CalendarFragment extends Fragment
         } else {
 
             Log.d(TAG, "onInterpreterChanged: setting interpreter: "
-                    + getActivity().getApplicationContext().getString( mapping.getId() ) );
-            this.getDataManager().setSelectedInterpreter( mapping );
+                    + getActivity().getApplicationContext().getString( interpreter.getId() ) );
+            this.getDataManager().setSelectedInterpreter(interpreter);
         }
 
         this.updateCalendar();

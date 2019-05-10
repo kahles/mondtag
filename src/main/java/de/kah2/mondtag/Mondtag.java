@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
-import de.kah2.mondtag.calendar.InterpreterMapper;
+import de.kah2.mondtag.calendar.InterpreterManager;
 import de.kah2.mondtag.datamanagement.DataManager;
 
 /**
@@ -29,7 +29,7 @@ public class Mondtag extends Application {
 
         AndroidThreeTen.init(this);
 
-        InterpreterMapper.init(this);
+        InterpreterManager.init(this);
 
         this.dataManager= new DataManager(this);
     }

@@ -15,7 +15,7 @@ import de.kah2.libZodiac.DateRange;
 import de.kah2.libZodiac.planetary.Position;
 import de.kah2.mondtag.Mondtag;
 import de.kah2.mondtag.R;
-import de.kah2.mondtag.calendar.InterpreterMapping;
+import de.kah2.mondtag.calendar.MappedInterpreter;
 
 /**
  * This class manages all data needed by Mondtag.
@@ -48,7 +48,7 @@ public class DataManager {
 
     private boolean importedExistingData = false;
 
-    private InterpreterMapping selectedInterpreter;
+    private MappedInterpreter selectedInterpreter;
 
     private Calendar calendar;
 
@@ -229,7 +229,7 @@ public class DataManager {
     }
 
     /** @return the selected interpreter or null if none is selected */
-    public InterpreterMapping getSelectedInterpreter() {
+    public MappedInterpreter getSelectedInterpreter() {
         return selectedInterpreter;
     }
 
@@ -246,7 +246,7 @@ public class DataManager {
         }
     }
 
-    public void setSelectedInterpreter(InterpreterMapping interpreter) {
+    public void setSelectedInterpreter(MappedInterpreter interpreter) {
         this.selectedInterpreter = interpreter;
     }
 

@@ -11,12 +11,14 @@ import de.kah2.libZodiac.Day;
 import de.kah2.libZodiac.interpretation.Interpreter;
 
 /**
- * This is a helper class to do an interpretation for a {@link Day}-object and provide translated
- * Strings and Icons.
+ * <p>This is a wrapper for Interpreter providing string-ids, icons and {@link Comparator}s needed
+ * by the views.</p>
+ * <p>Because we have multiple subclasses of {@link Interpreter}, we can't inherit from all of them.
+ * So we use an instance and delegate the work.</p>
  */
-public class InterpreterMapping {
+public class MappedInterpreter {
 
-    private static final String TAG = InterpreterMapping.class.getSimpleName();
+    private static final String TAG = MappedInterpreter.class.getSimpleName();
 
     /** The android-string-resource-id */
     private final int interpreterNameStringId;
@@ -28,23 +30,22 @@ public class InterpreterMapping {
     private final String interpreterName;
 
     private final Class<? extends Interpreter> interpreterClass;
+
     private Interpreter interpreterInstance;
 
-    // Use empty Strings as default, if no values are set
-    private String qualityText = "";
-    private String annotations = "";
-    private int qualityIcon = 0;
-
-    private boolean isQualityNeutral = true;
+    private String qualityText;
+    private String annotations;
+    private int qualityIcon;
+    private boolean isQualityNeutral;
 
     /**
      * @param nameId the android string resource id
      * @param nameString the translated name to be able to sort the interpreters
      * @param interpreterClass and the class used to do the interpretation
      */
-    InterpreterMapping(int nameId,
-                               String nameString,
-                               Class<? extends Interpreter> interpreterClass ) {
+    MappedInterpreter(int nameId,
+                      String nameString,
+                      Class<? extends Interpreter> interpreterClass ) {
 
         this.interpreterNameStringId = nameId;
         this.interpreterName = nameString;
@@ -52,11 +53,11 @@ public class InterpreterMapping {
     }
 
     /**
-     * To simply clone an {@link InterpreterMapping}. Does not clone interpretation /
-     * {@link Interpreter}-instance!
+     * To simply clone an {@link MappedInterpreter}. Does not clone interpretation /
+     * {@link Interpreter}-instance.
      */
     @SuppressWarnings("CopyConstructorMissesField")
-    InterpreterMapping(InterpreterMapping original) {
+    MappedInterpreter(MappedInterpreter original) {
         this(original.interpreterNameStringId, original.interpreterName, original.interpreterClass);
     }
 
@@ -77,7 +78,7 @@ public class InterpreterMapping {
 
         } catch (Exception e) {
 
-            Log.e(TAG, "InterpreterMapping couldn't instantiate interpreter "
+            Log.e(TAG, "MappedInterpreter couldn't instantiate interpreter "
                     + this.interpreterName, e);
         }
     }
@@ -103,7 +104,12 @@ public class InterpreterMapping {
 
         final String[] annotationKeys = this.interpreterInstance.getAnnotationsAsStringArray();
 
-        if ( annotationKeys.length > 0 ) {
+        if ( annotationKeys.length == 0 ) {
+
+            // If the active mapping did some Interpretation before, we have to reset them
+            this.annotations = "";
+
+        } else {
 
             final LinkedList<String> annotationStrings = new LinkedList<>();
 
@@ -144,32 +150,32 @@ public class InterpreterMapping {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof InterpreterMapping
-            && this.interpreterNameStringId == ((InterpreterMapping) obj).interpreterNameStringId;
+        return obj instanceof MappedInterpreter
+            && this.interpreterNameStringId == ((MappedInterpreter) obj).interpreterNameStringId;
     }
 
     /**
      * Comparator to sort by translated name {@link #interpreterName}.
      */
-    public static class NameComparator implements Comparator<InterpreterMapping> {
+    public static class NameComparator implements Comparator<MappedInterpreter> {
 
         @Override
-        public int compare(InterpreterMapping interpreter1, InterpreterMapping interpreter2) {
+        public int compare(MappedInterpreter interpreter1, MappedInterpreter interpreter2) {
 
             return interpreter1.interpreterName.compareTo( interpreter2.interpreterName );
         }
     }
 
     /**
-     * Comparator to sort {@link de.kah2.mondtag.calendar.InterpreterMapping}s by the calculated
+     * Comparator to sort {@link MappedInterpreter}s by the calculated
      * {@link de.kah2.libZodiac.interpretation.Interpreter.Quality} of their
      * {@link Interpreter}s: Best qualities first, worst last.
-     * <strong>Be sure to call {@link InterpreterMapping#interpret(Day, Context)} first, to avoid
+     * <strong>Be sure to call {@link MappedInterpreter#interpret(Day, Context)} first, to avoid
      * {@link NullPointerException}s</strong>
      */
-    public static class QualityComparator implements Comparator<InterpreterMapping> {
+    public static class QualityComparator implements Comparator<MappedInterpreter> {
         @Override
-        public int compare(InterpreterMapping interpreter1, InterpreterMapping interpreter2) {
+        public int compare(MappedInterpreter interpreter1, MappedInterpreter interpreter2) {
 
             return interpreter2.interpreterInstance.getQuality().compareTo(
                     interpreter1.interpreterInstance.getQuality() );

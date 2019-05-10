@@ -16,7 +16,7 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
 
     private InterpretationChangeListener interpretationChangeListener;
 
-    public void addInterpreters(Menu menu) {
+    void addInterpreters(Menu menu) {
 
         menu.clear();
 
@@ -24,7 +24,7 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
 
         menu.add(Menu.NONE, R.string.interpret_none, order, R.string.interpret_none);
 
-        for (int id : InterpreterMapper.getKeys()) {
+        for (int id : InterpreterManager.getIds()) {
 
             order++;
 
@@ -44,15 +44,15 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
             return true;
         }
 
-        InterpreterMapping interpreterMapping = InterpreterMapper.getMapping( item.getItemId() );
+        MappedInterpreter interpreter = InterpreterManager.getInterpreter( item.getItemId() );
 
-        if ( interpreterMapping == null ) {
+        if ( interpreter == null ) {
             Log.e( TAG, "onMenuItemClick: unknown interpreter" );
             return false;
         }
 
         if (interpretationChangeListener != null) {
-            this.interpretationChangeListener.onInterpreterChanged(interpreterMapping);
+            this.interpretationChangeListener.onInterpreterChanged(interpreter);
         } else {
             Log.e(TAG, "onMenuItemClick: no listener available" );
         }
@@ -60,18 +60,18 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
         return true;
     }
 
-    public void setInterpretationChangeListener(InterpretationChangeListener interpretationChangeListener) {
+    void setInterpretationChangeListener(InterpretationChangeListener interpretationChangeListener) {
         Log.d(TAG, "setInterpretationChangeListener called");
         this.interpretationChangeListener = interpretationChangeListener;
     }
 
-    public void resetInterpretationChangeListener() {
+    void resetInterpretationChangeListener() {
         Log.d(TAG, "resetInterpretationChangeListener called");
         this.interpretationChangeListener = null;
     }
 
     public interface InterpretationChangeListener {
 
-        void onInterpreterChanged(InterpreterMapping interpreterMapping);
+        void onInterpreterChanged(MappedInterpreter interpreter);
     }
 }

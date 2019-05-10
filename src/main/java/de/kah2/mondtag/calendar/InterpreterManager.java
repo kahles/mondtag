@@ -11,17 +11,17 @@ import de.kah2.libZodiac.interpretation.Interpreter;
 import de.kah2.mondtag.R;
 
 /**
- * This class manages the {@link InterpreterMapping}s to map String-IDs to {@link Interpreter}s.
- * Static method {@link #init(Context)} must be called at app start to initialize these mappings
+ * This class manages the {@link MappedInterpreter}s to map String-IDs to {@link Interpreter}s.
+ * Static method {@link #init(Context)} must be called at app start to initialize these interpreters
  * using the android resource-IDs.
  */
-public class InterpreterMapper {
+public class InterpreterManager {
 
-    private static LinkedList<InterpreterMapping> mappings;
+    private static LinkedList<MappedInterpreter> interpreters;
 
     public static void init(Context context) {
 
-        mappings = new LinkedList<>();
+        interpreters = new LinkedList<>();
 
         add(context, R.string.interpret_Gardening_CombatPests, Gardening.CombatPestsInterpreter.class);
         add(context, R.string.interpret_Gardening_CuttingTransplant, Gardening.CuttingTransplantInterpreter.class);
@@ -34,37 +34,40 @@ public class InterpreterMapper {
         add(context, R.string.interpret_Gardening_Water, Gardening.WaterInterpreter.class);
         add(context, R.string.interpret_Gardening_WeedControl, Gardening.WeedControlInterpreter.class);
 
-        Collections.sort(mappings, new InterpreterMapping.NameComparator());
+        Collections.sort(interpreters, new MappedInterpreter.NameComparator());
     }
 
     private static void add(Context context, int id, Class<? extends Interpreter> interpreterClass) {
-        mappings.add( new InterpreterMapping(id, context.getString(id), interpreterClass) );
+        interpreters.add( new MappedInterpreter(id, context.getString(id), interpreterClass) );
     }
 
-    static LinkedList<Integer> getKeys() {
+    static LinkedList<Integer> getIds() {
 
-        checkMappings();
+        checkInterpreters();
 
         final LinkedList<Integer> keys = new LinkedList<>();
 
-        for (InterpreterMapping mapping : mappings) {
+        for (MappedInterpreter mapping : interpreters) {
             keys.add( mapping.getId() );
         }
 
         return keys;
     }
 
-    /** @return a clone of the mapping to prevent external modification */
-    static InterpreterMapping getMapping(int id) {
+    /**
+     * @return a clone of the mapping to prevent external modification or null when there's no
+     * interpreter with the given id
+     */
+    static MappedInterpreter getInterpreter(int id) {
 
-        checkMappings();
+        checkInterpreters();
 
-        for (InterpreterMapping mapping : mappings) {
+        for (MappedInterpreter mapping : interpreters) {
 
             if (mapping.getId() == id) {
 
                 // return a copy to prevent modification of the original
-                return new InterpreterMapping( mapping );
+                return new MappedInterpreter( mapping );
             }
         }
 
@@ -72,20 +75,20 @@ public class InterpreterMapper {
     }
 
     /**
-     * Uses all InterpreterMappings and returns a list of interpretations that aren't neutral sorted
-     * by quality.
+     * Uses copies of all InterpreterMappings and returns a list of interpretations that aren't
+     * neutral sorted by quality.
      * Used to show all interpretations id {@link DayDetailFragment}.
-     * @see de.kah2.mondtag.calendar.InterpreterMapping.QualityComparator
+     * @see MappedInterpreter.QualityComparator
      */
-    static LinkedList<InterpreterMapping> getInterpretedMappings(Day day, Context context) {
+    static LinkedList<MappedInterpreter> getAllInterpretations(Day day, Context context) {
 
-        checkMappings();
+        checkInterpreters();
 
-        final LinkedList<InterpreterMapping> results = new LinkedList<>();
+        final LinkedList<MappedInterpreter> results = new LinkedList<>();
 
-        for (InterpreterMapping mapping : mappings) {
+        for (MappedInterpreter interpreter : interpreters) {
 
-            final InterpreterMapping clone = new InterpreterMapping( mapping );
+            final MappedInterpreter clone = new MappedInterpreter( interpreter );
             clone.interpret(day, context);
 
             if (!clone.isQualityNeutral()) {
@@ -93,13 +96,13 @@ public class InterpreterMapper {
             }
         }
 
-        Collections.sort(results, new InterpreterMapping.QualityComparator());
+        Collections.sort(results, new MappedInterpreter.QualityComparator());
 
         return results;
     }
 
-    private static void checkMappings() {
-        if (mappings == null) {
+    private static void checkInterpreters() {
+        if (interpreters == null) {
             throw new IllegalStateException( "No data - forgot to call init()?" );
         }
     }

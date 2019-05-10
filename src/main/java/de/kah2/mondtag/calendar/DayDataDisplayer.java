@@ -223,17 +223,17 @@ class DayDataDisplayer {
         String qualityText = "";
         String annotations = "";
 
-        final InterpreterMapping interpreterMapping =
+        final MappedInterpreter interpreter =
                 ((Mondtag) getContext().getApplicationContext()).getDataManager()
                         .getSelectedInterpreter();
 
-        if (interpreterMapping != null) {
+        if (interpreter != null) {
 
-            interpreterMapping.interpret(day, getContext());
+            interpreter.interpret(day, getContext());
 
-            qualityIcon = interpreterMapping.getQualityIcon();
-            qualityText = interpreterMapping.getQualityText();
-            annotations = interpreterMapping.getAnnotations();
+            qualityIcon = interpreter.getQualityIcon();
+            qualityText = interpreter.getQualityText();
+            annotations = interpreter.getAnnotations();
         }
 
         // Finally assign Strings to fields
@@ -245,8 +245,8 @@ class DayDataDisplayer {
 
     private void initAllInterpretersList(Day day) {
 
-        final LinkedList<InterpreterMapping> interpreters =
-                InterpreterMapper.getInterpretedMappings(day, getContext());
+        final LinkedList<MappedInterpreter> interpreters =
+                InterpreterManager.getAllInterpretations(day, getContext());
 
         final RecyclerView view = this.dayView.findViewById(R.id.interpretation_list);
 

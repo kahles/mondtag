@@ -18,9 +18,9 @@ import de.kah2.mondtag.R;
 public class DayDetailInterpretationListAdapter
         extends RecyclerView.Adapter<DayDetailInterpretationListAdapter.InterpretationListItem> {
 
-    private final LinkedList<InterpreterMapping> interpreters;
+    private final LinkedList<MappedInterpreter> interpreters;
 
-    DayDetailInterpretationListAdapter(LinkedList<InterpreterMapping> interpreters) {
+    DayDetailInterpretationListAdapter(LinkedList<MappedInterpreter> interpreters) {
         this.interpreters = interpreters;
     }
 
@@ -39,7 +39,7 @@ public class DayDetailInterpretationListAdapter
     @Override
     public void onBindViewHolder(@NonNull InterpretationListItem holder, int position) {
 
-        final InterpreterMapping interpreter = interpreters.get(position);
+        final MappedInterpreter interpreter = interpreters.get(position);
         holder.bindElement(interpreter);
     }
 
@@ -55,15 +55,15 @@ public class DayDetailInterpretationListAdapter
             super(itemView);
         }
 
-        void bindElement(InterpreterMapping mapping) {
+        void bindElement(MappedInterpreter interpreter) {
             ( (ImageView) itemView.findViewById(R.id.interpretation_icon) )
-                    .setImageResource( mapping.getQualityIcon() );
+                    .setImageResource( interpreter.getQualityIcon() );
             ( (TextView) itemView.findViewById(R.id.interpretation_name) )
-                    .setText( mapping.getId() );
+                    .setText( interpreter.getId() );
             ( (TextView) itemView.findViewById(R.id.interpretation_quality_text) )
-                    .setText( mapping.getQualityText() );
+                    .setText( interpreter.getQualityText() );
             ( (TextView) itemView.findViewById(R.id.interpretation_annotation_text) )
-                    .setText( mapping.getAnnotations() );
+                    .setText( interpreter.getAnnotations() );
         }
     }
 }
