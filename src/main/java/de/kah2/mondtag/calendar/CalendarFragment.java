@@ -88,6 +88,8 @@ public class CalendarFragment extends Fragment
     private DayRecyclerViewAdapter.ClickListener createDayClickListener() {
         return new DayRecyclerViewAdapter.ClickListener() {
 
+            // TODO move logic for extending future here
+
             @Override
             public void onShortClick(Day day) {
                 Log.d(TAG, "onShortClick: " + day.getDate());
@@ -190,7 +192,9 @@ public class CalendarFragment extends Fragment
         final Calendar calendar =
                 ((Mondtag) getActivity().getApplicationContext()).getDataManager().getCalendar();
 
-        return calendar.getValidDays();
+        final LinkedList<Day> days = calendar.getValidDays();
+
+        return days;
     }
 
     @Override

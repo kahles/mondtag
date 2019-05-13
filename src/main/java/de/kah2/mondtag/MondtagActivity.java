@@ -103,42 +103,47 @@ public class MondtagActivity extends AppCompatActivity {
 
         this.isVisible = true;
 
-        this.setInitialStateIfUndefined();
-
-        if (this.isUiUpdatePostponed) {
-
-            Log.d(TAG, "onResume: UI update was postponed - doing it now");
-            this.updateContent();
-            this.isUiUpdatePostponed = false;
-
-        }
+        this.initActivity();
     }
 
-    private void setInitialStateIfUndefined() {
+    private void initActivity() {
 
-        if (this.state == State.UNDEFINED) {
+        // Mondtag#onCreate constructs a new DataManager which tries to load the config.
+        // If config isn't valid the following call will return true.
+        if ( this.getDataManager().userShouldReviewConfig() ) {
 
-            // Mondtag#onCreate constructs a new DataManager which tries to load the config.
-            // If config isn't valid the following call will return true.
-            if ( this.getDataManager().userShouldReviewConfig() ) {
+            this.activateConfiguration();
 
-                // automatically start configuration if config is missing/invalid
-                this.activateConfiguration();
+        } else if ( ! this.getDataManager().getCalendar().isComplete() ) {
 
-            } else if ( ! this.getDataManager().getCalendar().isComplete() ) {
+            // days are missing in expected date range => we start fetching data
+            this.activateDataFetching();
 
-                // if days are missing in expected date range we automatically start generation
-                this.activateDataGeneration();
+        } else {
 
-            } else {
+            // ok, we have config and data
 
-                // everything ok => show calendar
+            if (state == State.UNDEFINED) {
+
+                // app is freshly started and not resumed
                 this.activateCalendarView();
+
+            } else if (this.isUiUpdatePostponed) {
+
+                    // app was resumed and we have a pending update
+                    Log.d(TAG, "onResume: UI update was postponed - doing it now");
+                    this.updateContent();
+                    this.isUiUpdatePostponed = false;
             }
+
+            // if this point is reached, we seem to have fully resumed the app and nothing is to do
         }
     }
 
-    /** called by onCreate and {@link CalendarFragment#onOptionsItemSelected(MenuItem)} */
+    /**
+     * called by {@link #initActivity()} and
+     * {@link CalendarFragment#onOptionsItemSelected(MenuItem)}
+     */
     public void activateConfiguration() {
 
         Log.d(TAG, "activateConfiguration");
@@ -146,22 +151,27 @@ public class MondtagActivity extends AppCompatActivity {
         this.updateContent();
     }
 
-    /** Called when button to calculate more days is clicked */
+    /**
+     * Called when button to calculate more days is clicked
+     * @see de.kah2.mondtag.calendar.DayRecyclerViewAdapter
+     */
     public void extendFuture() {
-
+        Log.d(TAG, "extendFuture");
         this.getDataManager().extendExpectedRange();
-        this.activateDataGeneration();
+        this.activateDataFetching();
     }
 
-    /** called by onCreate and onBackPressed */
-    private void activateDataGeneration() {
+    /**
+     * called by {@link #initActivity()} and {@link #onBackPressed()}
+     */
+    private void activateDataFetching() {
 
-        Log.d(TAG, "activateDataGeneration");
+        Log.d(TAG, "activateDataFetching");
         this.state = State.FETCHING_DATA;
         this.updateContent();
     }
 
-    /** called by onCreate, onBackPressed and onDataReady */
+    /** called by {@link #initActivity()}, {@link #onBackPressed()} and {@link #onDataReady()} */
     private void activateCalendarView() {
 
         Log.d(TAG, "activateCalendarView");
@@ -169,7 +179,10 @@ public class MondtagActivity extends AppCompatActivity {
         this.updateContent();
     }
 
-    /** Shows detailed view for a selected {@link Day}. */
+    /**
+     * Shows detailed view for a selected {@link Day} when a day is clicked
+     * @see CalendarFragment
+     */
     public void activateDayDetailView(Day day) {
 
         Log.d(TAG, "activateDayDetailView");
@@ -286,7 +299,7 @@ public class MondtagActivity extends AppCompatActivity {
             final Calendar calendar = this.getDataManager().getCalendar();
 
             if (calendar == null || !calendar.isComplete()) {
-                this.activateDataGeneration();
+                this.activateDataFetching();
             } else {
                 this.activateCalendarView();
             }
