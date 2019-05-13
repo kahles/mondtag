@@ -31,7 +31,7 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
 
     private LocalDate today;
 
-    private ClickListener clickListener;
+    private DayClickListener clickListener;
 
     DayRecyclerViewAdapter() {
         this.days = new ArrayList<>();
@@ -84,7 +84,7 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
         return days.size() + 1;
     }
 
-    void setClickListener(ClickListener clickListener) {
+    void setClickListener(DayClickListener clickListener) {
         this.clickListener = clickListener;
     }
 
@@ -106,25 +106,14 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
          * {@link DayDataDisplayer}.
          */
         void bindElement(Day day) {
+
             this.day = day;
 
-            if (day == null) {
+            super.itemView.setOnClickListener(this);
+            super.itemView.setOnLongClickListener(this);
 
-                // the actual list element is the extend button
-                super.itemView.findViewById(R.id.button_extend_data).setOnClickListener((view)->{
-
-                    Log.d(Item.class.getSimpleName(),
-                            "clickListener: extendButton clicked");
-
-                    ((MondtagActivity) view.getContext()).extendFuture();
-
-                });
-
-            } else {
-
-                super.itemView.setOnClickListener(this);
-                super.itemView.setOnLongClickListener(this);
-
+            // if we have a day and not the "extend future"-buton
+            if (day != null) {
                 final DayDataDisplayer displayer = new DayDataDisplayer(itemView);
                 displayer.setDayData(day, false);
 
@@ -182,7 +171,7 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
 
         @Override
         public void onClick(View v) {
-            final ClickListener listener = DayRecyclerViewAdapter.this.clickListener;
+            final DayClickListener listener = DayRecyclerViewAdapter.this.clickListener;
             if (listener != null) {
                 listener.onShortClick(this.day);
             }
@@ -190,32 +179,12 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
 
         @Override
         public boolean onLongClick(View v) {
-            final ClickListener listener = DayRecyclerViewAdapter.this.clickListener;
+            final DayClickListener listener = DayRecyclerViewAdapter.this.clickListener;
             if (listener != null) {
                 return listener.onLongClick(this.day);
             } else {
                 return false;
             }
         }
-    }
-
-    /** Simple "adapter" interface to manage clicks on days */
-    public interface ClickListener {
-
-        /**
-         * Is called when a list element is short-clicked.
-         * @param day Data of the day which got clicked, or null if clicked element was the extend
-         *            button.
-         */
-        void onShortClick(Day day);
-
-        /**
-         * Is called when a list element is long-clicked.
-         * @param day Data of the day which got clicked, or null if clicked element was the extend
-         *            button.
-         * @return true, if click was consumed.
-         */
-        @SuppressWarnings("SameReturnValue")
-        boolean onLongClick(Day day);
     }
 }

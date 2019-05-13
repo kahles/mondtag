@@ -54,7 +54,8 @@ public class CalendarFragment extends Fragment
 
         this.dayRecyclerViewAdapter = new DayRecyclerViewAdapter();
         recyclerView.setAdapter(dayRecyclerViewAdapter);
-        this.dayRecyclerViewAdapter.setClickListener( this.createDayClickListener() );
+        this.dayRecyclerViewAdapter.setClickListener( 
+                new DayClickListener((MondtagActivity) this.getActivity()) );
 
         this.setHasOptionsMenu(true);
 
@@ -83,30 +84,6 @@ public class CalendarFragment extends Fragment
                 new LinearLayoutManager(getActivity().getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         return linearLayoutManager;
-    }
-
-    private DayRecyclerViewAdapter.ClickListener createDayClickListener() {
-        return new DayRecyclerViewAdapter.ClickListener() {
-
-            // TODO move logic for extending future here
-
-            @Override
-            public void onShortClick(Day day) {
-                Log.d(TAG, "onShortClick: " + day.getDate());
-
-                ((MondtagActivity) getActivity()).activateDayDetailView(day);
-            }
-
-            @Override
-            public boolean onLongClick(Day day) {
-                Log.d(TAG, "onLongClick: " + day.getDate());
-
-                final CalendarEvent event = new CalendarEvent(
-                        CalendarFragment.this.getActivity().getApplicationContext(), day );
-                CalendarFragment.this.startActivity( event.toIntent() );
-                return true;
-            }
-        };
     }
 
     @Override
