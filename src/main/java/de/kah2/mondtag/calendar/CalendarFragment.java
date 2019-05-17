@@ -21,7 +21,6 @@ import java.util.List;
 
 import de.kah2.libZodiac.Calendar;
 import de.kah2.libZodiac.Day;
-import de.kah2.mondtag.InfoDialogFragment;
 import de.kah2.mondtag.Mondtag;
 import de.kah2.mondtag.MondtagActivity;
 import de.kah2.mondtag.R;
@@ -110,7 +109,7 @@ public class CalendarFragment extends Fragment
 
         switch (item.getItemId()) {
             case R.id.action_info:
-                this.showInfo();
+                ((MondtagActivity) this.getActivity()).showInfo();
                 return true;
             case R.id.action_settings:
                 Log.d(TAG, "Showing settings ...");
@@ -190,13 +189,6 @@ public class CalendarFragment extends Fragment
         }
 
         this.updateCalendar();
-    }
-
-    private void showInfo() {
-
-        Log.d(TAG, "Showing info ...");
-        InfoDialogFragment infoDialog = new InfoDialogFragment();
-        infoDialog.show( getFragmentManager() );
     }
 
     private DataManager getDataManager() {

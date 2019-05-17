@@ -250,6 +250,13 @@ public class MondtagActivity extends AppCompatActivity {
                 dayDetailFragment, DayDetailFragment.TAG);
     }
 
+    public void showInfo() {
+
+        Log.d(TAG, "Showing info ...");
+        InfoDialogFragment infoDialog = new InfoDialogFragment();
+        infoDialog.show( getFragmentManager() );
+    }
+
     /**
      * Shortcut for {@link AppCompatActivity#getSupportActionBar()}.
      * <p>Since this is our only Activity and we set an ActionBar at {@link #onCreate(Bundle)}, this
