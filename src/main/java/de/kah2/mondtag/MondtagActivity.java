@@ -1,5 +1,7 @@
 package de.kah2.mondtag;
 
+// TODO use supportFragmentManager
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -168,15 +170,31 @@ public class MondtagActivity extends AppCompatActivity {
 
         Log.d(TAG, "activateDataFetching");
         this.state = State.FETCHING_DATA;
+
+        final FragmentManager manager = this.getFragmentManager();
+
         this.updateContent();
     }
 
-    /** called by {@link #initActivity()}, {@link #onBackPressed()} and {@link #onDataReady()} */
+    /**
+     * Prepares displaying of {@link CalendarFragment} through {@link #updateContent()} OR
+     * pops one from backStack, if available
+     * Called by {@link #initActivity()}, {@link #onBackPressed()} and {@link #onDataReady()}.
+     * @see #showDayDetailView(FragmentTransaction) where the existing CalendarFragment gets pushed
+     * to backStack
+     */
     private void activateCalendarView() {
+
+        final FragmentManager manager = this.getFragmentManager();
 
         Log.d(TAG, "activateCalendarView");
         this.state = State.DISPLAYING;
-        this.updateContent();
+
+        if ( manager.getBackStackEntryCount() > 0 ) {
+            manager.popBackStackImmediate();
+        } else {
+            this.updateContent();
+       }
     }
 
     /**
@@ -235,19 +253,24 @@ public class MondtagActivity extends AppCompatActivity {
         transaction.replace(R.id.content_frame,
                 fragment, SettingsFragment.TAG);
 
-        // We do this here to not show the help dialog again if e.g. screen is rotated
         if ( this.getDataManager().userShouldReviewConfig() ) {
+            // We do this here to not show the help dialog again if e.g. screen is rotated
             fragment.showHelpDialog();
         }
     }
 
+    /**
+     * Since {@link DayDetailFragment} is called from {@link CalendarFragment} and we ant to return
+     * to the same position in Calendar afterwards, we push the fragment to backStack here ...
+     * @see #activateCalendarView() where it gets restored
+     */
     private void showDayDetailView(FragmentTransaction transaction) {
 
         final DayDetailFragment dayDetailFragment = new DayDetailFragment();
         dayDetailFragment.setDay(this.selectedDay);
 
-        transaction.replace(R.id.content_frame,
-                dayDetailFragment, DayDetailFragment.TAG);
+        transaction.replace(R.id.content_frame, dayDetailFragment, DayDetailFragment.TAG)
+            .addToBackStack(null);
     }
 
     public void showInfo() {
@@ -313,8 +336,6 @@ public class MondtagActivity extends AppCompatActivity {
 
         } else if (state == State.DAY_DETAILS) {
 
-            // here we could also use the backstack but this would lead to more complexity at
-            // #updateContent
             this.selectedDay = null;
             this.activateCalendarView();
 
