@@ -30,7 +30,10 @@ This project is licensed under the GNU General Public License v3. See [LICENSE](
 
 ### Privacy Statement
 This software is open source and doesn't contain advertisements. No internet connection is needed and no user data gets utilised or stored outside the user's device.
-Sole exception is the search functionality to get geo coordinates: Therefor an Android-service is requested and the search term is submitted to Google.
+Sole exception is the functionality to search for geo coordinates: Therefor an Android-service is requested and the search term is submitted to Google.
 
-### Contact
-Feel free to contact me if you have wishes, proposals or if want to contribute.
+### Warranty
+Although I implemented this software to the best of my knowledge, I am not able to guarantee the completion, correctness and accuracy of the algorithms.
+
+### Contact 
+Feel free to contact me if you have wishes, proposals, bug reports or if you want to contribute.
