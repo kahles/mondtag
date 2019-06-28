@@ -11,8 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
-import de.kah2.libZodiac.Calendar;
-import de.kah2.libZodiac.Day;
+import de.kah2.zodiac.libZodiac4A.Calendar;
+import de.kah2.zodiac.libZodiac4A.Day;
 import de.kah2.mondtag.calendar.CalendarFragment;
 import de.kah2.mondtag.calendar.DayDetailFragment;
 import de.kah2.mondtag.datamanagement.DataFetchingFragment;

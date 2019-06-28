@@ -12,15 +12,15 @@ import org.threeten.bp.format.TextStyle;
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 
-import de.kah2.libZodiac.ProgressListener;
-import de.kah2.libZodiac.interpretation.Gardening;
-import de.kah2.libZodiac.interpretation.Interpreter;
-import de.kah2.libZodiac.planetary.LunarPhase;
-import de.kah2.libZodiac.zodiac.ZodiacDirection;
-import de.kah2.libZodiac.zodiac.ZodiacElement;
-import de.kah2.libZodiac.zodiac.ZodiacSign;
 import de.kah2.mondtag.R;
 import de.kah2.mondtag.datamanagement.DataManager;
+import de.kah2.zodiac.libZodiac4A.ProgressListener;
+import de.kah2.zodiac.libZodiac4A.interpretation.Gardening;
+import de.kah2.zodiac.libZodiac4A.interpretation.Interpreter;
+import de.kah2.zodiac.libZodiac4A.planetary.LunarPhase;
+import de.kah2.zodiac.libZodiac4A.zodiac.ZodiacDirection;
+import de.kah2.zodiac.libZodiac4A.zodiac.ZodiacElement;
+import de.kah2.zodiac.libZodiac4A.zodiac.ZodiacSign;
 
 /**
  * This class is used to map keys of libZodiac to string- or image-resources, and formats dates and

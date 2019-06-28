@@ -6,7 +6,6 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +15,8 @@ import org.threeten.bp.LocalDate;
 
 import java.util.ArrayList;
 
-import de.kah2.libZodiac.Day;
-import de.kah2.mondtag.MondtagActivity;
 import de.kah2.mondtag.R;
+import de.kah2.zodiac.libZodiac4A.Day;
 
 /**
  * Displays a scrollable calendar.

@@ -13,10 +13,10 @@ import android.widget.TextView;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 
-import de.kah2.libZodiac.Day;
 import de.kah2.mondtag.Mondtag;
 import de.kah2.mondtag.MondtagActivity;
 import de.kah2.mondtag.R;
+import de.kah2.zodiac.libZodiac4A.Day;
 
 /**
  * This is a {@link Fragment} to show daily information more verbose than the

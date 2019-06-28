@@ -12,7 +12,7 @@ import org.threeten.bp.LocalDateTime;
 
 import java.util.LinkedList;
 
-import de.kah2.libZodiac.Day;
+import de.kah2.zodiac.libZodiac4A.Day;
 import de.kah2.mondtag.Mondtag;
 import de.kah2.mondtag.R;
 

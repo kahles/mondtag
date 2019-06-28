@@ -5,9 +5,9 @@ import android.content.Context;
 import java.util.Collections;
 import java.util.LinkedList;
 
-import de.kah2.libZodiac.Day;
-import de.kah2.libZodiac.interpretation.Gardening;
-import de.kah2.libZodiac.interpretation.Interpreter;
+import de.kah2.zodiac.libZodiac4A.Day;
+import de.kah2.zodiac.libZodiac4A.interpretation.Gardening;
+import de.kah2.zodiac.libZodiac4A.interpretation.Interpreter;
 import de.kah2.mondtag.R;
 
 /**

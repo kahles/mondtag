@@ -3,7 +3,6 @@ package de.kah2.mondtag.calendar;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.CalendarContract;
-import android.util.Log;
 
 import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDate;
@@ -11,11 +10,9 @@ import org.threeten.bp.LocalTime;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
 
-import de.kah2.libZodiac.Day;
 import de.kah2.mondtag.Mondtag;
-import de.kah2.mondtag.MondtagActivity;
 import de.kah2.mondtag.R;
-import de.kah2.mondtag.datamanagement.DataManager;
+import de.kah2.zodiac.libZodiac4A.Day;
 
 /**
  * This class is used to build an {@link Intent} to create a calendar event and fill it with data of

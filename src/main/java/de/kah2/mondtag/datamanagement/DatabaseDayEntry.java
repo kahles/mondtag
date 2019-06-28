@@ -7,9 +7,9 @@ import android.provider.BaseColumns;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 
-import de.kah2.libZodiac.Day;
-import de.kah2.libZodiac.DayStorableDataSet;
-import de.kah2.libZodiac.planetary.ZonedRiseSet;
+import de.kah2.zodiac.libZodiac4A.Day;
+import de.kah2.zodiac.libZodiac4A.DayStorableDataSet;
+import de.kah2.zodiac.libZodiac4A.planetary.ZonedRiseSet;
 
 /**
  * This class is used to map libZodiac-data to database-entries.

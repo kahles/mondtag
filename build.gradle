@@ -1,3 +1,13 @@
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.4.1'
+    }
+}
+
 plugins {
     id 'com.gladed.androidgitversion' version '0.4.5'
 }
@@ -30,6 +40,7 @@ android {
         // workaround for "error" "app_name is not translated"
         abortOnError false
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -38,16 +49,29 @@ android {
 
 def androidLibsVersion = '27.1.1'
 
+repositories {
+    jcenter()
+    google()
+    mavenCentral()
+    /* For snapshots: */
+    maven {
+        url =  'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+}
+
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:${androidLibsVersion}"
     implementation "com.android.support:cardview-v7:${androidLibsVersion}"
     implementation "com.android.support:recyclerview-v7:${androidLibsVersion}"
     implementation "com.android.support:support-v13:${androidLibsVersion}"
-    implementation "com.jakewharton.threetenabp:threetenabp:1.1.1"
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
+
+    // Needed for libZodiac4A:
+    implementation 'org.slf4j:slf4j-android:1.7.26'
+
     //    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
     //        exclude group: 'com.android.support', module: 'support-annotations'
     //    })
-    implementation project(':libZodiac')
-    implementation project(':novaforjava')
+
+    implementation 'de.kah2.zodiac:libZodiac4A:0.9-8-438fa8e-SNAPSHOT'
 }

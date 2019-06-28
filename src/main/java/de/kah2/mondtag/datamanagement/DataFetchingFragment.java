@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import de.kah2.libZodiac.ProgressListener;
+import de.kah2.zodiac.libZodiac4A.ProgressListener;
 import de.kah2.mondtag.Mondtag;
 import de.kah2.mondtag.MondtagActivity;
 import de.kah2.mondtag.R;

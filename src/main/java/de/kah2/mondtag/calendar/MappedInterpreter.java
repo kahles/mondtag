@@ -7,8 +7,8 @@ import android.util.Log;
 import java.util.Comparator;
 import java.util.LinkedList;
 
-import de.kah2.libZodiac.Day;
-import de.kah2.libZodiac.interpretation.Interpreter;
+import de.kah2.zodiac.libZodiac4A.Day;
+import de.kah2.zodiac.libZodiac4A.interpretation.Interpreter;
 
 /**
  * <p>This is a wrapper for Interpreter providing string-ids, icons and {@link Comparator}s needed

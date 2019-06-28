@@ -14,10 +14,10 @@ import org.threeten.bp.Instant;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.kah2.libZodiac.Calendar;
-import de.kah2.libZodiac.Day;
-import de.kah2.libZodiac.DayStorableDataSet;
-import de.kah2.libZodiac.ProgressListener;
+import de.kah2.zodiac.libZodiac4A.Calendar;
+import de.kah2.zodiac.libZodiac4A.Day;
+import de.kah2.zodiac.libZodiac4A.DayStorableDataSet;
+import de.kah2.zodiac.libZodiac4A.ProgressListener;
 import de.kah2.mondtag.Mondtag;
 
 /**

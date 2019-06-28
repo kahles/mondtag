@@ -19,8 +19,8 @@ import org.threeten.bp.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.kah2.libZodiac.Calendar;
-import de.kah2.libZodiac.Day;
+import de.kah2.zodiac.libZodiac4A.Calendar;
+import de.kah2.zodiac.libZodiac4A.Day;
 import de.kah2.mondtag.Mondtag;
 import de.kah2.mondtag.MondtagActivity;
 import de.kah2.mondtag.R;

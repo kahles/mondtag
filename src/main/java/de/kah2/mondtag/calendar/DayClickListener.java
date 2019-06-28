@@ -2,7 +2,7 @@ package de.kah2.mondtag.calendar;
 
 import android.util.Log;
 
-import de.kah2.libZodiac.Day;
+import de.kah2.zodiac.libZodiac4A.Day;
 import de.kah2.mondtag.MondtagActivity;
 
 /**

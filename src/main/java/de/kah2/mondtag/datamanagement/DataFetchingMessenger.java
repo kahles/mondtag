@@ -5,7 +5,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
-import de.kah2.libZodiac.ProgressListener;
+import de.kah2.zodiac.libZodiac4A.ProgressListener;
 
 /**
  * <p>This class is used to update the UI about status of data retrieving. It collects information

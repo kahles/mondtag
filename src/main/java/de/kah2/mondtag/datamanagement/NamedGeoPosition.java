@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import java.util.Locale;
 
-import de.kah2.libZodiac.planetary.Position;
+import de.kah2.zodiac.libZodiac4A.planetary.Position;
 
 /**
  * <p>This class extends {@link Position} with a name field and transformation methods.</p>
