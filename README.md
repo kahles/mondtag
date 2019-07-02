@@ -22,8 +22,8 @@ automate versioning based on git.
 This app is based on [libZodiac4A](https://github.com/kahles/libZodiac4A), which is an android 
 fork of [libZodiac](https://github.com/kahles/libZodiac), the library I created to calculate and 
 manage calendar data.
-libZodiac uses libnova/novaforjava for astronomical calculations - see libZodiac project page for 
-further details.
+libZodiac uses libnova/novaforjava/nova4jmt for astronomical calculations - see libZodiac project 
+page for further details.
 
 #### ThreeTenABP
 [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP) is a JSR-310 backport for Android. It 

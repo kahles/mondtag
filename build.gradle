@@ -15,6 +15,7 @@ apply plugin: 'com.android.application'
 
 androidGitVersion {
     codeFormat 'MNNPPP'
+    hideBranches = ['master','devel']
 }
 
 android {
