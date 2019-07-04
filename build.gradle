@@ -19,11 +19,11 @@ androidGitVersion {
 }
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId 'de.kah2.mondtag'
         minSdkVersion 15
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode androidGitVersion.code()
         versionName androidGitVersion.name()
     }
@@ -48,7 +48,7 @@ android {
     }
 }
 
-def androidLibsVersion = '27.1.1'
+def androidLibsVersion = '28.0.0'
 
 repositories {
     jcenter()
