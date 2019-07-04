@@ -1,4 +1,4 @@
-package de.kah2.mondtag.settings;
+package de.kah2.mondtag.settings.location;
 
 import android.app.Activity;
 import android.app.Fragment;

@@ -4,7 +4,7 @@
         android:title="@string/pref_group_name_rise_set"
         android:key="@string/pref_group_key_rise_set">
 
-        <de.kah2.mondtag.settings.LocationPreference
+        <de.kah2.mondtag.settings.location.LocationPreference
             android:key="@string/pref_key_location"
             android:title="@string/location"
             android:persistent="true"/>

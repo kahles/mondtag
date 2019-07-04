@@ -1,4 +1,4 @@
-package de.kah2.mondtag.settings;
+package de.kah2.mondtag.settings.location;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -358,7 +358,7 @@ public class LocationPreference extends DialogPreference
     }
 
     /** Getter for the actually configured position. */
-    NamedGeoPosition getPosition() {
+    public NamedGeoPosition getPosition() {
         return position;
     }
 

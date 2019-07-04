@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import de.kah2.mondtag.Mondtag;
 import de.kah2.mondtag.MondtagActivity;
 import de.kah2.mondtag.R;
+import de.kah2.mondtag.settings.location.LocationPreference;
 
 /**
  * This {@link PreferenceFragment} is used to configure the app.

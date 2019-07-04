@@ -21,7 +21,7 @@
         </activity>
 
         <service
-            android:name=".settings.GeocodeIntentService"
+            android:name=".settings.location.GeocodeIntentService"
             android:exported="false"/>
 
     </application>
