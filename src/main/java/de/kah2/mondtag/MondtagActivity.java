@@ -1,23 +1,22 @@
 package de.kah2.mondtag;
 
-// TODO use supportFragmentManager
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
-import de.kah2.zodiac.libZodiac4A.Calendar;
-import de.kah2.zodiac.libZodiac4A.Day;
 import de.kah2.mondtag.calendar.CalendarFragment;
 import de.kah2.mondtag.calendar.DayDetailFragment;
 import de.kah2.mondtag.datamanagement.DataFetchingFragment;
 import de.kah2.mondtag.datamanagement.DataManager;
 import de.kah2.mondtag.settings.SettingsFragment;
+import de.kah2.zodiac.libZodiac4A.Calendar;
+import de.kah2.zodiac.libZodiac4A.Day;
 
 /**
  * This is THE activity of Mondtag.
@@ -105,6 +104,7 @@ public class MondtagActivity extends AppCompatActivity {
 
         this.isVisible = true;
 
+    // FIXME when screen is rotated after config change, state automatically switches to GENERATING
         this.initActivity();
     }
 
@@ -114,10 +114,13 @@ public class MondtagActivity extends AppCompatActivity {
         // If config isn't valid the following call will return true.
         if ( this.getDataManager().userShouldReviewConfig() ) {
 
+            Log.d(TAG, "initActivity: default config loaded - starting configuration");
+
             this.activateConfiguration();
 
         } else if ( ! this.getDataManager().getCalendar().isComplete() ) {
 
+            Log.d(TAG, "initActivity: data is incomplete - generating");
             // days are missing in expected date range => we start fetching data
             this.activateDataFetching();
 
@@ -128,6 +131,7 @@ public class MondtagActivity extends AppCompatActivity {
             if (state == State.UNDEFINED) {
 
                 // app is freshly started and not resumed
+                Log.d(TAG, "initActivity: app has no state yet => showing calendar");
                 this.activateCalendarView();
 
             } else if (this.isUiUpdatePostponed) {
@@ -171,8 +175,6 @@ public class MondtagActivity extends AppCompatActivity {
         Log.d(TAG, "activateDataFetching");
         this.state = State.FETCHING_DATA;
 
-        final FragmentManager manager = this.getFragmentManager();
-
         this.updateContent();
     }
 
@@ -185,7 +187,7 @@ public class MondtagActivity extends AppCompatActivity {
      */
     private void activateCalendarView() {
 
-        final FragmentManager manager = this.getFragmentManager();
+        final FragmentManager manager = this.getSupportFragmentManager();
 
         Log.d(TAG, "activateCalendarView");
         this.state = State.DISPLAYING;
@@ -212,7 +214,7 @@ public class MondtagActivity extends AppCompatActivity {
     /** used to replace the fragments */
     private void updateContent() {
 
-        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         if (this.isVisible) {
 
@@ -277,7 +279,7 @@ public class MondtagActivity extends AppCompatActivity {
 
         Log.d(TAG, "Showing info ...");
         InfoDialogFragment infoDialog = new InfoDialogFragment();
-        infoDialog.show( getFragmentManager() );
+        infoDialog.show( getSupportFragmentManager() );
     }
 
     /**

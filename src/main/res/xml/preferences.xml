@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen  xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.v7.preference.PreferenceScreen  xmlns:android="http://schemas.android.com/apk/res/android">
+
     <PreferenceCategory
         android:title="@string/pref_group_name_rise_set"
         android:key="@string/pref_group_key_rise_set">
 
+        <!-- TODO add icons -->
+
         <de.kah2.mondtag.settings.location.LocationPreference
             android:key="@string/pref_key_location"
             android:title="@string/location"
-            android:persistent="true"/>
+            android:persistent="true" />
+
         <ListPreference
             android:key="@string/pref_key_timezone"
             android:title="@string/timezone"
-            android:persistent="true"/>
+            android:persistent="true" />
+
     </PreferenceCategory>
-</PreferenceScreen>
+
+</android.support.v7.preference.PreferenceScreen>

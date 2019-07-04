@@ -1,11 +1,11 @@
 package de.kah2.mondtag.settings.location;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import de.kah2.mondtag.datamanagement.NamedGeoPosition;
@@ -15,7 +15,7 @@ import de.kah2.mondtag.datamanagement.NamedGeoPosition;
  *
  * <p>... and a {@link Fragment}, that doesn't get destroyed on configuration changes (e.g. screen
  * rotation). This is needed to be available, when {@link GeocodeIntentService} finishes, to receive
- * results and to deliver them when bound to a {@link LocationPreference}-instance.</p>
+ * results and to deliver them when bound to a {@link LocationPrefDialogFragment}-instance.</p>
  * <p>See
  * <a href="https://www.androiddesignpatterns.com/2013/04/retaining-objects-across-config-changes.html">this post</a>
  * and <a href="https://stanmots.blogspot.com/2016/10/androids-bad-company-intentservice.html">this post</a>

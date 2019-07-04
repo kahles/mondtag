@@ -100,10 +100,29 @@ public class LocationSearchResultListAdapter
         this.notifyDataSetChanged();
     }
 
-    public NamedGeoPosition[] getResults() { return results; }
-
     /** Simple interface to deliver a search result to another class */
     interface LocationConsumer {
         void onSearchResultSelected(NamedGeoPosition position);
+    }
+
+    /**
+     * Needed for {@link de.kah2.mondtag.settings.location.LocationPrefDialogFragment} to save
+     * instance state.
+     */
+    String[] getResultsAsStringArray() {
+
+        if (this.results == null || this.results.length == 0) {
+            return new String[0];
+        } else {
+            return NamedGeoPosition.convertPositionsToStrings(this.results);
+        }
+    }
+
+    /**
+     * Needed for {@link de.kah2.mondtag.settings.location.LocationPrefDialogFragment} to restore
+     * instance state.
+     */
+    void setResults(String[] resultStrings) {
+        this.results = NamedGeoPosition.convertStringsToPositions(resultStrings);
     }
 }
