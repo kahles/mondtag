@@ -5,17 +5,17 @@
         android:title="@string/pref_group_name_rise_set"
         android:key="@string/pref_group_key_rise_set">
 
-        <!-- TODO add icons -->
-
         <de.kah2.mondtag.settings.location.LocationPreference
             android:key="@string/pref_key_location"
             android:title="@string/location"
-            android:persistent="true" />
+            android:persistent="true"
+            android:icon="@drawable/ic_location"/>
 
         <ListPreference
             android:key="@string/pref_key_timezone"
             android:title="@string/timezone"
-            android:persistent="true" />
+            android:persistent="true"
+            android:icon="@drawable/ic_world" />
 
     </PreferenceCategory>
 
