@@ -104,45 +104,43 @@ public class MondtagActivity extends AppCompatActivity {
 
         this.isVisible = true;
 
-    // FIXME when screen is rotated after config change, state automatically switches to GENERATING
         this.initActivity();
     }
 
     private void initActivity() {
 
-        // Mondtag#onCreate constructs a new DataManager which tries to load the config.
-        // If config isn't valid the following call will return true.
-        if ( this.getDataManager().userShouldReviewConfig() ) {
+        // Only true when app is launched, modify state ONLY in this case
+        if (state == State.UNDEFINED) {
 
-            Log.d(TAG, "initActivity: default config loaded - starting configuration");
+            // Mondtag#onCreate constructs a new DataManager which tries to load the config.
+            // If config isn't valid the following call will return true.
+            if ( this.getDataManager().userShouldReviewConfig() ) {
 
-            this.activateConfiguration();
+                Log.d(TAG, "initActivity: default config loaded - starting configuration");
 
-        } else if ( ! this.getDataManager().getCalendar().isComplete() ) {
+                this.activateConfiguration();
 
-            Log.d(TAG, "initActivity: data is incomplete - generating");
-            // days are missing in expected date range => we start fetching data
-            this.activateDataFetching();
+            } else if ( ! this.getDataManager().getCalendar().isComplete() ) {
 
-        } else {
+                Log.d(TAG, "initActivity: data is incomplete - generating");
+                // days are missing in expected date range => we start fetching data
+                this.activateDataFetching();
 
-            // ok, we have config and data
+            } else {
 
-            if (state == State.UNDEFINED) {
-
-                // app is freshly started and not resumed
-                Log.d(TAG, "initActivity: app has no state yet => showing calendar");
+                // ok, we have config and data
+                Log.d(TAG, "initActivity: showing calendar");
                 this.activateCalendarView();
 
-            } else if (this.isUiUpdatePostponed) {
-
-                    // app was resumed and we have a pending update
-                    Log.d(TAG, "onResume: UI update was postponed - doing it now");
-                    this.updateContent();
-                    this.isUiUpdatePostponed = false;
             }
+        }
 
-            // if this point is reached, we seem to have fully resumed the app and nothing is to do
+        if (this.isUiUpdatePostponed) {
+
+            // app was resumed and we have a pending update
+            Log.d(TAG, "onResume: UI update was postponed - doing it now");
+            this.updateContent();
+            this.isUiUpdatePostponed = false;
         }
     }
 
