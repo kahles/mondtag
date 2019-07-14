@@ -1,7 +1,9 @@
 package de.kah2.mondtag.calendar;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -20,7 +22,7 @@ import de.kah2.zodiac.libZodiac4A.Day;
 
 /**
  * This is a {@link Fragment} to show daily information more verbose than the
- * {@link android.support.v7.widget.CardView}s of {@link CalendarFragment}.
+ * {@link CardView}s of {@link CalendarFragment}.
  */
 public class DayDetailFragment extends Fragment {
 

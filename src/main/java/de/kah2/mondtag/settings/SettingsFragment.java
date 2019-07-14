@@ -2,11 +2,11 @@ package de.kah2.mondtag.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -37,6 +37,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         this.setupActionBar();
 
+        // set summaries
+        // TODO try SummaryProvider when androidx v1.1.0 is stable
         this.onSharedPreferenceChanged(null, getString(R.string.pref_key_location));
         this.onSharedPreferenceChanged(null, getString(R.string.pref_key_timezone));
 

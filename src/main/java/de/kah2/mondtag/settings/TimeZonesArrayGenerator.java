@@ -1,6 +1,6 @@
 package de.kah2.mondtag.settings;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.ZoneId;

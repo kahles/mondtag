@@ -2,7 +2,7 @@ package de.kah2.mondtag.settings.location;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v7.preference.DialogPreference;
+import androidx.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.util.Log;
 

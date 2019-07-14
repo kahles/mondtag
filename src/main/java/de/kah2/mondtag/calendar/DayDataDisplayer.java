@@ -1,8 +1,8 @@
 package de.kah2.mondtag.calendar;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -252,7 +252,7 @@ class DayDataDisplayer {
 
         final LinearLayoutManager linearLayoutManager =
                 new LinearLayoutManager( getContext() );
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         view.setLayoutManager(linearLayoutManager);
 
         final DayDetailInterpretationListAdapter adapter =
