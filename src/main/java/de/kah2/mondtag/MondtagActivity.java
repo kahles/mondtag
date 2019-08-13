@@ -99,6 +99,8 @@ public class MondtagActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
 
+        // FIXME sometimes starts with empty view after long resume
+
         super.onResume();
         Log.d(TAG, "onResume");
 

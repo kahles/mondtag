@@ -24,7 +24,6 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        // TODO switch to correct ns
         applicationId 'de.kah2.mondtag'
         minSdkVersion 15
         targetSdkVersion 28

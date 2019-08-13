@@ -13,6 +13,7 @@ import org.threeten.bp.Instant;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 import de.kah2.zodiac.libZodiac4A.Calendar;
 import de.kah2.zodiac.libZodiac4A.Day;
@@ -48,7 +49,6 @@ class DataFetcher implements ProgressListener{
         Log.d(TAG, "Imported " + loadedData.size() + " days");
 
         final List<Day> daysDeleted = calendar.removeOverhead(false);
-        Log.d(TAG, "Deleting " + daysDeleted.size() + " unused days from database.");
         this.deleteFromDb(daysDeleted);
     }
 
@@ -67,13 +67,21 @@ class DataFetcher implements ProgressListener{
      */
     private void deleteFromDb(List<Day> days) {
 
-        if ( days != null && days.size() > 0 ) {
+        if ( days == null || days.size() == 0 ) {
+
+            Log.d(TAG, "deleteFromDb: No unwanted past days to delete");
+            
+        } else {
 
             final SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
-            final String selection = DatabaseDayEntry.COLUMN_NAME_DATE + " IN (?)";
-            final String[] dates = {joinDates(days)};
-            final int deleted = db.delete(DatabaseDayEntry.TABLE_NAME, selection, dates);
+            final String dates = this.joinDates(days);
+            Log.d(TAG, "Deleting " + days.size() + " unused days from database: " + dates );
+
+            final String selection = DatabaseDayEntry.COLUMN_NAME_DATE + " IN (" + dates + ")";
+
+            // Using param whereArgs doesn't work
+            final int deleted = db.delete(DatabaseDayEntry.TABLE_NAME, selection, null);
 
             Log.d(TAG, "Deleted " + deleted + " days");
             db.close();
@@ -87,9 +95,9 @@ class DataFetcher implements ProgressListener{
     private String joinDates(List<Day> days) {
         LinkedList<String> dates = new LinkedList<>();
         for (Day day: days) {
-            dates.add(day.getDate().toString());
+            dates.add("'" + day.getDate().toString() + "'");
         }
-        return TextUtils.join(", ", dates);
+        return TextUtils.join(",", dates);
     }
 
     /**
