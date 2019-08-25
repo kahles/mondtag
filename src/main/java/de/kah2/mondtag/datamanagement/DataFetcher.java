@@ -13,13 +13,12 @@ import org.threeten.bp.Instant;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.StreamSupport;
 
+import de.kah2.mondtag.Mondtag;
 import de.kah2.zodiac.libZodiac4A.Calendar;
 import de.kah2.zodiac.libZodiac4A.Day;
 import de.kah2.zodiac.libZodiac4A.DayStorableDataSet;
 import de.kah2.zodiac.libZodiac4A.ProgressListener;
-import de.kah2.mondtag.Mondtag;
 
 /**
  * This class contains logic to import and calculate needed data.
@@ -83,7 +82,7 @@ class DataFetcher implements ProgressListener{
             // Using param whereArgs doesn't work
             final int deleted = db.delete(DatabaseDayEntry.TABLE_NAME, selection, null);
 
-            Log.d(TAG, "Deleted " + deleted + " days");
+            Log.d(TAG, "Deleted " + deleted + " entries");
             db.close();
         }
     }

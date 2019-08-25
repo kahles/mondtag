@@ -99,7 +99,7 @@ public class MondtagActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
 
-        // FIXME sometimes starts with empty view after long resume
+        // FIXME sometimes resumes with empty view after long suspend
 
         super.onResume();
         Log.d(TAG, "onResume");
@@ -112,7 +112,9 @@ public class MondtagActivity extends AppCompatActivity {
     private void initActivity() {
 
         // Only true when app is launched, modify state ONLY in this case
-        if (state == State.UNDEFINED) {
+        if (this.state == State.UNDEFINED) {
+
+            Log.d(TAG, "initActivity: started with state UNDEFINED");
 
             // Mondtag#onCreate constructs a new DataManager which tries to load the config.
             // If config isn't valid the following call will return true.
@@ -133,8 +135,9 @@ public class MondtagActivity extends AppCompatActivity {
                 // ok, we have config and data
                 Log.d(TAG, "initActivity: showing calendar");
                 this.activateCalendarView();
-
             }
+        } else {
+            Log.d(TAG, "initActivity: app was resumed with state: " + this.state);
         }
 
         if (this.isUiUpdatePostponed) {

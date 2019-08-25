@@ -38,7 +38,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         this.setupActionBar();
 
         // set summaries
-        // TODO try SummaryProvider when androidx v1.1.0 is stable
+        // TODO later : try SummaryProvider when androidx v1.1.0 is stable
         this.onSharedPreferenceChanged(null, getString(R.string.pref_key_location));
         this.onSharedPreferenceChanged(null, getString(R.string.pref_key_timezone));
 
