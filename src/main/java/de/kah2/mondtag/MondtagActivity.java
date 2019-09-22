@@ -99,8 +99,6 @@ public class MondtagActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
 
-        // FIXME sometimes resumes with empty view after long suspend
-
         super.onResume();
         Log.d(TAG, "onResume");
 
@@ -109,40 +107,36 @@ public class MondtagActivity extends AppCompatActivity {
         this.initActivity();
     }
 
+    // TODO add tests
     private void initActivity() {
 
-        // Only true when app is launched, modify state ONLY in this case
-        if (this.state == State.UNDEFINED) {
+        Log.d(TAG, "initActivity: app was resumed with state: " + this.state);
 
-            Log.d(TAG, "initActivity: started with state UNDEFINED");
+        // Mondtag#onCreate constructs a new DataManager which tries to load the config.
+        // If config isn't valid the following call will return true.
+        if ( this.getDataManager().userShouldReviewConfig() ) {
 
-            // Mondtag#onCreate constructs a new DataManager which tries to load the config.
-            // If config isn't valid the following call will return true.
-            if ( this.getDataManager().userShouldReviewConfig() ) {
+            Log.d(TAG, "initActivity: default config loaded - starting configuration");
 
-                Log.d(TAG, "initActivity: default config loaded - starting configuration");
+            this.activateConfiguration();
+        }
 
-                this.activateConfiguration();
+        if ( ! this.getDataManager().getCalendar().isComplete() ) {
 
-            } else if ( ! this.getDataManager().getCalendar().isComplete() ) {
+            Log.d(TAG, "initActivity: data is incomplete - generating");
+            // days are missing in expected date range => we start fetching data
+            this.activateDataFetching();
 
-                Log.d(TAG, "initActivity: data is incomplete - generating");
-                // days are missing in expected date range => we start fetching data
-                this.activateDataFetching();
+        } else if (this.state == State.UNDEFINED){
 
-            } else {
-
-                // ok, we have config and data
-                Log.d(TAG, "initActivity: showing calendar");
-                this.activateCalendarView();
-            }
-        } else {
-            Log.d(TAG, "initActivity: app was resumed with state: " + this.state);
+            // ok, we have config and data but no state => show calendar
+            Log.d(TAG, "initActivity: not state set, showing calendar");
+            this.activateCalendarView();
         }
 
         if (this.isUiUpdatePostponed) {
 
-            // app was resumed and we have a pending update
+            // we have a pending update
             Log.d(TAG, "onResume: UI update was postponed - doing it now");
             this.updateContent();
             this.isUiUpdatePostponed = false;
