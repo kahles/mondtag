@@ -25,7 +25,7 @@ import de.kah2.zodiac.libZodiac4A.zodiac.ZodiacSign;
 /**
  * This class is used to map keys of libZodiac to string- or image-resources, and formats dates and
  * times.
- *
+ * <p>
  * Created by kahles on 11.11.16.
  */
 
@@ -80,46 +80,47 @@ public class ResourceMapper {
         putAll(Interpreter.Quality.GOOD, R.drawable.quality_good, R.string.interpretation_good);
         putAll(Interpreter.Quality.BEST, R.drawable.quality_best, R.string.interpretation_best);
 
-
         // Interpreter annotations
 
         // Gardening
 
-		putString( Gardening.Plants.FLOWERS, R.string.interpret_gardening_plants_flowers );
-		putString( Gardening.Plants.FRUIT_PLANTS, R.string.interpret_gardening_plants_fruit );
-		putString( Gardening.Plants.LAWN, R.string.interpret_gardening_plants_lawn );
-		putString( Gardening.Plants.LEAFY_VEGETABLES, R.string.interpret_gardening_plants_leafy );
-		putString( Gardening.Plants.ROOT_VEGETABLES, R.string.interpret_gardening_plants_root );
-		putString( Gardening.Plants.POTATOES, R.string.interpret_gardening_plants_potatoes );
-		putString( Gardening.Plants.SALAD, R.string.interpret_gardening_plants_salad );
+        putString(Gardening.Plants.FLOWERS, R.string.interpret_gardening_plants_flowers);
+        putString(Gardening.Plants.FRUIT_PLANTS, R.string.interpret_gardening_plants_fruit);
+        putString(Gardening.Plants.LAWN, R.string.interpret_gardening_plants_lawn);
+        putString(Gardening.Plants.LEAFY_VEGETABLES, R.string.interpret_gardening_plants_leafy);
+        putString(Gardening.Plants.ROOT_VEGETABLES, R.string.interpret_gardening_plants_root);
+        putString(Gardening.Plants.POTATOES, R.string.interpret_gardening_plants_potatoes);
+        putString(Gardening.Plants.SALAD, R.string.interpret_gardening_plants_salad);
 
-		putString( Gardening.HarvestInterpreter.Usage.TO_CONSERVE, R.string.interpret_gardening_harvest_conserve );
-		putString( Gardening.HarvestInterpreter.Usage.TO_DRY, R.string.interpret_gardening_harvest_dry );
-		putString( Gardening.HarvestInterpreter.Usage.CONSUME_IMMEDIATELY, R.string.interpret_gardening_harvest_consume );
+        putString(Gardening.HarvestInterpreter.Usage.TO_CONSERVE, R.string.interpret_gardening_harvest_conserve);
+        putString(Gardening.HarvestInterpreter.Usage.TO_DRY, R.string.interpret_gardening_harvest_dry);
+        putString(Gardening.HarvestInterpreter.Usage.CONSUME_IMMEDIATELY, R.string.interpret_gardening_harvest_consume);
 
-		putString( Gardening.WeedControlInterpreter.Actions.DIG, R.string.interpret_gardening_dig );
-		putString( Gardening.WeedControlInterpreter.Actions.WEED, R.string.interpret_gardening_weed);
-		putString( Gardening.WeedControlInterpreter.Actions.WEED_BEFORE_NOON, R.string.interpret_gardening_weed_before_noon);
+        putString(Gardening.WeedControlInterpreter.Actions.DIG, R.string.interpret_gardening_dig);
+        putString(Gardening.WeedControlInterpreter.Actions.WEED, R.string.interpret_gardening_weed);
+        putString(Gardening.WeedControlInterpreter.Actions.WEED_BEFORE_NOON, R.string.interpret_gardening_weed_before_noon);
 
-		putString( Gardening.TrimInterpreter.PlantCategory.FRUIT_TREES, R.string.interpret_gardening_trim_fruit );
-		putString( Gardening.TrimInterpreter.PlantCategory.SICK_PLANTS, R.string.interpret_gardening_trim_sick );
+        putString(Gardening.TrimInterpreter.PlantCategory.FRUIT_TREES, R.string.interpret_gardening_trim_fruit);
+        putString(Gardening.TrimInterpreter.PlantCategory.SICK_PLANTS, R.string.interpret_gardening_trim_sick);
 
-		putString( Gardening.CombatPestsInterpreter.PestType.OVERTERRESTRIAL, R.string.interpret_gardening_combatpests_over );
-		putString( Gardening.CombatPestsInterpreter.PestType.SUBTERRESTRIAL, R.string.interpret_gardening_combatpests_sub );
-		putString( Gardening.CombatPestsInterpreter.PestType.SLUGS, R.string.interpret_gardening_combatpests_slugs );
+        putString(Gardening.CombatPestsInterpreter.PestType.OVERTERRESTRIAL, R.string.interpret_gardening_combatpests_over);
+        putString(Gardening.CombatPestsInterpreter.PestType.SUBTERRESTRIAL, R.string.interpret_gardening_combatpests_sub);
+        putString(Gardening.CombatPestsInterpreter.PestType.SLUGS, R.string.interpret_gardening_combatpests_slugs);
     }
 
     /**
      * Returns the resource-ids belonging to an enum value.
+     *
      * @param key the key
      * @return an array where INDEX_STRING contains the string-id and INDEX_IMAGE the id of the icon
      */
     public static Integer[] getResourceIds(Enum<?> key) {
-        return getResourceIds( key.toString() );
+        return getResourceIds(key.toString());
     }
 
     /**
      * Returns the resource-ids belonging to an enum value.
+     *
      * @param key the key
      * @return an array where INDEX_STRING contains the string-id and INDEX_IMAGE the id of the icon
      */
@@ -127,26 +128,34 @@ public class ResourceMapper {
         return mappings.get(key);
     }
 
-    /** Returns the translated day of the week of a date. */
+    /**
+     * Returns the translated day of the week of a date.
+     */
     public static String formatDayOfWeek(LocalDate date) {
         return date.getDayOfWeek().getDisplayName(TextStyle.FULL, DataManager.getLocale());
     }
 
-    /** Returns the formatted date string for a {@link LocalDate} */
+    /**
+     * Returns the formatted date string for a {@link LocalDate}
+     */
     public static String formatDate(LocalDate date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
                 .withLocale(DataManager.getLocale());
-        return date.format( formatter );
+        return date.format(formatter);
     }
 
-    /** returns day of week and date */
+    /**
+     * returns day of week and date
+     */
     public static String formatLongDate(LocalDate date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
                 .withLocale(DataManager.getLocale());
         return date.format(formatter);
     }
 
-    /** Returns the formatted time string of a {@link LocalDateTime}-object. */
+    /**
+     * Returns the formatted time string of a {@link LocalDateTime}-object.
+     */
     public static String formatTime(Context context, LocalDateTime date) {
         /* Ignores 24h-format  - see https://github.com/JakeWharton/ThreeTenABP/issues/16 */
         /*LocalTime time = LocalTime.from(date).truncatedTo(ChronoUnit.MINUTES);
@@ -161,7 +170,7 @@ public class ResourceMapper {
     }
 
     private static void putAll(Enum<?> key, int drawableId, int stringId) {
-        mappings.put( key.toString(),
-                    new Integer[]{ drawableId, stringId } );
+        mappings.put(key.toString(),
+                new Integer[]{drawableId, stringId});
     }
 }

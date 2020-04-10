@@ -13,7 +13,6 @@ import de.kah2.zodiac.libZodiac4A.planetary.ZonedRiseSet;
 
 /**
  * This class is used to map libZodiac-data to database-entries.
- *
  * Created by kahles on 04.10.16.
  */
 
@@ -42,10 +41,10 @@ class DatabaseDayEntry extends DayStorableDataSet implements BaseColumns {
                 )
         );
         this.setLunarLongitude( cursor.getDouble(
-                cursor.getColumnIndex(COLUMN_NAME_LUNAR_LONGITUDE)
+                cursor.getColumnIndexOrThrow(COLUMN_NAME_LUNAR_LONGITUDE)
         ));
         this.setLunarVisibility( cursor.getDouble(
-                cursor.getColumnIndex(COLUMN_NAME_LUNAR_VISIBILITY)
+                cursor.getColumnIndexOrThrow(COLUMN_NAME_LUNAR_VISIBILITY)
         ));
         this.setLunarRiseSet( this.getRiseSet(cursor, COLUMN_NAME_LUNAR_RISE, COLUMN_NAME_LUNAR_SET) );
         this.setSolarRiseSet( this.getRiseSet(cursor, COLUMN_NAME_SUN_RISE, COLUMN_NAME_SUN_SET) );
@@ -53,10 +52,11 @@ class DatabaseDayEntry extends DayStorableDataSet implements BaseColumns {
 
     private ZonedRiseSet getRiseSet(Cursor cursor, String columnNameRise, String columnNameSet) {
         LocalDateTime rise = LocalDateTime.parse( cursor.getString(
-                cursor.getColumnIndex(columnNameRise)
+                // FIXME Better way than orThrow?
+                cursor.getColumnIndexOrThrow(columnNameRise)
         ));
         LocalDateTime set = LocalDateTime.parse( cursor.getString(
-                cursor.getColumnIndex(columnNameSet)
+                cursor.getColumnIndexOrThrow(columnNameSet)
         ));
         return new ZonedRiseSet(rise, set);
     }

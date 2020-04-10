@@ -107,29 +107,28 @@ public class CalendarFragment extends Fragment
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, "onOptionsItemSelected: " + item.getTitle() + " selected.");
 
-        switch (item.getItemId()) {
-            case R.id.action_info:
-                ((MondtagActivity) this.getActivity()).showInfo();
-                return true;
-            case R.id.action_settings:
-                Log.d(TAG, "Showing settings ...");
-                ((MondtagActivity) getActivity()).activateConfiguration();
-                return true;
-            case R.id.action_scroll_to_today:
-                this.scrollToToday();
-                return true;
-            case R.id.menu_interpretations:
-                // Nothing to do
-                return true;
-            default:
-                if ( this.interpretationMenuManager.onMenuItemClick(item) ) {
-                    // click got handled by InterpretationMenuManager
-                    return true;
-                } else {
-                    Log.e(TAG, "Unknown Action: "
-                            + item.getTitle() + " / " + item.getItemId());
-                    return super.onOptionsItemSelected(item);
-                }
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_info) {
+            ((MondtagActivity) this.getActivity()).showInfo();
+            return true;
+        } else if (itemId == R.id.action_settings) {
+            Log.d(TAG, "Showing settings ...");
+            ((MondtagActivity) getActivity()).activateConfiguration();
+            return true;
+        } else if (itemId == R.id.action_scroll_to_today) {
+            this.scrollToToday();
+            return true;
+        } else if (itemId == R.id.menu_interpretations) {// Nothing to do
+            return true;
+        }
+
+        if (this.interpretationMenuManager.onMenuItemClick(item)) {
+            // click got handled by InterpretationMenuManager
+            return true;
+        } else {
+            Log.e(TAG, "Unknown Action: "
+                    + item.getTitle() + " / " + item.getItemId());
+            return super.onOptionsItemSelected(item);
         }
     }
 

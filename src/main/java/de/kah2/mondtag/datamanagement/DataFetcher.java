@@ -121,7 +121,8 @@ class DataFetcher implements ProgressListener{
 
         while ( !cursor.isAfterLast() ) {
             DatabaseDayEntry entry = new DatabaseDayEntry(cursor);
-            long id = cursor.getInt(cursor.getColumnIndex(DatabaseDayEntry._ID));
+            // FIXME Better way than orThrow?
+            long id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseDayEntry._ID));
             Log.d(TAG, "Read entry with ID " + id + ": " + entry.getDate());
             result.add(entry);
             cursor.moveToNext();

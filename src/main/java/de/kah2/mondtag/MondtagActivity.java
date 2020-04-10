@@ -71,6 +71,9 @@ public class MondtagActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate");
 
+        // FIXME throws an exception on devices with API<28
+        //  Rejecting re-init on previously-failed class java.lang.Class<androidx.core.view.ViewCompat$2>:
+        //  java.lang.NoClassDefFoundError: Failed resolution of: Landroid/view/View$OnUnhandledKeyEventListener;
         super.setContentView(R.layout.activity_mondtag);
 
         // toolbar must be set before #onCreate

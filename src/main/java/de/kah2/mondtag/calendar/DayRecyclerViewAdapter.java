@@ -1,14 +1,15 @@
 package de.kah2.mondtag.calendar;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.threeten.bp.DayOfWeek;
 import org.threeten.bp.LocalDate;
@@ -20,7 +21,6 @@ import de.kah2.zodiac.libZodiac4A.Day;
 
 /**
  * Displays a scrollable calendar.
- *
  * Created by kahles on 09.11.16.
  */
 public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerViewAdapter.Item> {
@@ -35,6 +35,7 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
         this.days = new ArrayList<>();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     void setDays(Iterable<Day> daysIterable) {
         this.days.clear();
         for (Day day: daysIterable) {
@@ -130,18 +131,15 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
             // Elevate item, if it is TODAY
 
             if (isToday) {
-                if (Build.VERSION.SDK_INT >= 21) {
-                    this.itemView.setElevation(20);
-                }
+
+                this.itemView.setElevation(20);
                 this.itemView.setBackgroundColor(
                         ContextCompat.getColor( context, R.color.background_today) );
 
                 displayer.getDayOfWeekView().setTypeface(null, Typeface.BOLD);
 
             } else {
-                if (Build.VERSION.SDK_INT >= 21) {
-                    this.itemView.setElevation(6);
-                }
+                this.itemView.setElevation(6);
                 this.itemView.setBackgroundColor(
                         ContextCompat.getColor( context, R.color.background_default) );
             }
