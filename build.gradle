@@ -4,7 +4,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.2'
+        classpath 'com.android.tools.build:gradle:3.6.2'
     }
 }
 
@@ -20,6 +20,9 @@ androidGitVersion {
 }
 
 android {
+
+    // TODO enable view binding
+    // https://developer.android.com/topic/libraries/view-binding?utm_medium=studio-assistant-stable&utm_source=android-studio-3-6
 
     compileSdkVersion 28
 
@@ -58,11 +61,11 @@ repositories {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
-    implementation 'androidx.preference:preference:1.0.0'
+    implementation 'androidx.preference:preference:1.1.0'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
 
     // Needed for libZodiac4A:
