@@ -118,7 +118,10 @@ public class MondtagActivity extends AppCompatActivity {
 
             Log.d(TAG, "initActivity: default config loaded - starting configuration");
 
+            // TODO if app gets suspended, dialog is shown again on resume
+
             this.activateConfiguration();
+            return;
         }
 
         if ( ! this.getDataManager().getCalendar().isComplete() ) {
