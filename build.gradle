@@ -32,8 +32,8 @@ android {
         applicationId 'de.kah2.mondtag'
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode androidGitVersion.code()
-        versionName androidGitVersion.name()
+        versionCode androidGitVersion.code()?:1543
+        versionName androidGitVersion.name()?:"not available"
     }
 
     buildTypes {
