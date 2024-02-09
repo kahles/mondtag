@@ -19,6 +19,10 @@ androidGitVersion {
     hideBranches = ['master','devel']
 }
 
+def appVersionCode = androidGitVersion.code()?:1543
+def appVersionName = androidGitVersion.name()?:"not available"
+printf( "Version name:\t%s\nVersion code:\t%s", appVersionName, appVersionCode )
+
 android {
 
     // TODO enable view binding?
@@ -32,8 +36,8 @@ android {
         applicationId 'de.kah2.mondtag'
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode androidGitVersion.code()?:1543
-        versionName androidGitVersion.name()?:"not available"
+        versionCode appVersionCode
+        versionName appVersionName
     }
 
     buildTypes {
