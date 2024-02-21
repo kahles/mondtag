@@ -1,14 +1,15 @@
 package de.kah2.mondtag.calendar;
 
-import androidx.appcompat.widget.PopupMenu;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.appcompat.widget.PopupMenu;
+
 import de.kah2.mondtag.R;
 
 /**
- * Handles the menu that is used to switch {@link de.kah2.libZodiac.interpretation.Interpreter}s.
+ * Handles the menu that is used to switch {@link de.kah2.zodiac.libZodiac4A.interpretation.Interpreter}s.
  */
 public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListener {
 
@@ -16,20 +17,22 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
 
     private InterpretationChangeListener interpretationChangeListener;
 
-    void addInterpreters(Menu menu) {
-
-        menu.clear();
+    void addInterpreters(Menu menu, int selectedInterpreterId) {
 
         int order = 0;
 
-        menu.add(Menu.NONE, R.string.interpret_none, order, R.string.interpret_none);
-
         for (int id : InterpreterManager.getIds()) {
 
-            order++;
 
-            menu.add( Menu.NONE, id, order, id );
+            menu.add( R.id.menu_interpretations_check_group, id, order, id );
+
+            MenuItem actualItem = menu.findItem( id );
+            actualItem.setChecked( id == selectedInterpreterId );
+
+            order++;
         }
+
+        menu.setGroupCheckable( R.id.menu_interpretations_check_group, true, true );
     }
 
     @Override

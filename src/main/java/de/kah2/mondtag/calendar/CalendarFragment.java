@@ -1,11 +1,6 @@
 package de.kah2.mondtag.calendar;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.ActionBar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,17 +9,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.threeten.bp.LocalDate;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import de.kah2.zodiac.libZodiac4A.Calendar;
-import de.kah2.zodiac.libZodiac4A.Day;
 import de.kah2.mondtag.Mondtag;
 import de.kah2.mondtag.MondtagActivity;
 import de.kah2.mondtag.R;
 import de.kah2.mondtag.datamanagement.DataManager;
+import de.kah2.zodiac.libZodiac4A.Calendar;
+import de.kah2.zodiac.libZodiac4A.Day;
 
 /**
  * This {@link Fragment} is used to display the calendar.
@@ -89,14 +90,11 @@ public class CalendarFragment extends Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.d(TAG, "onCreateOptionsMenu: showing main menu");
 
-        // clear - otherwise we get duplicate menu entries
-        menu.clear();
-
         inflater.inflate(R.menu.menu, menu);
 
         final Menu interpretationsMenu = menu.findItem(R.id.menu_interpretations).getSubMenu();
 
-        this.interpretationMenuManager.addInterpreters( interpretationsMenu );
+        this.interpretationMenuManager.addInterpreters( interpretationsMenu, getDataManager().getSelectedInterpreterNameId() );
     }
 
     /**

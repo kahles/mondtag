@@ -4,11 +4,12 @@ import android.content.Context;
 
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
+import de.kah2.mondtag.R;
 import de.kah2.zodiac.libZodiac4A.Day;
 import de.kah2.zodiac.libZodiac4A.interpretation.Gardening;
 import de.kah2.zodiac.libZodiac4A.interpretation.Interpreter;
-import de.kah2.mondtag.R;
 
 /**
  * This class manages the {@link MappedInterpreter}s to map String-IDs to {@link Interpreter}s.
@@ -23,25 +24,23 @@ public class InterpreterManager {
 
         interpreters = new LinkedList<>();
 
-        add(context, R.string.interpret_Gardening_CombatPests, Gardening.CombatPestsInterpreter.class);
-        add(context, R.string.interpret_Gardening_CuttingTransplant, Gardening.CuttingTransplantInterpreter.class);
-        add(context, R.string.interpret_Gardening_Fertilize, Gardening.FertilizeInterpreter.class);
-        add(context, R.string.interpret_Gardening_Graft, Gardening.GraftInterpreter.class);
-        add(context, R.string.interpret_Gardening_Harvest, Gardening.HarvestInterpreter.class);
-        add(context, R.string.interpret_Gardening_MowLawn, Gardening.MowLawnInterpreter.class);
-        add(context, R.string.interpret_Gardening_SowPlant, Gardening.SowPlantInterpreter.class);
-        add(context, R.string.interpret_Gardening_Trim, Gardening.TrimInterpreter.class);
-        add(context, R.string.interpret_Gardening_Water, Gardening.WaterInterpreter.class);
-        add(context, R.string.interpret_Gardening_WeedControl, Gardening.WeedControlInterpreter.class);
+        interpreters.add( new MappedInterpreter(R.string.interpret_Gardening_CombatPests, context.getString(R.string.interpret_Gardening_CombatPests), Gardening.CombatPestsInterpreter.class) );
+        interpreters.add( new MappedInterpreter(R.string.interpret_Gardening_CuttingTransplant, context.getString(R.string.interpret_Gardening_CuttingTransplant), Gardening.CuttingTransplantInterpreter.class) );
+        interpreters.add( new MappedInterpreter(R.string.interpret_Gardening_Fertilize, context.getString(R.string.interpret_Gardening_Fertilize), Gardening.FertilizeInterpreter.class) );
+        interpreters.add( new MappedInterpreter(R.string.interpret_Gardening_Graft, context.getString(R.string.interpret_Gardening_Graft), Gardening.GraftInterpreter.class) );
+        interpreters.add( new MappedInterpreter(R.string.interpret_Gardening_Harvest, context.getString(R.string.interpret_Gardening_Harvest), Gardening.HarvestInterpreter.class) );
+        interpreters.add( new MappedInterpreter(R.string.interpret_Gardening_MowLawn, context.getString(R.string.interpret_Gardening_MowLawn), Gardening.MowLawnInterpreter.class) );
+        interpreters.add( new MappedInterpreter(R.string.interpret_Gardening_SowPlant, context.getString(R.string.interpret_Gardening_SowPlant), Gardening.SowPlantInterpreter.class) );
+        interpreters.add( new MappedInterpreter(R.string.interpret_Gardening_Trim, context.getString(R.string.interpret_Gardening_Trim), Gardening.TrimInterpreter.class) );
+        interpreters.add( new MappedInterpreter(R.string.interpret_Gardening_Water, context.getString(R.string.interpret_Gardening_Water), Gardening.WaterInterpreter.class) );
+        interpreters.add( new MappedInterpreter(R.string.interpret_Gardening_WeedControl, context.getString(R.string.interpret_Gardening_WeedControl), Gardening.WeedControlInterpreter.class) );
 
         Collections.sort(interpreters, new MappedInterpreter.NameComparator());
+
+        interpreters.addFirst(new MappedInterpreter(R.string.interpret_none, context.getString(R.string.interpret_none), null) );
     }
 
-    private static void add(Context context, int id, Class<? extends Interpreter> interpreterClass) {
-        interpreters.add( new MappedInterpreter(id, context.getString(id), interpreterClass) );
-    }
-
-    static LinkedList<Integer> getIds() {
+    static List<Integer> getIds() {
 
         checkInterpreters();
 

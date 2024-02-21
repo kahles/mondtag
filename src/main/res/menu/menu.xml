@@ -13,7 +13,9 @@
         android:icon="@drawable/ic_lightbulb"
         app:showAsAction="ifRoom|collapseActionView">
         <menu>
-            <item android:id="@+id/interpretationDummy" android:title="@string/dummy_interpretationText"/>
+            <group
+                android:id="@+id/menu_interpretations_check_group"
+                android:checkableBehavior="single" />
         </menu>
     </item>
     
