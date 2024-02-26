@@ -7,9 +7,10 @@ import android.view.MenuItem;
 import androidx.appcompat.widget.PopupMenu;
 
 import de.kah2.mondtag.R;
+import de.kah2.zodiac.libZodiac4A.interpretation.Interpreter;
 
 /**
- * Handles the menu that is used to switch {@link de.kah2.zodiac.libZodiac4A.interpretation.Interpreter}s.
+ * Handles the menu that is used to switch {@link Interpreter}s.
  */
 public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListener {
 
@@ -21,15 +22,16 @@ public class InterpretationMenuManager implements PopupMenu.OnMenuItemClickListe
 
         int order = 0;
 
+        MenuItem actualItem = menu.add( R.id.menu_interpretations_check_group,
+                R.string.interpret_none, order, R.string.interpret_none );
+        actualItem.setChecked( R.string.interpret_none == selectedInterpreterId );
+
         for (int id : InterpreterManager.getIds()) {
 
-
-            menu.add( R.id.menu_interpretations_check_group, id, order, id );
-
-            MenuItem actualItem = menu.findItem( id );
-            actualItem.setChecked( id == selectedInterpreterId );
-
             order++;
+
+            actualItem = menu.add( R.id.menu_interpretations_check_group, id, order, id );
+            actualItem.setChecked( id == selectedInterpreterId );
         }
 
         menu.setGroupCheckable( R.id.menu_interpretations_check_group, true, true );

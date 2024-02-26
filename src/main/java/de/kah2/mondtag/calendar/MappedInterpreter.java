@@ -9,6 +9,7 @@ import java.util.LinkedList;
 
 import de.kah2.zodiac.libZodiac4A.Day;
 import de.kah2.zodiac.libZodiac4A.interpretation.Interpreter;
+import de.kah2.zodiac.libZodiac4A.interpretation.Interpreter.Quality;
 
 /**
  * <p>This is a wrapper for Interpreter providing string-ids, icons and {@link Comparator}s needed
@@ -85,12 +86,12 @@ public class MappedInterpreter {
 
     private void processInterpreterResults(Context context) {
 
-        final Interpreter.Quality quality = this.interpreterInstance.getQuality();
+        final Quality quality = this.interpreterInstance.getQuality();
 
         final Integer[] qualityStringIds = ResourceMapper.getResourceIds( quality );
 
         // to allow showing name only if quality isn't neutral
-        this.isQualityNeutral = (quality == Interpreter.Quality.NEUTRAL);
+        this.isQualityNeutral = (quality == Quality.NEUTRAL);
 
         if ( this.isQualityNeutral ) {
 
@@ -168,7 +169,7 @@ public class MappedInterpreter {
 
     /**
      * Comparator to sort {@link MappedInterpreter}s by the calculated
-     * {@link de.kah2.libZodiac.interpretation.Interpreter.Quality} of their
+     * {@link Quality} of their
      * {@link Interpreter}s: Best qualities first, worst last.
      * <strong>Be sure to call {@link MappedInterpreter#interpret(Day, Context)} first, to avoid
      * {@link NullPointerException}s</strong>

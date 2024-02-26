@@ -36,8 +36,6 @@ public class InterpreterManager {
         interpreters.add( new MappedInterpreter(R.string.interpret_Gardening_WeedControl, context.getString(R.string.interpret_Gardening_WeedControl), Gardening.WeedControlInterpreter.class) );
 
         Collections.sort(interpreters, new MappedInterpreter.NameComparator());
-
-        interpreters.addFirst(new MappedInterpreter(R.string.interpret_none, context.getString(R.string.interpret_none), null) );
     }
 
     static List<Integer> getIds() {
