@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.provider.CalendarContract;
 
-import org.threeten.bp.Instant;
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.LocalTime;
-import org.threeten.bp.ZoneId;
-import org.threeten.bp.ZonedDateTime;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import de.kah2.mondtag.Mondtag;
 import de.kah2.mondtag.R;
@@ -67,7 +67,7 @@ class CalendarEvent {
     }
 
     private long getDateInMillis(LocalDate date) {
-        final ZoneId timeZoneId = ((Mondtag) context).getDataManager().getZoneId();
+        final ZoneId timeZoneId = ((Mondtag) context).getDataManager().getTimeZoneId();
 
         final ZonedDateTime zonedDateTime = ZonedDateTime.of(
                 date, LocalTime.MIDNIGHT, timeZoneId );

@@ -7,9 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 
-import org.threeten.bp.Clock;
-import org.threeten.bp.Duration;
-import org.threeten.bp.Instant;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
 
 import java.util.LinkedList;
 import java.util.List;

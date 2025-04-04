@@ -1,20 +1,21 @@
 package de.kah2.mondtag.calendar;
 
 import android.content.Context;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.LocalDateTime;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.LinkedList;
 
-import de.kah2.zodiac.libZodiac4A.Day;
 import de.kah2.mondtag.Mondtag;
 import de.kah2.mondtag.R;
+import de.kah2.zodiac.libZodiac4A.Day;
 
 /**
  * This class is used to capsule basic day-display functionality used by
@@ -23,6 +24,8 @@ import de.kah2.mondtag.R;
  * Created by kahles on 21.03.17.
  */
 class DayDataDisplayer {
+
+    private final ZoneId zoneId;
 
     private final View dayView;
 
@@ -51,8 +54,9 @@ class DayDataDisplayer {
 
     private boolean isDayDetailView;
 
-    DayDataDisplayer(View dayView) {
+    DayDataDisplayer(View dayView, ZoneId zoneId) {
         this.dayView = dayView;
+        this.zoneId = zoneId;
 
         this.solarRiseTextField = dayView.findViewById(R.id.sun_rise_text);
         this.solarSetTextView = dayView.findViewById(R.id.sun_set_text);
@@ -129,10 +133,10 @@ class DayDataDisplayer {
     private void initSolarRiseSetFields(Day day) {
 
         this.solarRiseTextField.setText(
-                ResourceMapper.formatTime( getContext(),
+                ResourceMapper.formatTime( getContext(), zoneId,
                         day.getPlanetaryData().getSolarRiseSet().getRise() ) );
         this.solarSetTextView.setText(
-                ResourceMapper.formatTime( getContext(),
+                ResourceMapper.formatTime( getContext(), zoneId,
                         day.getPlanetaryData().getSolarRiseSet().getSet() ) );
     }
 
@@ -140,11 +144,11 @@ class DayDataDisplayer {
 
         final Context context = this.getContext();
 
-        final LocalDateTime rise = day.getPlanetaryData().getLunarRiseSet().getRise();
-        final String localRise = ResourceMapper.formatTime(context, rise);
+        final Instant rise = day.getPlanetaryData().getLunarRiseSet().getRise();
+        final String localRise = ResourceMapper.formatTime(context, zoneId, rise);
 
-        final LocalDateTime set = day.getPlanetaryData().getLunarRiseSet().getSet();
-        final String localSet = ResourceMapper.formatTime(context, set);
+        final Instant set = day.getPlanetaryData().getLunarRiseSet().getSet();
+        final String localSet = ResourceMapper.formatTime(context, zoneId, set);
 
         // We can have four cases:
         if ( !day.getDate().isEqual(LocalDate.from(rise)) ) {

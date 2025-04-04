@@ -3,11 +3,13 @@ package de.kah2.mondtag.calendar;
 import android.content.Context;
 import android.text.format.DateFormat;
 
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.LocalDateTime;
-import org.threeten.bp.format.DateTimeFormatter;
-import org.threeten.bp.format.FormatStyle;
-import org.threeten.bp.format.TextStyle;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.format.TextStyle;
 
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
@@ -156,13 +158,10 @@ public class ResourceMapper {
     /**
      * Returns the formatted time string of a {@link LocalDateTime}-object.
      */
-    public static String formatTime(Context context, LocalDateTime date) {
-        /* Ignores 24h-format  - see https://github.com/JakeWharton/ThreeTenABP/issues/16 */
-        /*LocalTime time = LocalTime.from(date).truncatedTo(ChronoUnit.MINUTES);
-        return time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT));*/
+    public static String formatTime(Context context, ZoneId zoneId, Instant date) {
         SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getTimeFormat(context);
         DateTimeFormatter format = DateTimeFormatter.ofPattern(sdf.toPattern());
-        return format.format(date);
+        return format.format( date.atZone( zoneId) );
     }
 
     private static void putString(Enum<?> key, int stringId) {

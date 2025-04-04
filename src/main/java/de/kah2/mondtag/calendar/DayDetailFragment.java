@@ -1,9 +1,6 @@
 package de.kah2.mondtag.calendar;
 
 import android.os.Bundle;
-
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -12,8 +9,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.LocalDateTime;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+
+import java.time.Instant;
+import java.time.LocalDate;
 
 import de.kah2.mondtag.Mondtag;
 import de.kah2.mondtag.MondtagActivity;
@@ -34,7 +34,7 @@ public class DayDetailFragment extends Fragment {
     private Day day;
 
     /**
-     * Sets a {@link de.kah2.libZodiac.Day} to display - must be set before fragment is created
+     * Sets a {@link Day} to display - must be set before fragment is created
      * and will be overwritten if fragment is restored from saved instance state.
      */
     public void setDay(Day day) {
@@ -49,7 +49,9 @@ public class DayDetailFragment extends Fragment {
 
         this.restoreDayIfAvailable(savedInstanceState);
 
-        DayDataDisplayer viewHolder = new DayDataDisplayer(view);
+        DayDataDisplayer viewHolder = new DayDataDisplayer(
+                view,
+                ((Mondtag) getActivity().getApplicationContext()).getDataManager().getTimeZoneId() );
         viewHolder.setDayData(this.day, true);
         this.setLunarRiseSetDescriptions(view);
 
@@ -65,7 +67,7 @@ public class DayDetailFragment extends Fragment {
 
     /**
      * Restores this.day if a date was found in savedInstanceState and a corresponding
-     * {@link de.kah2.libZodiac.Day}-object exists.
+     * {@link Day}-object exists.
      *
      * If not, this method does nothing.
      */
@@ -91,7 +93,7 @@ public class DayDetailFragment extends Fragment {
             Log.d(TAG, "reminderButton clicked");
 
             CalendarEvent event = new CalendarEvent(
-                    getActivity().getApplicationContext(), DayDetailFragment.this.day);
+                    getActivity().getApplicationContext(), day);
             DayDetailFragment.this.startActivity( event.toIntent() );
         });
     }
@@ -101,7 +103,7 @@ public class DayDetailFragment extends Fragment {
         final MondtagActivity mondtagActivity = (MondtagActivity) getActivity();
 
         mondtagActivity.getSupportActionBar().setSubtitle(
-                ResourceMapper.formatLongDate( this.day.getDate() ) );
+                ResourceMapper.formatLongDate( day.getDate() ) );
 
         mondtagActivity.setUpButtonVisible(true);
     }
@@ -119,8 +121,8 @@ public class DayDetailFragment extends Fragment {
     }
 
     private void setLunarRiseSetDescriptions(final View view) {
-        final LocalDateTime rise = this.day.getPlanetaryData().getLunarRiseSet().getRise();
-        final LocalDateTime set = this.day.getPlanetaryData().getLunarRiseSet().getSet();
+        final Instant rise = this.day.getPlanetaryData().getLunarRiseSet().getRise();
+        final Instant set = this.day.getPlanetaryData().getLunarRiseSet().getSet();
 
         final TextView lunarRSFirstDescriptionTextView = view.findViewById(R.id.lunar_rise_set_first_description);
         final TextView lunarRSecondDescriptionTextView = view.findViewById(R.id.lunar_rise_set_second_description);

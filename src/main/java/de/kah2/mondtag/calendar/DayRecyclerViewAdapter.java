@@ -11,9 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.threeten.bp.DayOfWeek;
-import org.threeten.bp.LocalDate;
-
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 
 import de.kah2.mondtag.R;
@@ -27,6 +27,8 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
 
     private final ArrayList<Day> days;
 
+    private ZoneId zoneId = ZoneId.systemDefault();
+
     private LocalDate today;
 
     private DayClickListener clickListener;
@@ -36,12 +38,13 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    void setDays(Iterable<Day> daysIterable) {
+    void setDays(Iterable<Day> daysIterable, ZoneId zoneId) {
         this.days.clear();
         for (Day day: daysIterable) {
             days.add(day);
         }
         today = LocalDate.now();
+        this.zoneId = zoneId;
         this.notifyDataSetChanged();
     }
 
@@ -113,7 +116,7 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
 
             // if we have a day and not the "extend future"-buton
             if (day != null) {
-                final DayDataDisplayer displayer = new DayDataDisplayer(itemView);
+                final DayDataDisplayer displayer = new DayDataDisplayer(itemView, zoneId);
                 displayer.setDayData(day, false);
 
                 setDailyLayoutProperties(day, displayer);

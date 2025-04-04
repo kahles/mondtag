@@ -2,10 +2,10 @@ package de.kah2.mondtag.settings;
 
 import androidx.annotation.NonNull;
 
-import org.threeten.bp.LocalDateTime;
-import org.threeten.bp.ZoneId;
-import org.threeten.bp.ZoneOffset;
-import org.threeten.bp.ZonedDateTime;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 import java.util.Collections;
 import java.util.LinkedList;

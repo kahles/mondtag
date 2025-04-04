@@ -4,19 +4,19 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.LocalDateTime;
+import java.time.Instant;
+import java.time.LocalDate;
 
 import de.kah2.zodiac.libZodiac4A.Day;
-import de.kah2.zodiac.libZodiac4A.DayStorableDataSet;
-import de.kah2.zodiac.libZodiac4A.planetary.ZonedRiseSet;
+import de.kah2.zodiac.libZodiac4A.DayStorableDataSetPojo;
+import de.kah2.zodiac.libZodiac4A.planetary.RiseSet;
 
 /**
  * This class is used to map libZodiac-data to database-entries.
  * Created by kahles on 04.10.16.
  */
 
-class DatabaseDayEntry extends DayStorableDataSet implements BaseColumns {
+class DatabaseDayEntry extends DayStorableDataSetPojo implements BaseColumns {
 
     public static final String TABLE_NAME = "DAY";
 
@@ -33,32 +33,32 @@ class DatabaseDayEntry extends DayStorableDataSet implements BaseColumns {
     }
 
     DatabaseDayEntry(Cursor cursor) {
-        this.setDate(
+        setDate(
                 LocalDate.parse(
                     cursor.getString(
                             cursor.getColumnIndexOrThrow(COLUMN_NAME_DATE)
                     )
                 )
         );
-        this.setLunarLongitude( cursor.getDouble(
+        setLunarLongitude( cursor.getDouble(
                 cursor.getColumnIndexOrThrow(COLUMN_NAME_LUNAR_LONGITUDE)
         ));
-        this.setLunarVisibility( cursor.getDouble(
+        setLunarVisibility( cursor.getDouble(
                 cursor.getColumnIndexOrThrow(COLUMN_NAME_LUNAR_VISIBILITY)
         ));
-        this.setLunarRiseSet( this.getRiseSet(cursor, COLUMN_NAME_LUNAR_RISE, COLUMN_NAME_LUNAR_SET) );
-        this.setSolarRiseSet( this.getRiseSet(cursor, COLUMN_NAME_SUN_RISE, COLUMN_NAME_SUN_SET) );
+        setLunarRiseSet( this.getRiseSet(cursor, COLUMN_NAME_LUNAR_RISE, COLUMN_NAME_LUNAR_SET) );
+        setSolarRiseSet( this.getRiseSet(cursor, COLUMN_NAME_SUN_RISE, COLUMN_NAME_SUN_SET) );
     }
 
-    private ZonedRiseSet getRiseSet(Cursor cursor, String columnNameRise, String columnNameSet) {
-        LocalDateTime rise = LocalDateTime.parse( cursor.getString(
+    private RiseSet getRiseSet(Cursor cursor, String columnNameRise, String columnNameSet) {
+        Instant rise = Instant.parse( cursor.getString(
                 // FIXME Better way than orThrow?
                 cursor.getColumnIndexOrThrow(columnNameRise)
         ));
-        LocalDateTime set = LocalDateTime.parse( cursor.getString(
+        Instant set = Instant.parse( cursor.getString(
                 cursor.getColumnIndexOrThrow(columnNameSet)
         ));
-        return new ZonedRiseSet(rise, set);
+        return new RiseSet(rise, set);
     }
 
     ContentValues toContentValues() {

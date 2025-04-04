@@ -5,13 +5,14 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.ZoneId;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 import java.util.Locale;
 
 import de.kah2.zodiac.libZodiac4A.Calendar;
 import de.kah2.zodiac.libZodiac4A.DateRange;
+import de.kah2.zodiac.libZodiac4A.LocationProvider;
 import de.kah2.zodiac.libZodiac4A.planetary.Position;
 import de.kah2.mondtag.Mondtag;
 import de.kah2.mondtag.R;
@@ -20,14 +21,13 @@ import de.kah2.mondtag.calendar.MappedInterpreter;
 /**
  * This class manages all data needed by Mondtag.
  * It is intended to be accessed through application context.
- *
  * E.g. <code>((Mondtag) getContext).getDataManager();</code>
  *
  * @see Mondtag
  *
  * Created by kahles on 22.08.16.
  */
-public class DataManager {
+public class DataManager implements LocationProvider {
 
     private final static String TAG = DataManager.class.getSimpleName();
 
@@ -69,12 +69,10 @@ public class DataManager {
 
         final LocalDate startDate = LocalDate.now();
 
-        final Position position = this.getPosition();
-        final ZoneId zoneId = this.getZoneId();
         final DateRange range = new DateRange( startDate,
                 startDate.plusDays(DAYS_TO_CALCULATE_AHEAD) );
 
-        final Calendar calendar = new Calendar( position, zoneId, range );
+        final Calendar calendar = new Calendar( range, Calendar.Scope.CYCLE, this );
 
         calendar.addProgressListener(this.fetcher);
         calendar.addProgressListener(this.messenger);
@@ -86,8 +84,8 @@ public class DataManager {
      * Loads the configured observer position needed for rise- and set-calculation or sets the
      * default if <strong>an invalid position</strong> was saved.
      */
-    private NamedGeoPosition getPosition() {
-
+    @Override
+    public Position getObserverPosition() {
         final SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(this.context);
 
@@ -121,7 +119,8 @@ public class DataManager {
      * <p>Loads the configured timezone needed for rise- and set-calculation.</p>
      * <p>We don't need to set a default, because the user can't type any time zone.</p>
      */
-    public ZoneId getZoneId() {
+    @Override
+    public ZoneId getTimeZoneId() {
 
         final SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
@@ -207,8 +206,9 @@ public class DataManager {
 
         this.calendar = this.createEmptyCalender();
 
-        DatabaseHelper dbHelper = new DatabaseHelper(this.context);
-        dbHelper.resetDatabase(dbHelper.getWritableDatabase());
+        try ( DatabaseHelper dbHelper = new DatabaseHelper( this.context ) ) {
+            dbHelper.resetDatabase(dbHelper.getWritableDatabase());
+        }
     }
 
     /** Tells if config was loaded from defaults */

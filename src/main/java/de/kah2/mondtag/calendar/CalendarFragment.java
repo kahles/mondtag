@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.threeten.bp.LocalDate;
+import java.time.LocalDate;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -133,7 +133,7 @@ public class CalendarFragment extends Fragment
     private void updateCalendar() {
 
         final LinkedList<Day> days = this.getDaysToDisplay();
-        this.dayRecyclerViewAdapter.setDays(days);
+        this.dayRecyclerViewAdapter.setDays(days, getDataManager().getTimeZoneId());
         this.scrollToToday(days);
 
         final ActionBar actionBar = ((MondtagActivity) this.getActivity()).getSupportActionBar();
